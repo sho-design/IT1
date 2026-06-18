@@ -124,7 +124,7 @@ const jsonLd = {
             Your nurse finalises your blend after screening, on clinical
             grounds. No pricing.
           </p>
-          <a class="btn summary__cta" href="/book">Bring this to a consult</a>
+          <a class="btn summary__cta" href="/book" data-summary-cta>Bring this to a consult</a>
         </div>
       </aside>
     </div>
@@ -352,6 +352,7 @@ const jsonLd = {
   const sumBase = document.querySelector('[data-summary-base]');
   const sumList = document.querySelector('[data-summary-list]');
   const sumNotes = document.querySelector<HTMLElement>('[data-summary-notes]');
+  const sumCta = document.querySelector<HTMLAnchorElement>('[data-summary-cta]');
 
   const chosenBoosters = () =>
     Array.from(boosters).filter(
@@ -405,12 +406,32 @@ const jsonLd = {
     });
   };
 
+  // Carry the current blend to the consult form via the URL, so the booking
+  // message arrives pre-filled with the base and boosters chosen here.
+  const updateCta = () => {
+    if (!sumCta) return;
+    const base = activeBase();
+    const baseName = base?.dataset.name || 'Hydration base';
+    const chosen = chosenBoosters().map((b) => b.dataset.name || '');
+    const boosters = chosen.length ? chosen.join(', ') : 'none selected yet';
+    const message =
+      'I would like to discuss a Build Your Own infusion.\n' +
+      `Base: ${baseName}.\n` +
+      `Boosters: ${boosters}.`;
+    const params = new URLSearchParams({
+      interest: 'A specific drip or shot',
+      build: message,
+    });
+    sumCta.href = `/book?${params.toString()}`;
+  };
+
   bases.forEach((b) => {
     b.addEventListener('click', () => {
       bases.forEach((x) => x.setAttribute('aria-checked', 'false'));
       b.setAttribute('aria-checked', 'true');
       if (sumBase) sumBase.textContent = b.dataset.name || 'Base';
       renderNotes();
+      updateCta();
     });
   });
 
@@ -437,7 +458,10 @@ const jsonLd = {
       });
     }
     renderNotes();
+    updateCta();
   };
+
+  updateCta();
 
   boosters.forEach((b) => {
     b.addEventListener('click', () => {

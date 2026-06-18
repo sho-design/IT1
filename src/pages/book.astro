@@ -251,6 +251,21 @@ const jsonLd = {
 <script>
   const form = document.getElementById('consult-form') as HTMLFormElement | null;
   const confirm = document.getElementById('consult-confirm');
+
+  // Pre-fill from a Build Your Own selection passed via the URL.
+  const params = new URLSearchParams(window.location.search);
+  const build = params.get('build');
+  if (build) {
+    const message = document.getElementById('message') as HTMLTextAreaElement | null;
+    if (message) message.value = build;
+    const interest = params.get('interest');
+    const select = document.getElementById('interest') as HTMLSelectElement | null;
+    if (select && interest) {
+      const match = Array.from(select.options).some((o) => o.value === interest);
+      if (match) select.value = interest;
+    }
+  }
+
   if (form) {
     const hasEndpoint = form.dataset.hasEndpoint === 'true';
     form.addEventListener('submit', (e) => {
