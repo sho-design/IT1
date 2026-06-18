@@ -5,10 +5,12 @@ import CtaBand from '@/components/CtaBand.astro';
 import { ingredients } from '@/data/ingredients';
 
 // Educational configurator. No pricing. The nurse finalises the blend.
+// `hasC` marks bases that already contain vitamin C, which matters for the
+// vitamin C / glutathione separation flagged in the summary.
 const bases = [
-  { id: 'hydrate', name: 'Hydration base', note: 'Electrolytes and fluids, the canvas for everything else.' },
-  { id: 'myers', name: "Healing base", note: "Our Myers' style blend of B vitamins, vitamin C, and minerals." },
-  { id: 'foundation', name: 'Foundation base', note: 'A balanced everyday baseline of core vitamins and minerals.' },
+  { id: 'hydrate', name: 'Hydration base', note: 'Electrolytes and fluids, the canvas for everything else.', hasC: false },
+  { id: 'myers', name: "Healing base", note: "Our Myers' style blend of B vitamins, vitamin C, and minerals.", hasC: true },
+  { id: 'foundation', name: 'Foundation base', note: 'A balanced everyday baseline of core vitamins and minerals.', hasC: true },
 ];
 
 // Offer wellness boosters only (no clinical iron in a build-your-own).
@@ -52,6 +54,7 @@ const jsonLd = {
                 aria-checked={i === 0 ? 'true' : 'false'}
                 data-base={b.id}
                 data-name={b.name}
+                data-has-c={String(b.hasC)}
               >
                 <span class="base__name">{b.name}</span>
                 <span class="base__note">{b.note}</span>
@@ -62,7 +65,7 @@ const jsonLd = {
 
         <div class="byo__step reveal">
           <p class="eyebrow">Step two · Add boosters</p>
-          <p class="byo__hint meta">Tap to explore. Each booster lists what it may support.</p>
+          <p class="byo__hint meta">Tap to explore. Each booster lists what it may support. A few cannot share one bag, we will flag those in your blend as you build.</p>
           <div class="boosters">
             {boosters.map((ing) => (
               <button
@@ -88,10 +91,12 @@ const jsonLd = {
           <ul class="summary__list" data-summary-list>
             <li class="summary__empty">No boosters added yet. Tap any booster to add it.</li>
           </ul>
+          <div class="advisories" data-summary-notes hidden></div>
           <p class="summary__note meta">
             This is an educational sketch, not a prescription. Not every
-            combination suits everyone. Your nurse finalises your blend after
-            screening, on clinical grounds. No pricing.
+            combination goes in one bag, and not every booster suits everyone.
+            Your nurse finalises your blend after screening, on clinical
+            grounds. No pricing.
           </p>
           <a class="btn summary__cta" href="/book">Bring this to a consult</a>
         </div>
@@ -231,6 +236,31 @@ const jsonLd = {
     border-radius: 50%;
     flex: none;
   }
+  .advisories {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .advisory {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem;
+    align-items: start;
+    font-size: var(--step--1);
+    line-height: 1.45;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent-clinical);
+    border-radius: var(--radius);
+    padding: 0.7rem 0.8rem;
+  }
+  .advisory::before {
+    content: '!';
+    font-family: var(--mono);
+    font-weight: 600;
+    color: var(--accent-clinical);
+    line-height: 1.4;
+  }
   .summary__cta {
     justify-content: center;
   }
@@ -251,39 +281,92 @@ const jsonLd = {
   const boosters = document.querySelectorAll<HTMLButtonElement>('.booster');
   const sumBase = document.querySelector('[data-summary-base]');
   const sumList = document.querySelector('[data-summary-list]');
+  const sumNotes = document.querySelector<HTMLElement>('[data-summary-notes]');
+
+  const chosenBoosters = () =>
+    Array.from(boosters).filter(
+      (b) => b.getAttribute('aria-pressed') === 'true'
+    );
+  const activeBase = () =>
+    Array.from(bases).find((b) => b.getAttribute('aria-checked') === 'true');
+
+  // Combinations that are not given in one bag. Kept deliberately narrow to
+  // the well-established cases; the nurse screening covers the rest.
+  const advisoryRules: Array<{
+    applies: (slugs: Set<string>, base?: HTMLButtonElement) => boolean;
+    text: string;
+  }> = [
+    {
+      applies: (slugs, base) =>
+        slugs.has('glutathione') &&
+        (slugs.has('vitamin-c') || base?.dataset.hasC === 'true'),
+      text:
+        'Vitamin C and glutathione are not combined in one bag, the vitamin C would break the glutathione down. They are given separately, or on different visits, and your nurse sets the order.',
+    },
+    {
+      applies: (slugs, base) =>
+        slugs.has('nad') &&
+        (slugs.size > 1 || (base ? base.dataset.base !== 'hydrate' : false)),
+      text:
+        'NAD+ is given as its own slow infusion rather than blended with a base or other boosters. Your nurse will usually schedule it on its own.',
+    },
+  ];
+
+  const renderNotes = () => {
+    if (!sumNotes) return;
+    const slugs = new Set(
+      chosenBoosters().map((b) => b.dataset.slug || '')
+    );
+    const base = activeBase();
+    const notes = advisoryRules
+      .filter((r) => r.applies(slugs, base))
+      .map((r) => r.text);
+    sumNotes.innerHTML = '';
+    if (notes.length === 0) {
+      sumNotes.hidden = true;
+      return;
+    }
+    sumNotes.hidden = false;
+    notes.forEach((t) => {
+      const p = document.createElement('p');
+      p.className = 'advisory';
+      p.textContent = t;
+      sumNotes.appendChild(p);
+    });
+  };
 
   bases.forEach((b) => {
     b.addEventListener('click', () => {
       bases.forEach((x) => x.setAttribute('aria-checked', 'false'));
       b.setAttribute('aria-checked', 'true');
       if (sumBase) sumBase.textContent = b.dataset.name || 'Base';
+      renderNotes();
     });
   });
 
   const render = () => {
     if (!sumList) return;
-    const chosen = Array.from(boosters).filter(
-      (b) => b.getAttribute('aria-pressed') === 'true'
-    );
+    const chosen = chosenBoosters();
     sumList.innerHTML = '';
     if (chosen.length === 0) {
       const li = document.createElement('li');
       li.className = 'summary__empty';
       li.textContent = 'No boosters added yet. Tap any booster to add it.';
       sumList.appendChild(li);
-      return;
+    } else {
+      chosen.forEach((b) => {
+        const li = document.createElement('li');
+        const dot = document.createElement('span');
+        dot.className = 'summary__dot';
+        const color = getComputedStyle(b).getPropertyValue('--dot');
+        dot.style.background = color;
+        const name = document.createElement('span');
+        name.textContent = b.dataset.name || '';
+        li.append(dot, name);
+        sumList.appendChild(li);
+      });
     }
-    chosen.forEach((b) => {
-      const li = document.createElement('li');
-      const dot = document.createElement('span');
-      dot.className = 'summary__dot';
-      const color = getComputedStyle(b).getPropertyValue('--dot');
-      dot.style.background = color;
-      const name = document.createElement('span');
-      name.textContent = b.dataset.name || '';
-      li.append(dot, name);
-      sumList.appendChild(li);
-    });
+    renderNotes();
   };
 
   boosters.forEach((b) => {
