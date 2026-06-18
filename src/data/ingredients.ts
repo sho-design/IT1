@@ -334,3 +334,17 @@ export const ingredients: Ingredient[] = [
 
 export const ingredientBySlug = (slug: string): Ingredient | undefined =>
   ingredients.find((i) => i.slug === slug);
+
+// Honest evidence tier per ingredient. "Established" = an essential nutrient
+// with well-defined physiological roles and/or clinical use. "Emerging" =
+// promising, but human evidence is still developing. Keep this conservative.
+const emergingEvidence = new Set<string>([
+  'glutathione',
+  'nad',
+  'amino-blend',
+  'l-carnitine',
+  'mic-lipotropic',
+]);
+
+export const evidenceLevel = (slug: string): 'Established' | 'Emerging' =>
+  emergingEvidence.has(slug) ? 'Emerging' : 'Established';

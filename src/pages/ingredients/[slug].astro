@@ -2,7 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import CtaBand from '@/components/CtaBand.astro';
 import TreatmentCard from '@/components/TreatmentCard.astro';
-import { ingredients, ingredientBySlug } from '@/data/ingredients';
+import { ingredients, ingredientBySlug, evidenceLevel } from '@/data/ingredients';
 import { treatmentsWithIngredient } from '@/data/treatments';
 import { families } from '@/data/families';
 
@@ -14,6 +14,7 @@ const { slug } = Astro.params;
 const ingredient = ingredientBySlug(slug!)!;
 const fam = families[ingredient.family];
 const foundIn = treatmentsWithIngredient(ingredient.slug);
+const evidence = evidenceLevel(ingredient.slug);
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -33,14 +34,30 @@ const jsonLd = {
     class="ih reveal"
     style={`--accent: var(--accent-${ingredient.family}); --accent-text: ${fam.text}`}
   >
-    <div class="wrap">
-      <a class="link-arrow ih__back" href="/ingredients">&larr; Ingredient library</a>
-      <p class="eyebrow ih__eyebrow">
-        <span class="ih__dot" aria-hidden="true"></span>
-        {ingredient.role}
-      </p>
-      <h1 class="hl ih__title display-2">{ingredient.name}</h1>
-      <p class="lead ih__line">{ingredient.oneLine}</p>
+    <div class="wrap ih__wrap">
+      <div class="ih__text">
+        <a class="link-arrow ih__back" href="/ingredients">&larr; Ingredient library</a>
+        <div class="ih__meta">
+          <span class="eyebrow ih__eyebrow">
+            <span class="ih__dot" aria-hidden="true"></span>
+            {ingredient.role}
+          </span>
+          <span
+            class={`ev ev--${evidence === 'Established' ? 'est' : 'emg'}`}
+            title={evidence === 'Established'
+              ? 'An essential nutrient with well-defined physiological roles.'
+              : 'Promising, but human evidence is still developing.'}
+          >
+            <span class="ev__dot" aria-hidden="true"></span>
+            {evidence} evidence
+          </span>
+        </div>
+        <h1 class="hl ih__title display-2">{ingredient.name}</h1>
+        <p class="lead ih__line">{ingredient.oneLine}</p>
+      </div>
+      <div class="ih__specimen" aria-hidden="true">
+        <canvas class="ih__swatch" data-ing-swatch></canvas>
+      </div>
     </div>
   </header>
 
@@ -100,14 +117,80 @@ const jsonLd = {
       transparent 60%
     );
   }
+  .ih__wrap {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  .ih__text {
+    max-width: 56ch;
+  }
   .ih__back {
     display: inline-block;
     margin-bottom: 2rem;
     border-color: transparent;
   }
+  .ih__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.2rem;
+  }
   .ih__eyebrow {
     color: var(--accent-text);
-    margin-bottom: 1.2rem;
+    margin-bottom: 0;
+  }
+  /* Honest evidence tag: established (solid) vs emerging (hollow). */
+  .ev {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--graphite);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.26rem 0.62rem;
+    cursor: help;
+  }
+  .ev__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+  .ev--est .ev__dot {
+    background: var(--accent-metabolic);
+  }
+  .ev--emg .ev__dot {
+    background: transparent;
+    border: 1.5px solid var(--mist);
+  }
+  .ih__specimen {
+    justify-self: end;
+  }
+  .ih__swatch {
+    display: block;
+    width: clamp(112px, 13vw, 156px);
+    height: clamp(112px, 13vw, 156px);
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    /* The canvas reads this resolved colour for the diffusion. */
+    color: var(--accent);
+    background: var(--white-pure);
+  }
+  @media (max-width: 720px) {
+    .ih__wrap {
+      grid-template-columns: 1fr;
+      gap: 1.8rem;
+    }
+    .ih__specimen {
+      justify-self: start;
+      order: -1;
+    }
   }
   .ih__dot {
     width: 9px;
@@ -170,3 +253,80 @@ const jsonLd = {
     gap: 1.2rem;
   }
 </style>
+
+<script>
+  // Ingredient "specimen": a slow single-colour diffusion of the ingredient's
+  // own accent, blooming inside the circular swatch.
+  const initSwatch = () => {
+    const canvas = document.querySelector('[data-ing-swatch]');
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const color = getComputedStyle(canvas).color || '#888';
+    const rand = (a: number, b: number) => a + Math.random() * (b - a);
+    let w = 0, h = 0, raf = 0, frame = 0;
+    const drops: any[] = [];
+
+    const resize = () => {
+      const r = canvas.getBoundingClientRect();
+      w = r.width; h = r.height;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(1, Math.round(w * dpr));
+      canvas.height = Math.max(1, Math.round(h * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    const spawn = () => {
+      drops.push({
+        x: w * rand(0.28, 0.72),
+        y: h * rand(0.55, 0.9),
+        r: rand(w * 0.07, w * 0.15),
+        grow: rand(0.02, 0.05),
+        life: 0,
+        ttl: rand(170, 280),
+      });
+    };
+    const paint = (d: any, a: number) => {
+      const g = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r);
+      g.addColorStop(0, color);
+      g.addColorStop(1, 'transparent');
+      ctx.globalAlpha = a;
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+      ctx.fill();
+    };
+    const tick = () => {
+      if (!canvas.isConnected) { raf = 0; return; }
+      ctx.clearRect(0, 0, w, h);
+      for (let i = drops.length - 1; i >= 0; i--) {
+        const d = drops[i];
+        d.life++;
+        d.y -= 0.16;
+        d.r += d.grow;
+        const t = d.life / d.ttl;
+        const f = Math.sin(Math.min(t, 1) * Math.PI);
+        paint(d, Math.max(0, f) * 0.42);
+        if (t >= 1) drops.splice(i, 1);
+      }
+      ctx.globalAlpha = 1;
+      if (frame % 28 === 0 && drops.length < 6) spawn();
+      frame++;
+      raf = requestAnimationFrame(tick);
+    };
+
+    resize();
+    window.addEventListener('resize', resize);
+    if (reduce) {
+      spawn(); spawn();
+      drops.forEach((d) => paint(d, 0.35));
+      ctx.globalAlpha = 1;
+      return;
+    }
+    for (let i = 0; i < 3; i++) { spawn(); drops[drops.length - 1].life = i * 60; }
+    raf = requestAnimationFrame(tick);
+  };
+
+  if (document.readyState !== 'loading') initSwatch();
+  else document.addEventListener('DOMContentLoaded', initSwatch);
+</script>
