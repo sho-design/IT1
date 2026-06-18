@@ -487,7 +487,7 @@ const steps = [
     ];
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const rand = (a, b) => a + Math.random() * (b - a);
-    let w = 0, h = 0, raf = 0, frame = 0;
+    let w = 0, h = 0, raf = 0, frame = 0, baseT = Math.random() * 9;
     const drops = [];
 
     const resize = () => {
@@ -501,15 +501,15 @@ const steps = [
 
     const spawn = () => {
       drops.push({
-        x: w * rand(0.34, 0.66),
-        y: h + 14,
-        vy: -rand(0.12, 0.30),
-        drift: rand(-0.4, 0.4),
+        x: w * rand(0.2, 0.8),
+        y: h + 12,
+        vy: -rand(0.18, 0.4),
+        drift: rand(-0.5, 0.5),
         phase: rand(0, Math.PI * 2),
-        r: rand(w * 0.10, w * 0.18),
-        grow: rand(0.05, 0.11),
+        r: rand(w * 0.07, w * 0.13),
+        grow: rand(0.015, 0.04),
         life: 0,
-        ttl: rand(520, 820),
+        ttl: rand(420, 640),
         color: palette[Math.floor(Math.random() * palette.length)],
       });
     };
@@ -517,6 +517,7 @@ const steps = [
     const paint = (d, alpha) => {
       const g = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r);
       g.addColorStop(0, d.color);
+      g.addColorStop(0.45, d.color);
       g.addColorStop(1, "rgba(255,255,255,0)");
       ctx.globalAlpha = alpha;
       ctx.fillStyle = g;
@@ -525,21 +526,42 @@ const steps = [
       ctx.fill();
     };
 
+    // The settled fluid the bag is filled with: a soft tint rising from the
+    // bottom, its hue drifting slowly as new ingredients blend in.
+    const paintBase = () => {
+      baseT += 0.0016;
+      const i = Math.floor(baseT) % palette.length;
+      const mix = baseT % 1;
+      const g = ctx.createLinearGradient(0, h, 0, h * 0.18);
+      g.addColorStop(0, palette[i]);
+      g.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.globalAlpha = 0.14;
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+      const g2 = ctx.createLinearGradient(0, h, 0, h * 0.32);
+      g2.addColorStop(0, palette[(i + 1) % palette.length]);
+      g2.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.globalAlpha = 0.1 * mix;
+      ctx.fillStyle = g2;
+      ctx.fillRect(0, 0, w, h);
+    };
+
     const tick = () => {
       ctx.clearRect(0, 0, w, h);
+      paintBase();
       for (let i = drops.length - 1; i >= 0; i--) {
         const d = drops[i];
         d.life++;
         d.y += d.vy;
-        d.x += Math.sin(d.life * 0.02 + d.phase) * 0.3 + d.drift * 0.02;
+        d.x += Math.sin(d.life * 0.02 + d.phase) * 0.35 + d.drift * 0.02;
         d.r += d.grow;
         const t = d.life / d.ttl;
         const fade = Math.sin(Math.min(t, 1) * Math.PI);
-        paint(d, Math.max(0, fade) * 0.5);
+        paint(d, Math.max(0, fade) * 0.62);
         if (t >= 1 || d.y + d.r < -20) drops.splice(i, 1);
       }
       ctx.globalAlpha = 1;
-      if (frame % 46 === 0 && drops.length < 16) spawn();
+      if (frame % 38 === 0 && drops.length < 11) spawn();
       frame++;
       raf = requestAnimationFrame(tick);
     };
@@ -548,15 +570,16 @@ const steps = [
     window.addEventListener("resize", resize);
 
     if (reduce) {
-      for (let i = 0; i < 5; i++) {
-        const d = { x: w * rand(0.3, 0.7), y: h * rand(0.45, 0.92), r: w * rand(0.16, 0.26), color: palette[i % palette.length] };
-        paint(d, 0.4);
+      paintBase();
+      for (let i = 0; i < 4; i++) {
+        const d = { x: w * rand(0.25, 0.75), y: h * rand(0.5, 0.92), r: w * rand(0.12, 0.2), color: palette[i % palette.length] };
+        paint(d, 0.5);
       }
       ctx.globalAlpha = 1;
       return;
     }
 
-    for (let i = 0; i < 4; i++) { spawn(); const d = drops[drops.length - 1]; d.life = i * 130; d.y = h * rand(0.5, 0.95); }
+    for (let i = 0; i < 5; i++) { spawn(); const d = drops[drops.length - 1]; d.life = i * 90; d.y = h * rand(0.45, 0.95); }
     raf = requestAnimationFrame(tick);
 
     document.addEventListener("visibilitychange", () => {
