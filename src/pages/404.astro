@@ -4,19 +4,38 @@ import Layout from '@/layouts/Layout.astro';
 
 <Layout title="Page not found" noindex={true}>
   <section class="nf">
-    <div class="wrap nf__inner">
-      <p class="eyebrow">404</p>
-      <h1 class="hl nf__title display-2">
-        This page took <span class="it">a quiet detour.</span>
-      </h1>
-      <p class="lead nf__lead">
-        The page you were looking for is not here. Let us point you somewhere
-        useful instead.
-      </p>
-      <div class="nf__links">
-        <a class="btn" href="/">Back home</a>
-        <a class="link-arrow" href="/drips">Browse drips &amp; shots &rarr;</a>
-        <a class="link-arrow" href="/concerns">Browse by concern &rarr;</a>
+    <div class="wrap nf__grid">
+      <div class="nf__inner">
+        <p class="eyebrow">404 · Off the line</p>
+        <h1 class="hl nf__title display-2">
+          This line <span class="it">ran dry.</span>
+        </h1>
+        <p class="lead nf__lead">
+          The page you were looking for is not here. Let us point you somewhere
+          useful, with a little more in the bag.
+        </p>
+        <div class="nf__links">
+          <a class="btn" href="/">Back home</a>
+          <a class="link-arrow" href="/drips">Browse drips &amp; shots &rarr;</a>
+          <a class="link-arrow" href="/concerns">Browse by concern &rarr;</a>
+        </div>
+      </div>
+
+      <!-- An empty IV bag, with one last drop -->
+      <div class="nf__bag" aria-hidden="true">
+        <svg class="nf__svg" viewBox="0 0 128 200" fill="none">
+          <path
+            class="nf__line"
+            d="M24 8 L104 8 Q120 8 120 24 L120 108 Q120 118 111 121 L72 134 L72 146 L56 146 L56 134 L17 121 Q8 118 8 108 L8 24 Q8 8 24 8 Z"
+          />
+          <rect class="nf__line" x="51" y="146" width="26" height="12" rx="3" />
+          <path class="nf__line" d="M58 158 L70 158 L66.5 178 L61.5 178 Z" />
+          <rect class="nf__line" x="47" y="17" width="34" height="11" rx="5.5" />
+          <ellipse class="nf__port" cx="105" cy="46" rx="3.6" ry="6.2" />
+          <ellipse class="nf__port" cx="105" cy="62" rx="3.6" ry="6.2" />
+          <!-- the last drop, falling from the tip -->
+          <path class="nf__drop" d="M64 181 C66.5 184.5 67.5 186.5 67.5 188.2 a3.5 3.5 0 0 1 -7 0 C60.5 186.5 61.5 184.5 64 181 Z" />
+        </svg>
       </div>
     </div>
   </section>
@@ -24,12 +43,21 @@ import Layout from '@/layouts/Layout.astro';
 
 <style>
   .nf {
-    padding-block: var(--space-xxl);
+    min-height: calc(100dvh - var(--header-h));
+    display: grid;
+    align-items: center;
+    padding-block: var(--space-xl);
+  }
+  .nf__grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 3rem;
+    align-items: center;
   }
   .nf__inner {
     display: grid;
     gap: 1.4rem;
-    max-width: 40ch;
+    max-width: 42ch;
   }
   .nf__lead {
     margin-top: 0;
@@ -40,5 +68,63 @@ import Layout from '@/layouts/Layout.astro';
     gap: 1.5rem;
     flex-wrap: wrap;
     margin-top: 1rem;
+  }
+  .nf__bag {
+    width: clamp(150px, 22vw, 240px);
+    justify-self: end;
+  }
+  .nf__svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .nf__line {
+    fill: none;
+    stroke: color-mix(in srgb, var(--graphite) 38%, var(--line));
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .nf__port {
+    fill: color-mix(in srgb, var(--accent-recovery) 70%, var(--paper));
+  }
+  .nf__drop {
+    fill: var(--accent-recovery);
+    transform-box: fill-box;
+    transform-origin: center top;
+    animation: nf-drip 3.2s var(--ease) infinite;
+  }
+  @keyframes nf-drip {
+    0%,
+    55% {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.7);
+    }
+    62% {
+      opacity: 0.85;
+      transform: translateY(-6px) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(14px) scale(0.9);
+    }
+  }
+
+  @media (max-width: 760px) {
+    .nf__grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .nf__bag {
+      order: -1;
+      justify-self: start;
+      width: clamp(130px, 38vw, 180px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nf__drop {
+      animation: none;
+      opacity: 0.85;
+    }
   }
 </style>
