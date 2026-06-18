@@ -1,0 +1,42 @@
+---
+import { ingredientBySlug } from '@/data/ingredients';
+import IngredientChip from './IngredientChip.astro';
+
+export interface Props {
+  ingredientSlugs: string[];
+  heading?: string;
+}
+const { ingredientSlugs, heading = "What's inside" } = Astro.props;
+const items = ingredientSlugs
+  .map((slug) => ingredientBySlug(slug))
+  .filter((i): i is NonNullable<typeof i> => Boolean(i));
+---
+
+<div class="inside">
+  <p class="eyebrow inside__heading">{heading}</p>
+  <ul class="inside__list">
+    {items.map((ing) => (
+      <li><IngredientChip ingredient={ing} showLine={true} /></li>
+    ))}
+  </ul>
+  <p class="inside__note meta">
+    Each ingredient links to its page. A consult and screening confirm the
+    final blend for you.
+  </p>
+</div>
+
+<style>
+  .inside__heading {
+    margin-bottom: 1.2rem;
+  }
+  .inside__list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.6rem;
+  }
+  .inside__note {
+    margin-top: 1.2rem;
+  }
+</style>

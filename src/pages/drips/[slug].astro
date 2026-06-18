@@ -1,0 +1,34 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import TreatmentDetail from '@/components/TreatmentDetail.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { drips, treatmentBySlug } from '@/data/treatments';
+
+export function getStaticPaths() {
+  // Build Your Own has its own configurator page.
+  return drips
+    .filter((d) => !d.configurator)
+    .map((d) => ({ params: { slug: d.slug } }));
+}
+
+const { slug } = Astro.params;
+const treatment = treatmentBySlug(slug!)!;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalProcedure',
+  name: `${treatment.name} IV Drip`,
+  description: treatment.essence,
+  procedureType: 'https://schema.org/TherapeuticProcedure',
+  url: new URL(`/drips/${treatment.slug}`, Astro.site).href,
+};
+---
+
+<Layout
+  title={treatment.name}
+  description={`${treatment.name}: ${treatment.essence} Physician-reviewed, nurse-administered IV drip at Restoration Medical. No pricing. Results vary.`}
+  jsonLd={jsonLd}
+>
+  <TreatmentDetail treatment={treatment} />
+  <CtaBand />
+</Layout>

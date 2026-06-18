@@ -1,0 +1,95 @@
+---
+import '@/styles/global.css';
+import Nav from '@/components/Nav.astro';
+import Footer from '@/components/Footer.astro';
+import { site } from '@/data/site';
+
+export interface Props {
+  title: string;
+  description?: string;
+  noindex?: boolean;
+  jsonLd?: Record<string, any> | Record<string, any>[];
+}
+
+const {
+  title,
+  description = site.description,
+  noindex = false,
+  jsonLd,
+} = Astro.props;
+
+const fullTitle =
+  title === 'home'
+    ? `${site.line} at ${site.brand} · ${site.tagline}`
+    : `${title} · ${site.line} at ${site.brand}`;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={`${site.brand} · ${site.line}`} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,340;0,9..144,380;0,9..144,480;1,9..144,340;1,9..144,440&family=Inter+Tight:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap"
+    />
+
+    {ld.map((node) => (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify(node)}
+      />
+    ))}
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <Nav />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // Reveal-on-scroll runtime. Below-the-fold only; above-the-fold uses
+      // a CSS-only entrance so the LCP text is never held at opacity:0.
+      const reduce = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+      const items = document.querySelectorAll('.reveal');
+      if (reduce || !('IntersectionObserver' in window)) {
+        items.forEach((el) => el.classList.add('is-in'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-in');
+                io.unobserve(e.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.05 }
+        );
+        items.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>

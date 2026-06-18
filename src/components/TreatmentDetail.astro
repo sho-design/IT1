@@ -1,0 +1,230 @@
+---
+import type { Treatment } from '@/data/treatments';
+import { treatmentBySlug } from '@/data/treatments';
+import { families } from '@/data/families';
+import { concernBySlug } from '@/data/concerns';
+import WhatsInside from './WhatsInside.astro';
+import TreatmentCard from './TreatmentCard.astro';
+
+export interface Props {
+  treatment: Treatment;
+}
+const { treatment } = Astro.props;
+const fam = families[treatment.family];
+
+const related = treatment.pairsWith
+  .map((s) => treatmentBySlug(s))
+  .filter((t): t is Treatment => Boolean(t));
+
+const relatedConcerns = treatment.concerns
+  .map((s) => concernBySlug(s))
+  .filter((c): c is NonNullable<ReturnType<typeof concernBySlug>> => Boolean(c));
+
+const backHref = treatment.type === 'drip' ? '/drips' : '/shots';
+const backLabel = treatment.type === 'drip' ? 'All drips' : 'The Injection Bar';
+---
+
+<article class="detail" style={`--accent: var(--accent-${treatment.family}); --accent-text: ${fam.text}`}>
+  <header class="detail__head reveal">
+    <div class="wrap">
+      <a class="detail__back link-arrow" href={backHref}>&larr; {backLabel}</a>
+      <p class="eyebrow detail__eyebrow">
+        <span class="detail__dot" aria-hidden="true"></span>
+        {fam.label} · {treatment.type === 'drip' ? 'IV Drip' : 'Injection'}
+      </p>
+      <h1 class="hl detail__title display-2">{treatment.name}</h1>
+      <p class="lead detail__essence">{treatment.essence}</p>
+    </div>
+  </header>
+
+  <div class="wrap detail__grid">
+    <div class="detail__main">
+      <section class="reveal detail__block">
+        <h2 class="detail__h">What it is</h2>
+        <p class="detail__p measure">{treatment.whatItIs}</p>
+      </section>
+
+      <section class="reveal detail__block">
+        <h2 class="detail__h">Designed to support</h2>
+        <ul class="supports">
+          {treatment.supports.map((s) => (
+            <li class="supports__item">
+              <span class="supports__tick" aria-hidden="true"></span>{s}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="reveal detail__block detail__inside">
+        <WhatsInside ingredientSlugs={treatment.ingredients} />
+      </section>
+
+      <section class="reveal detail__block">
+        <h2 class="detail__h">What to expect</h2>
+        <p class="detail__p measure">{treatment.whatToExpect}</p>
+      </section>
+
+      <section class="reveal detail__block detail__note">
+        <h2 class="detail__h">Good to know</h2>
+        <p class="detail__p measure">{treatment.goodToKnow}</p>
+      </section>
+    </div>
+
+    <aside class="detail__side reveal">
+      <div class="sidecard">
+        <p class="eyebrow">Begin</p>
+        <p class="sidecard__line">A consult confirms this is right for you.</p>
+        <a class="btn sidecard__cta" href="/book">Book a consult</a>
+        <a class="link-arrow" href="/safety">Is this right for me? &rarr;</a>
+      </div>
+
+      {relatedConcerns.length > 0 && (
+        <div class="sidecard sidecard--plain">
+          <p class="eyebrow">Helps with</p>
+          <ul class="sidecard__list">
+            {relatedConcerns.map((c) => (
+              <li><a class="link-arrow" href={`/concerns/${c.slug}`}>{c.label} &rarr;</a></li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </aside>
+  </div>
+
+  {related.length > 0 && (
+    <section class="section-tight">
+      <div class="wrap">
+        <div class="reveal sec-head">
+          <p class="eyebrow">Pairs well with</p>
+          <h2 class="hl display-3">Often chosen together.</h2>
+        </div>
+        <div class="related reveal">
+          {related.map((t) => <TreatmentCard treatment={t} />)}
+        </div>
+      </div>
+    </section>
+  )}
+</article>
+
+<style>
+  .detail__head {
+    padding-top: var(--space-l);
+    padding-bottom: var(--space-m);
+    border-bottom: 1px solid var(--line);
+  }
+  .detail__back {
+    display: inline-block;
+    margin-bottom: 2rem;
+    border-color: transparent;
+  }
+  .detail__eyebrow {
+    color: var(--accent-text);
+    margin-bottom: 1.2rem;
+  }
+  .detail__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .detail__essence {
+    margin-top: 1.4rem;
+  }
+  .detail__grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 3rem;
+    padding-block: var(--space-l);
+  }
+  .detail__main {
+    display: grid;
+    gap: var(--space-m);
+  }
+  .detail__h {
+    font-size: var(--step-2);
+    margin-bottom: 1rem;
+  }
+  .detail__p {
+    color: var(--graphite);
+  }
+  .detail__inside,
+  .detail__note {
+    border-top: 1px solid var(--line);
+    padding-top: var(--space-m);
+  }
+  .supports {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.8rem;
+    max-width: var(--measure);
+  }
+  .supports__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.8rem;
+    align-items: baseline;
+    color: var(--graphite);
+  }
+  .supports__tick {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .detail__side {
+    align-self: start;
+    position: sticky;
+    top: calc(var(--header-h) + 1.5rem);
+    display: grid;
+    gap: 1rem;
+  }
+  .sidecard {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.6rem 1.5rem;
+    display: grid;
+    gap: 0.8rem;
+    background: var(--paper);
+  }
+  .sidecard__line {
+    font-family: var(--display);
+    font-size: var(--step-1);
+    line-height: 1.2;
+  }
+  .sidecard__cta {
+    justify-content: center;
+    margin-top: 0.4rem;
+  }
+  .sidecard--plain {
+    background: var(--cloud);
+  }
+  .sidecard__list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .related {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem;
+  }
+  .sec-head {
+    display: grid;
+    gap: 0.8rem;
+    margin-bottom: var(--space-m);
+  }
+
+  @media (max-width: 860px) {
+    .detail__grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .detail__side {
+      position: static;
+    }
+  }
+</style>

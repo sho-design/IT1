@@ -1,0 +1,89 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import IngredientChip from '@/components/IngredientChip.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { ingredients, type IngredientRole } from '@/data/ingredients';
+
+const roleOrder: IngredientRole[] = [
+  'Vitamin',
+  'Mineral',
+  'Antioxidant',
+  'Amino acid',
+  'Specialty',
+];
+const grouped = roleOrder
+  .map((role) => ({
+    role,
+    items: ingredients
+      .filter((i) => i.role === role)
+      .sort((a, b) => a.name.localeCompare(b.name)),
+  }))
+  .filter((g) => g.items.length > 0);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Ingredient library',
+  description:
+    'A plain-language library of the vitamins, minerals, antioxidants, and specialty ingredients used in infusion therapy at Restoration Medical.',
+  url: new URL('/ingredients', Astro.site).href,
+};
+---
+
+<Layout
+  title="Ingredient Library"
+  description="A plain-language library of the vitamins, minerals, antioxidants, amino acids, and specialty ingredients used in infusion therapy at Restoration Medical. Honest about evidence. No pricing."
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    eyebrow="Ingredient Library"
+    lead="Plain language, honest about the evidence. Every ingredient lists what it may support and where to find it. Grouped by role."
+  >
+    What goes in, <span class="it">and what it does.</span>
+  </PageHeader>
+
+  {grouped.map((g) => (
+    <section class="section-tight">
+      <div class="wrap">
+        <div class="role-head reveal">
+          <h2 class="role-head__title">{g.role}s</h2>
+          <span class="role-head__count meta tnum">{g.items.length}</span>
+        </div>
+        <div class="grid reveal">
+          {g.items.map((ing) => <IngredientChip ingredient={ing} showLine={true} />)}
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <CtaBand
+    eyebrow="From ingredient to treatment"
+    heading="See how these come together."
+    body="Each ingredient page lists the drips and shots it appears in. Or start from a concern and let us match the ingredients to you."
+    secondaryLabel="Browse by concern"
+    secondaryHref="/concerns"
+  />
+</Layout>
+
+<style>
+  .role-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    border-top: 1px solid var(--ink);
+    padding-top: 1rem;
+    margin-bottom: var(--space-s);
+  }
+  .role-head__title {
+    font-size: var(--step-2);
+  }
+  .role-head__count {
+    color: var(--mist);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.6rem;
+  }
+</style>

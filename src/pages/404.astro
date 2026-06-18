@@ -1,0 +1,44 @@
+---
+import Layout from '@/layouts/Layout.astro';
+---
+
+<Layout title="Page not found" noindex={true}>
+  <section class="nf">
+    <div class="wrap nf__inner">
+      <p class="eyebrow">404</p>
+      <h1 class="hl nf__title display-2">
+        This page took <span class="it">a quiet detour.</span>
+      </h1>
+      <p class="lead nf__lead">
+        The page you were looking for is not here. Let us point you somewhere
+        useful instead.
+      </p>
+      <div class="nf__links">
+        <a class="btn" href="/">Back home</a>
+        <a class="link-arrow" href="/drips">Browse drips &amp; shots &rarr;</a>
+        <a class="link-arrow" href="/concerns">Browse by concern &rarr;</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .nf {
+    padding-block: var(--space-xxl);
+  }
+  .nf__inner {
+    display: grid;
+    gap: 1.4rem;
+    max-width: 40ch;
+  }
+  .nf__lead {
+    margin-top: 0;
+  }
+  .nf__links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+</style>

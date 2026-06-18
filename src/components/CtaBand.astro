@@ -1,0 +1,90 @@
+---
+import { locations } from '@/data/site';
+
+export interface Props {
+  eyebrow?: string;
+  heading?: string;
+  body?: string;
+  primaryLabel?: string;
+  primaryHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+  showLocations?: boolean;
+}
+const {
+  eyebrow = 'Begin',
+  heading = 'A consult confirms what is right for you.',
+  body = 'Tell us how you want to feel. Our physician reviews, our nurses care for you, and together we find the right support. No pressure, no pricing surprises.',
+  primaryLabel = 'Book a consult',
+  primaryHref = '/book',
+  secondaryLabel = 'Is this right for me?',
+  secondaryHref = '/safety',
+  showLocations = true,
+} = Astro.props;
+
+const named = locations.filter((l) => l.name).map((l) => l.name);
+---
+
+<section class="band reveal">
+  <div class="wrap band__inner">
+    <p class="eyebrow band__eyebrow">{eyebrow}</p>
+    <h2 class="hl band__heading display-3">{heading}</h2>
+    <p class="band__body measure">{body}</p>
+    <div class="band__actions">
+      <a class="btn btn--lg band__primary" href={primaryHref}>{primaryLabel}</a>
+      <a class="link-arrow" href={secondaryHref}>{secondaryLabel} &rarr;</a>
+    </div>
+    {showLocations && named.length > 0 && (
+      <p class="band__loc meta">{named.join('  ·  ')}</p>
+    )}
+  </div>
+</section>
+
+<style>
+  .band {
+    background: var(--ink);
+    color: var(--paper);
+    padding-block: var(--space-xl);
+  }
+  .band__inner {
+    display: grid;
+    gap: 1.2rem;
+    justify-items: start;
+  }
+  .band__eyebrow {
+    color: rgba(251, 250, 248, 0.55);
+  }
+  .band__heading {
+    max-width: 18ch;
+  }
+  .band__body {
+    color: rgba(251, 250, 248, 0.78);
+  }
+  .band__actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.6rem;
+  }
+  .band__primary {
+    background: var(--paper);
+    color: var(--ink);
+    border-color: var(--paper);
+  }
+  .band__primary:hover {
+    background: transparent;
+    color: var(--paper);
+  }
+  .band .link-arrow {
+    color: var(--paper);
+    border-color: rgba(251, 250, 248, 0.35);
+  }
+  .band .link-arrow:hover {
+    border-color: var(--paper);
+  }
+  .band__loc {
+    color: rgba(251, 250, 248, 0.55);
+    margin-top: 0.4rem;
+  }
+</style>

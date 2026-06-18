@@ -1,0 +1,150 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import CtaBand from '@/components/CtaBand.astro';
+
+// Concept only. No pricing. Tiers are described by who they are for.
+const tiers = [
+  {
+    name: 'The maintenance routine',
+    who: 'For one steady habit, kept simple.',
+    benefits: [
+      'A regular shot or lighter drip on a calm cadence',
+      'Member pricing held for you, shared at consult',
+      'Priority booking around your schedule',
+    ],
+  },
+  {
+    name: 'The monthly reset',
+    who: 'For a fuller drip you return to each month.',
+    benefits: [
+      'A signature drip on a monthly rhythm',
+      'A complimentary shot to pair with it',
+      'Priority booking and flexible rescheduling',
+    ],
+  },
+  {
+    name: 'The full rhythm',
+    who: 'For the most consistent wellness routine.',
+    benefits: [
+      'Drips and shots across the month, planned with your nurse',
+      'First access to new treatments and seasonal items',
+      'The highest priority booking and care',
+    ],
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Memberships',
+  description:
+    'A calmer, consistent way to maintain your wellness rhythm at Restoration Medical, with member benefits and priority care.',
+  url: new URL('/memberships', Astro.site).href,
+};
+---
+
+<Layout
+  title="Memberships"
+  description="A calmer, consistent way to maintain your wellness rhythm at Restoration Medical. Three membership ideas, member benefits, and priority care. Details shared at consult."
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    eyebrow="Memberships"
+    lead="A calmer, consistent way to maintain your wellness rhythm, with member benefits and priority care. Consistency is where wellness routines actually pay off."
+  >
+    A steady rhythm, <span class="it">looked after.</span>
+  </PageHeader>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="tiers reveal">
+        {tiers.map((t) => (
+          <article class="tier">
+            <h2 class="tier__name">{t.name}</h2>
+            <p class="tier__who">{t.who}</p>
+            <ul class="tier__list">
+              {t.benefits.map((b) => (
+                <li class="tier__item"><span class="tier__tick" aria-hidden="true"></span>{b}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+      <p class="note reveal">
+        Membership is a concept we will tailor to you. We keep pricing out of the
+        website by design. The right tier, and what it includes, is something we
+        confirm together at a consult.
+      </p>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Learn more"
+    heading="Find the rhythm that fits your life."
+    body="A consult is the easiest way to see whether a membership suits you, and which one. No pressure, and no pricing surprises."
+    primaryLabel="Talk to us"
+    secondaryLabel="Browse drips & shots"
+    secondaryHref="/drips"
+  />
+</Layout>
+
+<style>
+  .tiers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+  }
+  .tier {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 2rem 1.8rem;
+    display: grid;
+    gap: 0.8rem;
+    align-content: start;
+  }
+  .tier__name {
+    font-size: var(--step-2);
+  }
+  .tier__who {
+    color: var(--mist);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+  }
+  .tier__list {
+    list-style: none;
+    padding: 0;
+    margin-top: 0.6rem;
+    display: grid;
+    gap: 0.7rem;
+  }
+  .tier__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.7rem;
+    align-items: baseline;
+    color: var(--graphite);
+    font-size: var(--step--1);
+  }
+  .tier__tick {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ink);
+    transform: translateY(-1px);
+  }
+  .note {
+    margin-top: var(--space-m);
+    max-width: var(--measure);
+    color: var(--mist);
+    font-style: italic;
+    border-left: 2px solid var(--line);
+    padding-left: 1.2rem;
+  }
+  @media (max-width: 820px) {
+    .tiers {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

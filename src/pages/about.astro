@@ -1,0 +1,175 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { locations, isFilled } from '@/data/site';
+
+const principles = [
+  { t: 'Physician first', d: 'We are physicians and nurses, not a counter. Every treatment is reviewed and overseen by our physician.' },
+  { t: 'Honest by default', d: 'We use careful language, we do not promise outcomes, and we tell you when the evidence is still developing.' },
+  { t: 'Calm by design', d: 'The space, the pace, and the care are intentional. Restraint is part of the standard.' },
+  { t: 'Personal, not packaged', d: 'We tailor to you and screen first. If something is not right for you, we will say so.' },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalOrganization',
+  name: 'Restoration Medical',
+  description:
+    'A physician-led medical clinic offering infusion therapy, refined by medicine, in Thornhill and Woodbridge.',
+  url: Astro.site?.href,
+  areaServed: locations.map((l) => l.name),
+};
+---
+
+<Layout
+  title="About"
+  description="The Refined by Medicine story. A physician-led clinic offering infusion therapy in Thornhill and Woodbridge, with real medical oversight and a calm standard of care."
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    eyebrow="About · Refined by Medicine"
+    lead="Restoration Medical is a physician-led clinic. Infusion therapy is our wellness and clinical line, held to the same standard as everything else we do."
+  >
+    Wellness, <span class="it">refined by medicine.</span>
+  </PageHeader>
+
+  <section class="section-tight">
+    <div class="wrap-narrow stack-lg">
+      <p class="reveal lead-body">
+        Restoration Medical began with a simple idea. Wellness deserves the same
+        rigour as the rest of medicine. Energy, immunity, skin, recovery, and
+        healthy aging are real things people care about, and they are better
+        served by a clinic than by a counter.
+      </p>
+      <p class="reveal body">
+        So we built infusion therapy the way we build everything. A physician
+        reviews. A registered nurse administers. We screen first, we use
+        pharmaceutical-grade ingredients, and we are honest about what each
+        treatment can and cannot do. The setting is calm and unhurried, because
+        good care does not rush.
+      </p>
+      <p class="reveal body">
+        We also do the clinical work that proves we are a real medical practice,
+        like iron therapy for low ferritin and a physician-led metabolic program.
+        That clinical backbone is what lets us offer wellness with a clear
+        conscience. It is the difference, quietly, between this and a drip bar.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight fill">
+    <div class="wrap">
+      <div class="reveal sec-head">
+        <p class="eyebrow">What we hold to</p>
+        <h2 class="hl display-3">A standard, not a slogan.</h2>
+      </div>
+      <div class="grid reveal">
+        {principles.map((p) => (
+          <article class="pcard">
+            <h3 class="pcard__t">{p.t}</h3>
+            <p class="pcard__d">{p.d}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="reveal sec-head">
+        <p class="eyebrow">Where to find us</p>
+        <h2 class="hl display-3">Two locations, one standard.</h2>
+      </div>
+      <div class="locs reveal">
+        {locations.map((loc) => (
+          <article class="loc">
+            <h3 class="loc__name">{loc.name}</h3>
+            {isFilled(loc.address) ? <p class="loc__meta">{loc.address}</p> : <p class="loc__meta loc__meta--tba">Address details coming soon.</p>}
+            {isFilled(loc.hours) && <p class="loc__meta">{loc.hours}</p>}
+            <a class="link-arrow" href="/contact">Contact &amp; directions &rarr;</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Come see for yourself"
+    heading="The calm is the point."
+    body="Book a consult and feel the difference a physician-led clinic makes. We will take the time to understand what you need."
+  />
+</Layout>
+
+<style>
+  .stack-lg {
+    display: grid;
+    gap: 1.4rem;
+  }
+  .lead-body {
+    font-family: var(--display);
+    font-size: var(--step-2);
+    line-height: 1.3;
+    font-weight: 360;
+  }
+  .body {
+    color: var(--graphite);
+    font-size: var(--step-1);
+    line-height: 1.6;
+  }
+  .sec-head {
+    display: grid;
+    gap: 0.7rem;
+    margin-bottom: var(--space-m);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.2rem;
+  }
+  .pcard {
+    border-top: 1px solid var(--ink);
+    padding-top: 1.1rem;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .pcard__t {
+    font-size: var(--step-1);
+  }
+  .pcard__d {
+    color: var(--graphite);
+    font-size: var(--step--1);
+  }
+  .locs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+  }
+  .loc {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.8rem;
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+  }
+  .loc__name {
+    font-size: var(--step-2);
+  }
+  .loc__meta {
+    color: var(--graphite);
+    font-size: var(--step--1);
+  }
+  .loc__meta--tba {
+    color: var(--mist);
+    font-style: italic;
+  }
+  .loc .link-arrow {
+    margin-top: 0.6rem;
+  }
+  @media (max-width: 820px) {
+    .locs {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

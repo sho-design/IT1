@@ -1,0 +1,31 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import TreatmentDetail from '@/components/TreatmentDetail.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { shots, treatmentBySlug } from '@/data/treatments';
+
+export function getStaticPaths() {
+  return shots.map((s) => ({ params: { slug: s.slug } }));
+}
+
+const { slug } = Astro.params;
+const treatment = treatmentBySlug(slug!)!;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalProcedure',
+  name: `${treatment.name}`,
+  description: treatment.essence,
+  procedureType: 'https://schema.org/TherapeuticProcedure',
+  url: new URL(`/shots/${treatment.slug}`, Astro.site).href,
+};
+---
+
+<Layout
+  title={treatment.name}
+  description={`${treatment.name}: ${treatment.essence} A five-minute physician-reviewed injection at Restoration Medical. No pricing. Results vary.`}
+  jsonLd={jsonLd}
+>
+  <TreatmentDetail treatment={treatment} />
+  <CtaBand />
+</Layout>

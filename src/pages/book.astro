@@ -1,0 +1,292 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { site, locations, integrations, isFilled } from '@/data/site';
+import { concerns } from '@/data/concerns';
+
+const hasEndpoint = isFilled(integrations.formEndpoint);
+const namedLocations = locations.filter((l) => l.name);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Book a consult',
+  description:
+    'Request a consultation for infusion therapy at Restoration Medical. A consult confirms what is right for you. No pricing.',
+  url: new URL('/book', Astro.site).href,
+};
+---
+
+<Layout
+  title="Book a Consult"
+  description="Request a consultation for infusion therapy at Restoration Medical in Thornhill or Woodbridge. A calm, no-pressure first step. A consult confirms what is right for you."
+  jsonLd={jsonLd}
+>
+  <section class="book">
+    <div class="wrap book__grid">
+      <div class="book__intro reveal">
+        <p class="eyebrow">Book a consult</p>
+        <h1 class="hl book__title display-2">
+          The first step is <span class="it">a conversation.</span>
+        </h1>
+        <p class="lead book__lead">
+          Tell us how you want to feel and we will take it from there. A consult
+          confirms what is right for you. No pricing surprises, no pressure.
+        </p>
+        <ul class="book__assure">
+          <li><span class="book__tick" aria-hidden="true"></span>Physician-reviewed, nurse-administered</li>
+          <li><span class="book__tick" aria-hidden="true"></span>We screen first, for your safety</li>
+          <li><span class="book__tick" aria-hidden="true"></span>Wellness services are elective</li>
+        </ul>
+      </div>
+
+      <div class="book__formwrap reveal">
+        <form
+          class="form"
+          id="consult-form"
+          method="post"
+          action={hasEndpoint ? integrations.formEndpoint : undefined}
+          data-has-endpoint={String(hasEndpoint)}
+          novalidate
+        >
+          <div class="field">
+            <label for="name">Your name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required />
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="phone">Phone <span class="opt">(optional)</span></label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" />
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="interest">What brings you in?</label>
+              <select id="interest" name="interest">
+                <option value="">Select a concern or interest</option>
+                {concerns.map((c) => <option value={c.label}>{c.label}</option>)}
+                <option value="A specific drip or shot">A specific drip or shot</option>
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="location">Preferred location</label>
+              <select id="location" name="location">
+                <option value="">No preference</option>
+                {namedLocations.map((l) => <option value={l.name}>{l.name}</option>)}
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="message">Anything you would like us to know? <span class="opt">(optional)</span></label>
+            <textarea id="message" name="message" rows="4"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn--lg form__submit">Request my consult</button>
+          <p class="form__fine">
+            We use your details only to respond to your request. {site.signOff}
+          </p>
+        </form>
+
+        <div class="confirm" id="consult-confirm" hidden>
+          <p class="confirm__mark" aria-hidden="true">✓</p>
+          <h2 class="confirm__h">Thank you. We have your request.</h2>
+          <p class="confirm__p">
+            One of our team will be in touch to find a time and answer your
+            questions. {site.signOff}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .book {
+    padding-block: var(--space-xl);
+  }
+  .book__grid {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  .book__intro {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+    display: grid;
+    gap: 1.4rem;
+  }
+  .book__lead {
+    margin-top: 0;
+  }
+  .book__assure {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 0.6rem;
+  }
+  .book__assure li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.7rem;
+    align-items: baseline;
+    color: var(--graphite);
+    font-size: var(--step--1);
+  }
+  .book__tick {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-wellness);
+    transform: translateY(-1px);
+  }
+
+  .form {
+    display: grid;
+    gap: 1.2rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 2rem;
+    background: var(--paper);
+  }
+  .field {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  label {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+    color: var(--graphite);
+  }
+  .opt {
+    color: var(--mist);
+    text-transform: none;
+  }
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.75rem 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    font-size: var(--step-0);
+    transition: border-color 0.2s var(--ease);
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--ink);
+    outline: none;
+  }
+  textarea {
+    resize: vertical;
+  }
+  .form__submit {
+    justify-content: center;
+    margin-top: 0.4rem;
+  }
+  .form__fine {
+    font-size: 0.78rem;
+    color: var(--mist);
+    text-align: center;
+  }
+  [aria-invalid='true'] {
+    border-color: var(--accent-clinical);
+  }
+
+  .confirm {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 3rem 2rem;
+    text-align: center;
+    display: grid;
+    gap: 1rem;
+    justify-items: center;
+    background: var(--cloud);
+  }
+  .confirm__mark {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--accent-wellness);
+    color: var(--paper);
+    display: grid;
+    place-items: center;
+    font-size: 1.5rem;
+  }
+  .confirm__h {
+    font-size: var(--step-2);
+  }
+  .confirm__p {
+    color: var(--graphite);
+    max-width: 40ch;
+  }
+
+  @media (max-width: 860px) {
+    .book__grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .book__intro {
+      position: static;
+    }
+    .field-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const form = document.getElementById('consult-form') as HTMLFormElement | null;
+  const confirm = document.getElementById('consult-confirm');
+  if (form) {
+    const hasEndpoint = form.dataset.hasEndpoint === 'true';
+    form.addEventListener('submit', (e) => {
+      // Basic client-side validation with accessible state.
+      let ok = true;
+      ['name', 'email'].forEach((id) => {
+        const el = form.elements.namedItem(id) as HTMLInputElement;
+        if (el && !el.value.trim()) {
+          el.setAttribute('aria-invalid', 'true');
+          ok = false;
+        } else {
+          el?.removeAttribute('aria-invalid');
+        }
+      });
+      const email = form.elements.namedItem('email') as HTMLInputElement;
+      if (email && email.value && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value)) {
+        email.setAttribute('aria-invalid', 'true');
+        ok = false;
+      }
+      if (!ok) {
+        e.preventDefault();
+        (form.querySelector('[aria-invalid="true"]') as HTMLElement)?.focus();
+        return;
+      }
+      // Until a real endpoint is wired, never post to a dead URL. Show a
+      // graceful confirmation instead. When `formEndpoint` is set in config,
+      // the form submits normally to it.
+      if (!hasEndpoint) {
+        e.preventDefault();
+        form.hidden = true;
+        if (confirm) {
+          confirm.hidden = false;
+          (confirm as HTMLElement).setAttribute('tabindex', '-1');
+          (confirm as HTMLElement).focus();
+        }
+      }
+    });
+  }
+</script>

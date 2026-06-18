@@ -1,0 +1,545 @@
+---
+import { site } from '@/data/site';
+import { signatureDrips, shots } from '@/data/treatments';
+import { concerns } from '@/data/concerns';
+
+// Accent dot uses the family CSS variable. This and treatment cards are the
+// only places the site shows prominent colour.
+const dot = (family: string) => `--dot: var(--accent-${family})`;
+---
+
+<header class="nav" data-nav>
+  <div class="nav__bar wrap">
+    <a class="nav__brand" href="/">
+      <span class="nav__brand-name">{site.brand}</span>
+      <span class="nav__brand-line">{site.line}</span>
+    </a>
+
+    <nav class="nav__links" aria-label="Primary">
+      <a class="nav__link" href="/how-it-works">How It Works</a>
+
+      <div class="nav__has-panel" data-dropdown>
+        <button
+          class="nav__link nav__trigger"
+          aria-expanded="false"
+          aria-controls="mega-drips"
+          data-trigger
+        >
+          Drips &amp; Shots
+          <svg class="nav__chev" viewBox="0 0 10 6" aria-hidden="true"
+            ><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.3"
+          /></svg>
+        </button>
+
+        <div class="mega" id="mega-drips" data-panel hidden>
+          <div class="mega__inner wrap">
+            <div class="mega__col">
+              <p class="mega__heading">Signature Drips</p>
+              <ul class="mega__list">
+                {signatureDrips.map((t) => (
+                  <li>
+                    <a class="mega__item" href={`/drips/${t.slug}`} style={dot(t.family)}>
+                      <span class="mega__dot" aria-hidden="true"></span>
+                      <span class="mega__name">{t.name}</span>
+                      <span class="mega__desc">{t.menuDescriptor}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="mega__col">
+              <p class="mega__heading">By Concern</p>
+              <ul class="mega__list">
+                {concerns.map((c) => (
+                  <li>
+                    <a
+                      class="mega__item mega__item--plain"
+                      href={c.externalHref ?? `/concerns/${c.slug}`}
+                    >
+                      <span class="mega__name">{c.label}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="mega__col">
+              <p class="mega__heading">Shots · The Injection Bar</p>
+              <ul class="mega__list mega__list--shots">
+                {shots.map((t) => (
+                  <li>
+                    <a class="mega__item mega__item--tight" href={`/shots/${t.slug}`} style={dot(t.family)}>
+                      <span class="mega__dot" aria-hidden="true"></span>
+                      <span class="mega__name">{t.name.replace(' Shot', '')}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <p class="mega__heading mega__heading--learn">Learn</p>
+              <ul class="mega__list">
+                <li><a class="mega__item mega__item--plain" href="/ingredients">Browse all ingredients</a></li>
+                <li><a class="mega__item mega__item--plain" href="/how-it-works">How infusion therapy works</a></li>
+                <li><a class="mega__item mega__item--plain" href="/safety">Is this right for me?</a></li>
+              </ul>
+            </div>
+          </div>
+          <p class="mega__foot">
+            Every treatment is physician-reviewed and nurse-administered.
+            Wellness services are elective. Iron therapy may be clinically indicated.
+          </p>
+        </div>
+      </div>
+
+      <div class="nav__has-panel" data-dropdown>
+        <button
+          class="nav__link nav__trigger"
+          aria-expanded="false"
+          aria-controls="mega-concern"
+          data-trigger
+        >
+          By Concern
+          <svg class="nav__chev" viewBox="0 0 10 6" aria-hidden="true"
+            ><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.3"
+          /></svg>
+        </button>
+        <div class="mega mega--narrow" id="mega-concern" data-panel hidden>
+          <div class="mega__inner mega__inner--narrow wrap">
+            <ul class="mega__list mega__list--two">
+              {concerns.map((c) => (
+                <li>
+                  <a
+                    class="mega__item mega__item--plain"
+                    href={c.externalHref ?? `/concerns/${c.slug}`}
+                  >
+                    <span class="mega__name">{c.label}</span>
+                    <span class="mega__desc">{c.tile}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <a class="nav__link" href="/iron-therapy">Iron Therapy</a>
+      <a class="nav__link" href="/about">About</a>
+      <a class="btn nav__cta" href="/book">Book a consult</a>
+    </nav>
+
+    <button class="nav__burger" data-burger aria-expanded="false" aria-controls="mobile-nav">
+      <span class="sr-only">Open menu</span>
+      <span class="nav__burger-bar"></span>
+      <span class="nav__burger-bar"></span>
+    </button>
+  </div>
+
+  <!-- Mobile: clean accordion -->
+  <div class="mobile" id="mobile-nav" data-mobile hidden>
+    <nav class="mobile__inner" aria-label="Mobile">
+      <a class="mobile__link" href="/how-it-works">How It Works</a>
+
+      <details class="mobile__acc">
+        <summary class="mobile__sum">Drips &amp; Shots</summary>
+        <div class="mobile__panel">
+          <p class="mega__heading">Signature Drips</p>
+          {signatureDrips.map((t) => (
+            <a class="mobile__sublink" href={`/drips/${t.slug}`} style={dot(t.family)}>
+              <span class="mega__dot" aria-hidden="true"></span>{t.name}
+            </a>
+          ))}
+          <p class="mega__heading">Shots</p>
+          {shots.map((t) => (
+            <a class="mobile__sublink" href={`/shots/${t.slug}`} style={dot(t.family)}>
+              <span class="mega__dot" aria-hidden="true"></span>{t.name.replace(' Shot', '')}
+            </a>
+          ))}
+          <a class="mobile__sublink mobile__sublink--learn" href="/ingredients">Browse all ingredients</a>
+        </div>
+      </details>
+
+      <details class="mobile__acc">
+        <summary class="mobile__sum">By Concern</summary>
+        <div class="mobile__panel">
+          {concerns.map((c) => (
+            <a class="mobile__sublink" href={c.externalHref ?? `/concerns/${c.slug}`}>{c.label}</a>
+          ))}
+        </div>
+      </details>
+
+      <a class="mobile__link" href="/iron-therapy">Iron Therapy</a>
+      <a class="mobile__link" href="/metabolic-program">Metabolic Program</a>
+      <a class="mobile__link" href="/memberships">Memberships</a>
+      <a class="mobile__link" href="/safety">Safety</a>
+      <a class="mobile__link" href="/about">About</a>
+      <a class="btn btn--lg mobile__cta" href="/book">Book a consult</a>
+    </nav>
+  </div>
+  <div class="mobile__scrim" data-scrim hidden></div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: saturate(1.1) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-h);
+  }
+  .nav__brand {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    line-height: 1.1;
+  }
+  .nav__brand-name {
+    font-family: var(--display);
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+  }
+  .nav__brand-line {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+  }
+  .nav__link {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: var(--step--1);
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    color: var(--ink);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .nav__link:not(.nav__cta):hover {
+    color: var(--mist);
+  }
+  .nav__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+  }
+  .nav__chev {
+    width: 9px;
+    height: 6px;
+    transition: transform 0.25s var(--ease);
+  }
+  [data-dropdown].is-open .nav__chev {
+    transform: rotate(180deg);
+  }
+  .nav__cta {
+    padding: 0.6em 1.1em;
+  }
+  .nav__has-panel {
+    position: static;
+  }
+
+  /* Mega panel */
+  .mega {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: var(--header-h);
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 24px 40px -28px rgba(20, 20, 20, 0.25);
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.22s var(--ease), transform 0.22s var(--ease);
+  }
+  .mega:not([hidden]) {
+    opacity: 1;
+    transform: none;
+  }
+  .mega__inner {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1fr;
+    gap: 2.5rem;
+    padding-block: 2.2rem 1.6rem;
+  }
+  .mega__inner--narrow {
+    grid-template-columns: 1fr;
+  }
+  .mega__heading {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 0.9rem;
+  }
+  .mega__heading--learn {
+    margin-top: 1.6rem;
+  }
+  .mega__list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.15rem;
+  }
+  .mega__list--two {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.15rem 2.5rem;
+  }
+  .mega__list--shots {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.1rem 1.2rem;
+  }
+  .mega__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    column-gap: 0.6rem;
+    padding: 0.5rem 0.6rem;
+    margin-inline: -0.6rem;
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: background 0.2s var(--ease);
+  }
+  .mega__item--tight {
+    padding: 0.4rem 0.6rem;
+  }
+  .mega__item:hover {
+    background: var(--cloud);
+  }
+  .mega__item--plain {
+    grid-template-columns: 1fr;
+  }
+  .mega__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--dot, var(--mist));
+    align-self: center;
+  }
+  .mega__name {
+    font-size: var(--step-0);
+    color: var(--ink);
+  }
+  .mega__desc {
+    grid-column: 2;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+    color: var(--mist);
+  }
+  .mega__foot {
+    border-top: 1px solid var(--line);
+    background: var(--cloud);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+    color: var(--mist);
+    text-align: center;
+    padding: 0.85rem 1rem;
+  }
+
+  /* Burger + mobile */
+  .nav__burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: 0;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+  .nav__burger-bar {
+    width: 22px;
+    height: 1.5px;
+    background: var(--ink);
+    transition: transform 0.25s var(--ease), opacity 0.25s var(--ease);
+  }
+  [data-burger][aria-expanded='true'] .nav__burger-bar:first-child {
+    transform: translateY(6.5px) rotate(45deg);
+  }
+  [data-burger][aria-expanded='true'] .nav__burger-bar:last-child {
+    transform: translateY(-6.5px) rotate(-45deg);
+  }
+
+  .mobile {
+    position: fixed;
+    top: var(--header-h);
+    right: 0;
+    width: min(86vw, 380px);
+    height: calc(100dvh - var(--header-h));
+    background: var(--paper);
+    border-left: 1px solid var(--line);
+    overflow-y: auto;
+    z-index: 60;
+    transform: translateX(100%);
+    transition: transform 0.3s var(--ease);
+  }
+  .mobile:not([hidden]) {
+    transform: none;
+  }
+  .mobile__inner {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1.5rem 3rem;
+    gap: 0.3rem;
+  }
+  .mobile__link {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    font-size: var(--step-1);
+    font-family: var(--display);
+  }
+  .mobile__acc {
+    border-bottom: 1px solid var(--line);
+  }
+  .mobile__sum {
+    padding: 0.85rem 0;
+    font-size: var(--step-1);
+    font-family: var(--display);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .mobile__sum::after {
+    content: '+';
+    font-family: var(--mono);
+    color: var(--mist);
+  }
+  .mobile__acc[open] .mobile__sum::after {
+    content: '–';
+  }
+  .mobile__panel {
+    padding-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+  .mobile__sublink {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0;
+    text-decoration: none;
+    color: var(--graphite);
+  }
+  .mobile__sublink--learn {
+    color: var(--ink);
+  }
+  .mobile__cta {
+    margin-top: 1.2rem;
+    justify-content: center;
+  }
+  .mobile__scrim {
+    position: fixed;
+    inset: var(--header-h) 0 0;
+    background: rgba(20, 20, 20, 0.28);
+    z-index: 55;
+  }
+
+  @media (max-width: 920px) {
+    .nav__links {
+      display: none;
+    }
+    .nav__burger {
+      display: flex;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .mega__item:hover .mega__name {
+      color: var(--ink);
+    }
+  }
+</style>
+
+<script>
+  const nav = document.querySelector('[data-nav]');
+  if (nav) {
+    const dropdowns = Array.from(nav.querySelectorAll('[data-dropdown]'));
+    let openDrop: Element | null = null;
+
+    const closeDrop = (d: Element | null) => {
+      if (!d) return;
+      d.classList.remove('is-open');
+      const trigger = d.querySelector('[data-trigger]');
+      const panel = d.querySelector('[data-panel]');
+      trigger?.setAttribute('aria-expanded', 'false');
+      panel?.setAttribute('hidden', '');
+      if (openDrop === d) openDrop = null;
+    };
+
+    const openDropFn = (d: Element) => {
+      if (openDrop && openDrop !== d) closeDrop(openDrop);
+      d.classList.add('is-open');
+      const trigger = d.querySelector('[data-trigger]');
+      const panel = d.querySelector('[data-panel]');
+      trigger?.setAttribute('aria-expanded', 'true');
+      panel?.removeAttribute('hidden');
+      openDrop = d;
+    };
+
+    dropdowns.forEach((d) => {
+      const trigger = d.querySelector('[data-trigger]');
+      trigger?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (d.classList.contains('is-open')) closeDrop(d);
+        else openDropFn(d);
+      });
+      // Open on hover for fine pointers, but keyboard/click still drives it.
+      if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        d.addEventListener('mouseenter', () => openDropFn(d));
+        d.addEventListener('mouseleave', () => closeDrop(d));
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (openDrop && !openDrop.contains(e.target as Node)) closeDrop(openDrop);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && openDrop) {
+        const t = openDrop.querySelector('[data-trigger]') as HTMLElement;
+        closeDrop(openDrop);
+        t?.focus();
+      }
+    });
+
+    // Mobile menu. Do not lock body scroll with overflow:hidden (it breaks
+    // position: sticky); a scrim handles dismissal instead.
+    const burger = nav.querySelector('[data-burger]');
+    const mobile = nav.querySelector('[data-mobile]');
+    const scrim = nav.querySelector('[data-scrim]');
+    const setMobile = (open: boolean) => {
+      burger?.setAttribute('aria-expanded', String(open));
+      if (open) {
+        mobile?.removeAttribute('hidden');
+        scrim?.removeAttribute('hidden');
+      } else {
+        mobile?.setAttribute('hidden', '');
+        scrim?.setAttribute('hidden', '');
+      }
+    };
+    burger?.addEventListener('click', () =>
+      setMobile(burger.getAttribute('aria-expanded') !== 'true')
+    );
+    scrim?.addEventListener('click', () => setMobile(false));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setMobile(false);
+    });
+  }
+</script>

@@ -1,0 +1,51 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import ConcernTile from '@/components/ConcernTile.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { concerns } from '@/data/concerns';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Browse by concern',
+  description:
+    'Find infusion therapy support by how you want to feel: energy, immunity, skin, recovery, longevity, metabolism, iron, and hydration.',
+  url: new URL('/concerns', Astro.site).href,
+};
+---
+
+<Layout
+  title="By Concern"
+  description="Tell us how you want to feel. Browse infusion therapy at Restoration Medical by concern: low energy, immune support, skin and hair, recovery, longevity, metabolism, iron, and hydration."
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    eyebrow="By Concern"
+    lead="Tell us how you want to feel. We will help you find the right support. People arrive with a feeling, not a product name, and we meet you there."
+  >
+    Start with <span class="it">how you feel.</span>
+  </PageHeader>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="grid reveal">
+        {concerns.map((c) => <ConcernTile concern={c} />)}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Still deciding?"
+    heading="A consult is the kindest first step."
+    body="If more than one of these sounds like you, that is common. A consult helps us look at the whole picture and find the right support."
+  />
+</Layout>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+</style>

@@ -1,0 +1,296 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { ingredients } from '@/data/ingredients';
+
+// Educational configurator. No pricing. The nurse finalises the blend.
+const bases = [
+  { id: 'hydrate', name: 'Hydration base', note: 'Electrolytes and fluids, the canvas for everything else.' },
+  { id: 'myers', name: "Healing base", note: "Our Myers' style blend of B vitamins, vitamin C, and minerals." },
+  { id: 'foundation', name: 'Foundation base', note: 'A balanced everyday baseline of core vitamins and minerals.' },
+];
+
+// Offer wellness boosters only (no clinical iron in a build-your-own).
+const boosters = ingredients.filter(
+  (i) => !['iron-sucrose'].includes(i.slug)
+);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Build Your Own Infusion',
+  description:
+    'An educational way to understand what goes into a personalised IV drip at Restoration Medical. Choose a base, explore boosters. Your nurse finalises the blend.',
+  url: new URL('/drips/build-your-own', Astro.site).href,
+};
+---
+
+<Layout
+  title="Build Your Own"
+  description="Build your own infusion at Restoration Medical. An educational configurator: choose a base, explore boosters, and see what each one supports. Your nurse finalises your blend. No pricing."
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    eyebrow="Build Your Own · Design your infusion"
+    accent="var(--accent-neutral)"
+    lead="A clear way to learn what goes into a drip. Choose a base, explore the boosters, and see what each one supports. This is educational. Your nurse finalises your blend after a brief screening."
+  >
+    Design your infusion, <span class="it">understand every drop.</span>
+  </PageHeader>
+
+  <section class="section-tight">
+    <div class="wrap byo">
+      <div class="byo__build">
+        <div class="byo__step reveal">
+          <p class="eyebrow">Step one · Choose a base</p>
+          <div class="bases" role="radiogroup" aria-label="Choose a base">
+            {bases.map((b, i) => (
+              <button
+                class="base"
+                role="radio"
+                aria-checked={i === 0 ? 'true' : 'false'}
+                data-base={b.id}
+                data-name={b.name}
+              >
+                <span class="base__name">{b.name}</span>
+                <span class="base__note">{b.note}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div class="byo__step reveal">
+          <p class="eyebrow">Step two · Add boosters</p>
+          <p class="byo__hint meta">Tap to explore. Each booster lists what it may support.</p>
+          <div class="boosters">
+            {boosters.map((ing) => (
+              <button
+                class="booster"
+                aria-pressed="false"
+                data-slug={ing.slug}
+                data-name={ing.name}
+                style={`--dot: var(--accent-${ing.family})`}
+              >
+                <span class="booster__dot" aria-hidden="true"></span>
+                <span class="booster__name">{ing.name}</span>
+                <span class="booster__line">{ing.oneLine}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <aside class="byo__summary reveal" aria-live="polite">
+        <div class="summary">
+          <p class="eyebrow">Your blend, so far</p>
+          <p class="summary__base" data-summary-base>Hydration base</p>
+          <ul class="summary__list" data-summary-list>
+            <li class="summary__empty">No boosters added yet. Tap any booster to add it.</li>
+          </ul>
+          <p class="summary__note meta">
+            This is an educational sketch, not a prescription. Not every
+            combination suits everyone. Your nurse finalises your blend after
+            screening, on clinical grounds. No pricing.
+          </p>
+          <a class="btn summary__cta" href="/book">Bring this to a consult</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Prefer a starting point?"
+    heading="Our signature drips are a good place to begin."
+    body="If a blank canvas feels like a lot, our signature drips are thoughtfully composed for common goals. You can always adjust with your nurse."
+    secondaryLabel="See signature drips"
+    secondaryHref="/drips"
+  />
+</Layout>
+
+<style>
+  .byo {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 3rem;
+    align-items: start;
+  }
+  .byo__build {
+    display: grid;
+    gap: var(--space-l);
+  }
+  .byo__step {
+    display: grid;
+    gap: 1rem;
+  }
+  .bases {
+    display: grid;
+    gap: 0.8rem;
+  }
+  .base {
+    text-align: left;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.2rem;
+    cursor: pointer;
+    display: grid;
+    gap: 0.3rem;
+    transition: border-color 0.2s var(--ease);
+  }
+  .base[aria-checked='true'] {
+    border-color: var(--ink);
+    box-shadow: inset 3px 0 0 var(--ink);
+  }
+  .base__name {
+    font-family: var(--display);
+    font-size: var(--step-1);
+  }
+  .base__note {
+    color: var(--graphite);
+    font-size: var(--step--1);
+  }
+  .boosters {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.7rem;
+  }
+  .booster {
+    text-align: left;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0.9rem 1rem;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.6rem;
+    align-items: baseline;
+    transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+  }
+  .booster__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--dot);
+    align-self: center;
+  }
+  .booster__name {
+    font-size: var(--step-0);
+  }
+  .booster__line {
+    grid-column: 2;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--mist);
+  }
+  .booster[aria-pressed='true'] {
+    border-color: var(--ink);
+    background: var(--cloud);
+  }
+  .booster[aria-pressed='true'] .booster__dot {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--dot) 30%, transparent);
+  }
+
+  .byo__summary {
+    position: sticky;
+    top: calc(var(--header-h) + 1.5rem);
+  }
+  .summary {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.6rem 1.5rem;
+    display: grid;
+    gap: 1rem;
+    background: var(--cloud);
+  }
+  .summary__base {
+    font-family: var(--display);
+    font-size: var(--step-1);
+  }
+  .summary__list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+  }
+  .summary__list li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--step--1);
+  }
+  .summary__empty {
+    color: var(--mist);
+    font-style: italic;
+  }
+  .summary__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex: none;
+  }
+  .summary__cta {
+    justify-content: center;
+  }
+
+  @media (max-width: 860px) {
+    .byo {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .byo__summary {
+      position: static;
+    }
+  }
+</style>
+
+<script>
+  const bases = document.querySelectorAll<HTMLButtonElement>('.base');
+  const boosters = document.querySelectorAll<HTMLButtonElement>('.booster');
+  const sumBase = document.querySelector('[data-summary-base]');
+  const sumList = document.querySelector('[data-summary-list]');
+
+  bases.forEach((b) => {
+    b.addEventListener('click', () => {
+      bases.forEach((x) => x.setAttribute('aria-checked', 'false'));
+      b.setAttribute('aria-checked', 'true');
+      if (sumBase) sumBase.textContent = b.dataset.name || 'Base';
+    });
+  });
+
+  const render = () => {
+    if (!sumList) return;
+    const chosen = Array.from(boosters).filter(
+      (b) => b.getAttribute('aria-pressed') === 'true'
+    );
+    sumList.innerHTML = '';
+    if (chosen.length === 0) {
+      const li = document.createElement('li');
+      li.className = 'summary__empty';
+      li.textContent = 'No boosters added yet. Tap any booster to add it.';
+      sumList.appendChild(li);
+      return;
+    }
+    chosen.forEach((b) => {
+      const li = document.createElement('li');
+      const dot = document.createElement('span');
+      dot.className = 'summary__dot';
+      const color = getComputedStyle(b).getPropertyValue('--dot');
+      dot.style.background = color;
+      const name = document.createElement('span');
+      name.textContent = b.dataset.name || '';
+      li.append(dot, name);
+      sumList.appendChild(li);
+    });
+  };
+
+  boosters.forEach((b) => {
+    b.addEventListener('click', () => {
+      const on = b.getAttribute('aria-pressed') === 'true';
+      b.setAttribute('aria-pressed', String(!on));
+      render();
+    });
+  });
+</script>

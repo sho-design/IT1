@@ -1,0 +1,155 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import TreatmentCard from '@/components/TreatmentCard.astro';
+import IngredientChip from '@/components/IngredientChip.astro';
+import { concerns, concernBySlug } from '@/data/concerns';
+import { treatmentBySlug, type Treatment } from '@/data/treatments';
+import { ingredientBySlug } from '@/data/ingredients';
+
+export function getStaticPaths() {
+  // Iron routes to its own clinical page, so it is not a concern page here.
+  return concerns
+    .filter((c) => !c.externalHref)
+    .map((c) => ({ params: { slug: c.slug } }));
+}
+
+const { slug } = Astro.params;
+const concern = concernBySlug(slug!)!;
+
+const treatments = concern.treatments
+  .map((s) => treatmentBySlug(s))
+  .filter((t): t is Treatment => Boolean(t));
+
+const keyIngredients = concern.ingredients
+  .map((s) => ingredientBySlug(s))
+  .filter((i): i is NonNullable<typeof i> => Boolean(i));
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalWebPage',
+  name: concern.humanHeadline,
+  description: concern.open,
+  url: new URL(`/concerns/${concern.slug}`, Astro.site).href,
+};
+---
+
+<Layout
+  title={concern.label}
+  description={`${concern.label}: ${concern.open} See which infusion treatments may help at Restoration Medical. Physician-led. Results vary.`}
+  jsonLd={jsonLd}
+>
+  <header class="ch reveal">
+    <div class="wrap">
+      <a class="link-arrow ch__back" href="/concerns">&larr; All concerns</a>
+      <p class="eyebrow ch__eyebrow">By Concern</p>
+      <h1 class="hl ch__title display-2">{concern.humanHeadline}</h1>
+      <p class="lead ch__open">{concern.open}</p>
+    </div>
+  </header>
+
+  <section class="section-tight">
+    <div class="wrap-narrow">
+      <div class="reveal block">
+        <h2 class="block__h">How infusion therapy may help</h2>
+        <p class="block__p">{concern.howItHelps}</p>
+      </div>
+    </div>
+  </section>
+
+  {treatments.length > 0 && (
+    <section class="section-tight fill">
+      <div class="wrap">
+        <div class="reveal sec-head">
+          <p class="eyebrow">Treatments to consider</p>
+          <h2 class="hl display-3">A few good places to start.</h2>
+        </div>
+        <div class="grid reveal">
+          {treatments.map((t) => <TreatmentCard treatment={t} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {keyIngredients.length > 0 && (
+    <section class="section-tight">
+      <div class="wrap">
+        <div class="reveal sec-head">
+          <p class="eyebrow">Key ingredients</p>
+          <h2 class="hl display-3">What does the work.</h2>
+        </div>
+        <div class="chips reveal">
+          {keyIngredients.map((ing) => <IngredientChip ingredient={ing} showLine={true} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section-tight">
+    <div class="wrap-narrow reveal">
+      <p class="softnote">
+        Results vary from person to person, and infusion therapy is one part of
+        feeling well, alongside sleep, food, and good habits. A consult confirms
+        what is right for you.
+      </p>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="The next step"
+    heading="Let us help you feel like yourself again."
+    body="Book a consult and we will look at the whole picture together, then find the support that fits you."
+  />
+</Layout>
+
+<style>
+  .ch {
+    padding-top: var(--space-l);
+    padding-bottom: var(--space-m);
+    border-bottom: 1px solid var(--line);
+  }
+  .ch__back {
+    display: inline-block;
+    margin-bottom: 2rem;
+    border-color: transparent;
+  }
+  .ch__eyebrow {
+    margin-bottom: 1.2rem;
+  }
+  .ch__title {
+    max-width: 20ch;
+  }
+  .ch__open {
+    margin-top: 1.6rem;
+  }
+  .block__h {
+    font-size: var(--step-2);
+    margin-bottom: 1rem;
+  }
+  .block__p {
+    color: var(--graphite);
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+  .sec-head {
+    display: grid;
+    gap: 0.7rem;
+    margin-bottom: var(--space-m);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem;
+  }
+  .chips {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.6rem;
+  }
+  .softnote {
+    color: var(--mist);
+    font-style: italic;
+    border-left: 2px solid var(--line);
+    padding-left: 1.2rem;
+  }
+</style>

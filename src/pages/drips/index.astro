@@ -1,0 +1,122 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import TreatmentCard from '@/components/TreatmentCard.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { drips } from '@/data/treatments';
+import { families } from '@/data/families';
+
+// Group by family for the gallery, preserving a calm order.
+const order = ['wellness', 'radiance', 'immune', 'energy', 'recovery', 'metabolic', 'neutral'];
+const grouped = order
+  .map((key) => ({
+    family: families[key as keyof typeof families],
+    items: drips.filter((d) => d.family === key),
+  }))
+  .filter((g) => g.items.length > 0);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'IV Drips',
+  description:
+    'The full collection of wellness IV drips at Restoration Medical, organised by treatment family.',
+  url: new URL('/drips', Astro.site).href,
+};
+---
+
+<Layout
+  title="IV Drips"
+  description="The full collection of wellness IV drips at Restoration Medical. Each family carries its own accent, drawn from its ingredients. Physician-reviewed, nurse-administered. No pricing."
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    eyebrow="The Drip Gallery"
+    lead="Each family carries its own accent, drawn from its ingredients. Browse by family. Every drip is physician-reviewed and nurse-administered. A consult confirms what is right for you."
+  >
+    IV drips, <span class="it">grouped by how you want to feel.</span>
+  </PageHeader>
+
+  <div class="wrap drips-nav reveal">
+    {grouped.map((g) => (
+      <a class="drips-nav__chip" href={`#${g.family.key}`} style={`--dot: var(--accent-${g.family.key})`}>
+        <span class="drips-nav__dot" aria-hidden="true"></span>{g.family.label}
+      </a>
+    ))}
+  </div>
+
+  {grouped.map((g) => (
+    <section class="section-tight">
+      <div class="wrap">
+        <div class="fam-head reveal" id={g.family.key} style={`--accent-text: ${g.family.text}`}>
+          <span class="fam-head__rule" style={`background: var(--accent-${g.family.key})`} aria-hidden="true"></span>
+          <h2 class="fam-head__title">{g.family.label}</h2>
+          <p class="fam-head__blurb">{g.family.blurb}</p>
+        </div>
+        <div class="grid reveal">
+          {g.items.map((t) => <TreatmentCard treatment={t} />)}
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <CtaBand
+    eyebrow="Not sure where to start?"
+    heading="Tell us how you want to feel."
+    body="If the menu feels like a lot, start with a concern or a consult. We will help you find the right drip, or build one with you."
+    secondaryLabel="Browse by concern"
+    secondaryHref="/concerns"
+  />
+</Layout>
+
+<style>
+  .drips-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: var(--space-m);
+  }
+  .drips-nav__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: var(--step--1);
+    transition: border-color 0.2s var(--ease);
+  }
+  .drips-nav__chip:hover {
+    border-color: var(--ink);
+  }
+  .drips-nav__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--dot);
+  }
+  .fam-head {
+    margin-bottom: var(--space-s);
+    scroll-margin-top: calc(var(--header-h) + 2rem);
+  }
+  .fam-head__rule {
+    display: block;
+    width: 48px;
+    height: 3px;
+    margin-bottom: 1rem;
+  }
+  .fam-head__title {
+    font-size: var(--step-2);
+  }
+  .fam-head__blurb {
+    color: var(--graphite);
+    margin-top: 0.4rem;
+    max-width: 50ch;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem;
+  }
+</style>

@@ -1,0 +1,53 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import TreatmentCard from '@/components/TreatmentCard.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { shots } from '@/data/treatments';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'The Injection Bar',
+  description:
+    'Fast, five-minute injection shots at Restoration Medical. Great on their own, between drips, or alongside an aesthetics visit.',
+  url: new URL('/shots', Astro.site).href,
+};
+---
+
+<Layout
+  title="The Injection Bar"
+  description="The Injection Bar at Restoration Medical. Fast, five-minute support, physician-reviewed and nurse-administered. B12, glutathione, immune, metabolic and more. No pricing."
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    eyebrow="The Injection Bar"
+    lead="Fast, five-minute support. Great on their own, between drips, or alongside an aesthetics visit. Each shot is physician-reviewed and nurse-administered."
+  >
+    Five minutes, <span class="it">measured support.</span>
+  </PageHeader>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="grid reveal">
+        {shots.map((t) => <TreatmentCard treatment={t} />)}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Pair it up"
+    heading="A shot, a drip, or both."
+    body="Many people add a shot to a drip, or keep a simple shot on a regular rhythm. Your nurse helps you find a cadence that fits."
+    secondaryLabel="See all drips"
+    secondaryHref="/drips"
+  />
+</Layout>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 1.2rem;
+  }
+</style>

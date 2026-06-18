@@ -1,0 +1,245 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import CtaBand from '@/components/CtaBand.astro';
+
+const forYou = [
+  'Low ferritin or diagnosed iron deficiency',
+  'Iron-deficiency anemia',
+  'Fatigue related to low iron',
+  'Heavy menstrual bleeding',
+  'Iron supplements that have not worked or are not tolerated',
+];
+
+const expect = [
+  { t: 'Assessment', d: 'A clinical review of your symptoms, history, and recent bloodwork. Recent iron studies are required before any infusion.' },
+  { t: 'A directed protocol', d: 'Ferritin and iron studies guide the dose and schedule. The physician directs the plan, not a fixed package.' },
+  { t: 'Monitoring throughout', d: 'You are monitored before, during, and after the infusion. Our nurses watch for and manage any reaction.' },
+  { t: 'Follow-up', d: 'We confirm how you respond and plan any repeat studies, so the treatment stays guided by your labs.' },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalProcedure',
+  name: 'Iron Infusion Therapy',
+  description:
+    'Physician-directed intravenous iron therapy for iron deficiency and low ferritin, guided by bloodwork and given with monitoring.',
+  procedureType: 'https://schema.org/TherapeuticProcedure',
+  url: new URL('/iron-therapy', Astro.site).href,
+};
+---
+
+<Layout
+  title="Iron Therapy"
+  description="Physician-directed iron infusion therapy at Restoration Medical for low ferritin and iron deficiency. Lab-reviewed, monitored throughout. Iron may be clinically indicated."
+  jsonLd={jsonLd}
+>
+  <header class="ironhead reveal">
+    <div class="wrap">
+      <p class="eyebrow ironhead__eyebrow">
+        <span class="ironhead__dot" aria-hidden="true"></span>
+        Clinical Infusion
+      </p>
+      <h1 class="hl ironhead__title">
+        <span class="lg">Iron therapy, when your body needs</span>
+        <span class="lg"><span class="it">more than supplements.</span></span>
+      </h1>
+      <p class="lead ironhead__lead">
+        This is a clinical infusion, not a wellness drip. It is lab-reviewed,
+        physician-directed, and given with monitoring, for when low iron is
+        holding you back and tablets have not been enough.
+      </p>
+      <div class="ironhead__actions">
+        <a class="btn btn--lg" href="/book">Book an assessment</a>
+        <a class="link-arrow" href="/contact">Talk to us about iron &rarr;</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="section-tight">
+    <div class="wrap two">
+      <div class="reveal block">
+        <h2 class="block__h">Who it is for</h2>
+        <ul class="ticks">
+          {forYou.map((f) => (
+            <li class="ticks__item"><span class="ticks__mark" aria-hidden="true"></span>{f}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="reveal block">
+        <h2 class="block__h">How it works</h2>
+        <p class="block__p">
+          Iron is given intravenously when your body cannot get enough from food
+          or supplements, or cannot tolerate them. The decision and the dose are
+          guided by recent bloodwork, including ferritin and iron studies, and
+          directed by our physician. We treat the cause, with proper assessment,
+          not a one-size infusion.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight fill">
+    <div class="wrap">
+      <div class="reveal sec-head">
+        <p class="eyebrow">What to expect</p>
+        <h2 class="hl display-3">Careful, start to finish.</h2>
+      </div>
+      <div class="grid reveal">
+        {expect.map((e) => (
+          <article class="ecard">
+            <h3 class="ecard__t">{e.t}</h3>
+            <p class="ecard__d">{e.d}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap-narrow stack-lg">
+      <div class="reveal block">
+        <h2 class="block__h">Safety and monitoring</h2>
+        <p class="block__p">
+          Modern intravenous iron is well tolerated, and we treat it with the
+          seriousness it deserves. You are screened first, monitored throughout,
+          and cared for by nurses trained to recognise and manage any reaction.
+          We will not proceed if it is not the right or safe choice for you.
+        </p>
+      </div>
+      <div class="reveal block block--soft">
+        <h2 class="block__h">On coverage, honestly</h2>
+        <p class="block__p">
+          Unlike elective wellness services, iron therapy may be clinically
+          indicated. Some private plans may help with cost, and we will guide
+          you through what to ask. We cannot promise coverage, and we keep this
+          conversation clear and pressure-free.
+        </p>
+      </div>
+      <div class="reveal block block--soft">
+        <h2 class="block__h">Already a Restoration patient?</h2>
+        <p class="block__p">
+          If you are seen at Restoration Medical and your bloodwork flags low
+          iron, you can be referred in-house. Ask your physician, or mention it
+          when you book, and we will arrange the pathway.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Clinical pathway"
+    heading="Let us look at your iron, properly."
+    body="Bring recent bloodwork if you have it. We will assess, explain your options clearly, and only proceed when it is the right call."
+    primaryLabel="Book an assessment"
+    secondaryLabel="Contact the clinic"
+    secondaryHref="/contact"
+  />
+</Layout>
+
+<style>
+  .ironhead {
+    --accent: var(--accent-clinical);
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-m);
+    border-bottom: 1px solid var(--line);
+  }
+  .ironhead__eyebrow {
+    color: var(--accent);
+    margin-bottom: 1.4rem;
+  }
+  .ironhead__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .ironhead__title {
+    font-size: var(--step-4);
+    max-width: 20ch;
+  }
+  .ironhead__lead {
+    margin-top: 1.8rem;
+  }
+  .ironhead__actions {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+  .block__h {
+    font-size: var(--step-2);
+    margin-bottom: 1rem;
+  }
+  .block__p {
+    color: var(--graphite);
+    font-size: var(--step-1);
+    line-height: 1.55;
+  }
+  .ticks {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.8rem;
+  }
+  .ticks__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.8rem;
+    align-items: baseline;
+    color: var(--graphite);
+    font-size: var(--step-1);
+  }
+  .ticks__mark {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-clinical);
+    transform: translateY(-2px);
+  }
+  .sec-head {
+    display: grid;
+    gap: 0.7rem;
+    margin-bottom: var(--space-m);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.2rem;
+  }
+  .ecard {
+    border-top: 1px solid var(--ink);
+    padding-top: 1.1rem;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .ecard__t {
+    font-size: var(--step-1);
+  }
+  .ecard__d {
+    color: var(--graphite);
+    font-size: var(--step--1);
+  }
+  .stack-lg {
+    display: grid;
+    gap: var(--space-m);
+  }
+  .block--soft {
+    border-top: 1px solid var(--line);
+    padding-top: var(--space-m);
+  }
+  .block--soft .block__p {
+    font-size: var(--step-0);
+  }
+  @media (max-width: 820px) {
+    .two {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>

@@ -1,0 +1,58 @@
+---
+import type { Concern } from '@/data/concerns';
+
+export interface Props {
+  concern: Concern;
+}
+const { concern } = Astro.props;
+const href = concern.externalHref ?? `/concerns/${concern.slug}`;
+---
+
+<a class="tile" href={href}>
+  <span class="tile__label">{concern.label}</span>
+  <span class="tile__line">{concern.tile}</span>
+  <span class="tile__more link-arrow">
+    {concern.clinical ? 'Clinical pathway' : 'Explore'} &rarr;
+  </span>
+</a>
+
+<style>
+  .tile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.6rem 1.5rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: transform 0.3s var(--ease), border-color 0.3s var(--ease),
+      box-shadow 0.3s var(--ease);
+  }
+  .tile__label {
+    font-family: var(--display);
+    font-size: var(--step-1);
+    line-height: 1.15;
+    color: var(--ink);
+  }
+  .tile__line {
+    color: var(--graphite);
+    font-size: var(--step--1);
+    line-height: 1.5;
+    flex: 1;
+  }
+  .tile__more {
+    border-color: transparent;
+    margin-top: 0.5rem;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .tile:hover {
+      transform: translateY(-3px);
+      border-color: var(--ink);
+      box-shadow: 0 18px 30px -24px rgba(20, 20, 20, 0.3);
+    }
+    .tile:hover .tile__more {
+      border-color: var(--ink);
+    }
+  }
+</style>

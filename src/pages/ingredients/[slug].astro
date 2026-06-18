@@ -1,0 +1,166 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import TreatmentCard from '@/components/TreatmentCard.astro';
+import { ingredients, ingredientBySlug } from '@/data/ingredients';
+import { treatmentsWithIngredient } from '@/data/treatments';
+import { families } from '@/data/families';
+
+export function getStaticPaths() {
+  return ingredients.map((i) => ({ params: { slug: i.slug } }));
+}
+
+const { slug } = Astro.params;
+const ingredient = ingredientBySlug(slug!)!;
+const fam = families[ingredient.family];
+const foundIn = treatmentsWithIngredient(ingredient.slug);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalWebPage',
+  name: ingredient.name,
+  description: ingredient.whatItIs,
+  url: new URL(`/ingredients/${ingredient.slug}`, Astro.site).href,
+};
+---
+
+<Layout
+  title={ingredient.name}
+  description={`${ingredient.name}: ${ingredient.oneLine} What it is, what it may support, and the treatments it appears in at Restoration Medical. Honest about evidence.`}
+  jsonLd={jsonLd}
+>
+  <header
+    class="ih reveal"
+    style={`--accent: var(--accent-${ingredient.family}); --accent-text: ${fam.text}`}
+  >
+    <div class="wrap">
+      <a class="link-arrow ih__back" href="/ingredients">&larr; Ingredient library</a>
+      <p class="eyebrow ih__eyebrow">
+        <span class="ih__dot" aria-hidden="true"></span>
+        {ingredient.role}
+      </p>
+      <h1 class="hl ih__title display-2">{ingredient.name}</h1>
+      <p class="lead ih__line">{ingredient.oneLine}</p>
+    </div>
+  </header>
+
+  <section class="section-tight">
+    <div class="wrap-narrow stack-lg">
+      <div class="reveal block">
+        <h2 class="block__h">What it is</h2>
+        <p class="block__p">{ingredient.whatItIs}</p>
+      </div>
+
+      <div class="reveal block">
+        <h2 class="block__h">What it may support</h2>
+        <ul class="supports">
+          {ingredient.maySupport.map((s) => (
+            <li class="supports__item">
+              <span class="supports__tick" aria-hidden="true"></span>{s}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {ingredient.goodToKnow && (
+        <div class="reveal block block--note">
+          <h2 class="block__h">Good to know</h2>
+          <p class="block__p">{ingredient.goodToKnow}</p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  {foundIn.length > 0 && (
+    <section class="section-tight fill">
+      <div class="wrap">
+        <div class="reveal sec-head">
+          <p class="eyebrow">Found in these treatments</p>
+          <h2 class="hl display-3">Where you will meet it.</h2>
+        </div>
+        <div class="grid reveal">
+          {foundIn.map((t) => <TreatmentCard treatment={t} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <CtaBand />
+</Layout>
+
+<style>
+  .ih {
+    padding-top: var(--space-l);
+    padding-bottom: var(--space-m);
+    border-bottom: 1px solid var(--line);
+  }
+  .ih__back {
+    display: inline-block;
+    margin-bottom: 2rem;
+    border-color: transparent;
+  }
+  .ih__eyebrow {
+    color: var(--accent-text);
+    margin-bottom: 1.2rem;
+  }
+  .ih__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .ih__line {
+    margin-top: 1.4rem;
+  }
+  .stack-lg {
+    display: grid;
+    gap: var(--space-m);
+  }
+  .block__h {
+    font-size: var(--step-2);
+    margin-bottom: 1rem;
+  }
+  .block__p {
+    color: var(--graphite);
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+  .block--note {
+    border-top: 1px solid var(--line);
+    padding-top: var(--space-m);
+  }
+  .block--note .block__p {
+    font-size: var(--step-0);
+  }
+  .supports {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.8rem;
+  }
+  .supports__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.8rem;
+    align-items: baseline;
+    color: var(--graphite);
+    font-size: var(--step-1);
+  }
+  .supports__tick {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translateY(-2px);
+  }
+  .sec-head {
+    display: grid;
+    gap: 0.7rem;
+    margin-bottom: var(--space-m);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem;
+  }
+</style>

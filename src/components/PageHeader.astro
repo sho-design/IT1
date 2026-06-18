@@ -1,0 +1,41 @@
+---
+export interface Props {
+  eyebrow: string;
+  accent?: string; // css color for the eyebrow dot, optional
+  lead?: string;
+}
+const { eyebrow, accent, lead } = Astro.props;
+---
+
+<header class="ph reveal">
+  <div class="wrap">
+    <p class="eyebrow ph__eyebrow">
+      {accent && <span class="ph__dot" style={`background:${accent}`} aria-hidden="true"></span>}
+      {eyebrow}
+    </p>
+    <h1 class="hl ph__title display-2"><slot /></h1>
+    {lead && <p class="lead ph__lead"><slot name="lead">{lead}</slot></p>}
+  </div>
+</header>
+
+<style>
+  .ph {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-m);
+  }
+  .ph__eyebrow {
+    margin-bottom: 1.4rem;
+  }
+  .ph__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .ph__title {
+    max-width: 18ch;
+  }
+  .ph__lead {
+    margin-top: 1.6rem;
+  }
+</style>
