@@ -3,7 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import TreatmentCard from '@/components/TreatmentCard.astro';
 import ConcernTile from '@/components/ConcernTile.astro';
 import CtaBand from '@/components/CtaBand.astro';
-import PullQuote from '@/components/PullQuote.astro';
+import RandomPullQuote from '@/components/RandomPullQuote.astro';
 import { treatmentBySlug, type Treatment } from '@/data/treatments';
 import { concerns } from '@/data/concerns';
 import { site, locations } from '@/data/site';
@@ -182,13 +182,10 @@ const steps = [
     </div>
   </section>
 
-  <!-- Editorial beat -->
+  <!-- Editorial beat: a random on-brand line per visit -->
   <section class="section-tight">
     <div class="wrap">
-      <PullQuote cite="The standard, not a slogan" accent="var(--accent-recovery)">
-        Wellness deserves the same rigour as
-        <span class="it">the rest of medicine.</span>
-      </PullQuote>
+      <RandomPullQuote accent="var(--accent-recovery)" />
     </div>
   </section>
 

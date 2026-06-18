@@ -2,7 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import PageHeader from '@/components/PageHeader.astro';
 import CtaBand from '@/components/CtaBand.astro';
-import PullQuote from '@/components/PullQuote.astro';
+import RandomPullQuote from '@/components/RandomPullQuote.astro';
 import { locations, isFilled } from '@/data/site';
 
 const principles = [
@@ -61,9 +61,7 @@ const jsonLd = {
 
   <section class="section-tight">
     <div class="wrap">
-      <PullQuote cite="Calm by design" accent="var(--accent-wellness)">
-        Good care <span class="it">does not rush.</span>
-      </PullQuote>
+      <RandomPullQuote accent="var(--accent-wellness)" />
     </div>
   </section>
 
