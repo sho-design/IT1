@@ -63,14 +63,24 @@ const steps = [
   <section class="hero">
     <!-- Living IV bag: colour "ingredients" injected from the bottom port -->
     <div class="hero__bag in-load" style="--load-delay: 220ms" aria-hidden="true">
-      <span class="hero__bag-hook"></span>
       <div class="hero__bag-body">
         <canvas class="hero__bag-canvas" data-hero-fluid></canvas>
-        <span class="hero__bag-ticks"></span>
-        <span class="hero__bag-tag">IV · 500 mL</span>
       </div>
-      <span class="hero__bag-neck"></span>
-      <span class="hero__bag-tube"></span>
+      <svg class="hero__bag-frame" viewBox="0 0 128 184" fill="none" aria-hidden="true">
+        <!-- Bag silhouette: rounded body tapering to a centre funnel -->
+        <path
+          class="hero__bag-outline"
+          d="M24 8 L104 8 Q120 8 120 24 L120 108 Q120 118 111 121 L72 134 L72 146 L56 146 L56 134 L17 121 Q8 118 8 108 L8 24 Q8 8 24 8 Z"
+        />
+        <!-- Luer connector below the funnel -->
+        <rect class="hero__bag-outline" x="51" y="146" width="26" height="12" rx="3" />
+        <path class="hero__bag-outline" d="M58 158 L70 158 L66.5 178 L61.5 178 Z" />
+        <!-- Hanging slot -->
+        <rect class="hero__bag-hole" x="47" y="17" width="34" height="11" rx="5.5" />
+        <!-- Side ports -->
+        <ellipse class="hero__bag-port" cx="105" cy="46" rx="3.6" ry="6.2" />
+        <ellipse class="hero__bag-port" cx="105" cy="62" rx="3.6" ry="6.2" />
+      </svg>
     </div>
     <div class="wrap hero__inner">
       <p class="eyebrow hero__eyebrow in-load">
@@ -246,35 +256,28 @@ const steps = [
     z-index: 2;
   }
 
-  /* The IV bag, a line-art vessel holding the live liquid canvas. */
+  /* The IV bag: an SVG line-art silhouette framing the live liquid canvas. */
   .hero__bag {
     position: absolute;
     z-index: 1;
     top: 50%;
     right: clamp(0.5rem, 5vw, 5rem);
     transform: translateY(-50%);
-    width: clamp(200px, 23vw, 296px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: clamp(196px, 22vw, 280px);
+    aspect-ratio: 128 / 184;
     pointer-events: none;
   }
-  .hero__bag-hook {
-    width: 24px;
-    height: 24px;
-    border: 1.5px solid color-mix(in srgb, var(--graphite) 30%, var(--line));
-    border-radius: 50%;
-    margin-bottom: -3px;
-  }
+  /* Liquid chamber: sits inside the straight-sided body of the silhouette,
+     a touch in from the walls so the outline frames it. */
   .hero__bag-body {
-    position: relative;
-    width: 100%;
-    height: clamp(310px, 46vh, 430px);
-    border: 1.5px solid color-mix(in srgb, var(--graphite) 32%, var(--line));
-    border-radius: 16px 16px 22px 22px;
-    background: color-mix(in srgb, var(--cloud) 55%, transparent);
+    position: absolute;
+    top: 7.5%;
+    bottom: 39%;
+    left: 11%;
+    right: 11%;
+    border-radius: 13px 13px 10px 10px;
+    background: color-mix(in srgb, var(--cloud) 50%, transparent);
     overflow: hidden;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
   }
   .hero__bag-canvas {
     position: absolute;
@@ -282,43 +285,30 @@ const steps = [
     width: 100%;
     height: 100%;
     mix-blend-mode: multiply;
-    -webkit-mask-image: linear-gradient(to top, #000 0 66%, transparent 100%);
-    mask-image: linear-gradient(to top, #000 0 66%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to top, #000 0 80%, transparent 100%);
+    mask-image: linear-gradient(to top, #000 0 80%, transparent 100%);
   }
-  .hero__bag-ticks {
+  .hero__bag-frame {
     position: absolute;
-    left: 11px;
-    top: 14%;
-    bottom: 16%;
-    width: 9px;
-    background: repeating-linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--graphite) 38%, transparent) 0 1px,
-      transparent 1px 27px
-    );
-    opacity: 0.7;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
   }
-  .hero__bag-tag {
-    position: absolute;
-    top: 12px;
-    right: 13px;
-    font-family: var(--mono);
-    font-size: 0.5rem;
-    letter-spacing: 0.18em;
-    color: var(--mist);
+  .hero__bag-outline {
+    fill: none;
+    stroke: color-mix(in srgb, var(--graphite) 38%, var(--line));
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
   }
-  .hero__bag-neck {
-    width: 26px;
-    height: 12px;
-    border: 1.5px solid color-mix(in srgb, var(--graphite) 32%, var(--line));
-    border-top: none;
-    border-radius: 0 0 7px 7px;
-    background: var(--cloud);
+  .hero__bag-hole {
+    fill: var(--paper);
+    stroke: color-mix(in srgb, var(--graphite) 38%, var(--line));
+    stroke-width: 1.5;
   }
-  .hero__bag-tube {
-    width: 2px;
-    height: clamp(20px, 5vh, 42px);
-    background: color-mix(in srgb, var(--graphite) 32%, var(--line));
+  .hero__bag-port {
+    fill: color-mix(in srgb, var(--accent-recovery) 70%, var(--paper));
   }
   @media (min-width: 1000px) {
     .hero__inner,
