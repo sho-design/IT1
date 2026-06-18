@@ -249,6 +249,8 @@ const jsonLd = {
 </style>
 
 <script>
+  // Re-run on every page load, including view-transition navigations.
+  const initBookForm = () => {
   const form = document.getElementById('consult-form') as HTMLFormElement | null;
   const confirm = document.getElementById('consult-confirm');
 
@@ -304,4 +306,7 @@ const jsonLd = {
       }
     });
   }
+  };
+
+  document.addEventListener('astro:page-load', initBookForm);
 </script>

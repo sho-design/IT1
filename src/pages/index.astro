@@ -546,6 +546,7 @@ const steps = [
     };
 
     const tick = () => {
+      if (!canvas.isConnected) { raf = 0; return; }
       ctx.clearRect(0, 0, w, h);
       paintBase();
       for (let i = drops.length - 1; i >= 0; i--) {

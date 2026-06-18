@@ -21,7 +21,7 @@ const dots = treatment.ingredients.slice(0, 5);
   href={href}
   style={`--accent: var(--accent-${treatment.family}); --accent-text: ${fam.text}`}
 >
-  <span class="card__rule" aria-hidden="true"></span>
+  <span class="card__rule" aria-hidden="true" transition:name={`accent-${treatment.slug}`}></span>
   <span class="card__top">
     <span class="card__family">{fam.label}</span>
     <span class="card__type">{treatment.type === 'drip' ? 'Drip' : 'Shot'}</span>
