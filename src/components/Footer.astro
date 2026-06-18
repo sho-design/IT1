@@ -63,13 +63,13 @@ const columns = [
   <div class="wrap footer__locations">
     {locations.map((loc) => (
       <div class="footer__loc">
-        <p class="footer__heading">{loc.name}</p>
+        <p class="footer__loc-title">{loc.name}</p>
         {isFilled(loc.address) && <p class="footer__meta">{loc.address}</p>}
         {isFilled(loc.hours) && <p class="footer__meta">{loc.hours}</p>}
       </div>
     ))}
     <div class="footer__loc">
-      <p class="footer__heading">Reach us</p>
+      <p class="footer__loc-title">Reach us</p>
       {isFilled(site.phone) && <p class="footer__meta">{site.phone}</p>}
       <p class="footer__meta"><a href={`mailto:${site.email}`}>{site.email}</a></p>
     </div>
@@ -140,6 +140,14 @@ const columns = [
     text-transform: uppercase;
     color: rgba(252, 252, 253, 0.55);
     margin-bottom: 1rem;
+  }
+  .footer__loc-title {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: var(--step-1);
+    letter-spacing: -0.01em;
+    color: var(--paper);
+    margin-bottom: 0.7rem;
   }
   .footer__col ul {
     list-style: none;
