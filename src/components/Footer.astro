@@ -1,5 +1,6 @@
 ---
 import { site, locations, isFilled } from '@/data/site';
+import SocialLinks from './SocialLinks.astro';
 
 const year = new Date().getFullYear();
 
@@ -43,7 +44,9 @@ const columns = [
         Wellness and clinical care, built around how you want to feel.
         Reviewed by our physician, given by our nurses.
       </p>
-      <a class="btn footer__cta" href="/book">Book a consult</a>
+      <div class="footer__socials">
+        <SocialLinks />
+      </div>
     </div>
 
     <nav class="footer__nav" aria-label="Footer">
@@ -130,15 +133,8 @@ const columns = [
     margin-top: 1rem;
     color: rgba(252, 252, 253, 0.75);
   }
-  .footer__cta {
-    margin-top: 1.5rem;
-    background: var(--paper);
-    color: var(--ink);
-    border-color: var(--paper);
-  }
-  .footer__cta:hover {
-    background: transparent;
-    color: var(--paper);
+  .footer__socials {
+    margin-top: 1.6rem;
   }
   .footer__nav {
     display: grid;

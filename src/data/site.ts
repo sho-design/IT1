@@ -43,6 +43,15 @@ export const cta = {
   secondary: { label: 'Explore drips & shots', href: '/drips' },
 };
 
+// Social profiles, shown in the footer and the mobile menu. Add the full
+// profile URL for each. While a URL is on a placeholder the icon still shows
+// but is not a link, so there are never dead links before launch.
+export const socials = [
+  { name: 'Instagram', href: PLACEHOLDER }, // e.g. 'https://instagram.com/...'
+  { name: 'Facebook', href: PLACEHOLDER },
+  { name: 'TikTok', href: PLACEHOLDER },
+];
+
 // Wire these before launch. While on a placeholder, the consult form posts
 // nowhere and instead shows a graceful "we will be in touch" confirmation,
 // so there is never a broken submit.

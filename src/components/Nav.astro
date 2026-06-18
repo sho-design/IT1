@@ -3,6 +3,7 @@ import { site } from '@/data/site';
 import { signatureDrips, shots } from '@/data/treatments';
 import { concerns } from '@/data/concerns';
 import ConcernIcon from './ConcernIcon.astro';
+import SocialLinks from './SocialLinks.astro';
 
 // Accent dot uses the family CSS variable. This and treatment cards are the
 // only places the site shows prominent colour.
@@ -164,6 +165,9 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
       <a class="mobile__link" href="/safety">Safety</a>
       <a class="mobile__link" href="/about">About</a>
       <a class="btn btn--lg mobile__cta" href="/book">Book a consult</a>
+      <div class="mobile__socials">
+        <SocialLinks />
+      </div>
     </nav>
   </div>
   <div class="mobile__scrim" data-scrim hidden></div>
@@ -462,6 +466,13 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
   }
   .mobile__cta {
     margin-top: 1.2rem;
+    justify-content: center;
+  }
+  .mobile__socials {
+    margin-top: 1.5rem;
+    padding-top: 1.3rem;
+    border-top: 1px solid var(--line);
+    display: flex;
     justify-content: center;
   }
   .mobile__scrim {
