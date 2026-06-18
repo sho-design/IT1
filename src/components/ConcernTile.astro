@@ -10,7 +10,7 @@ const href = concern.externalHref ?? `/concerns/${concern.slug}`;
 ---
 
 <a class="tile" href={href}>
-  <span class="tile__icon" aria-hidden="true"><ConcernIcon slug={concern.slug} /></span>
+  <span class="tile__icon" aria-hidden="true"><ConcernIcon slug={concern.slug} color={concern.accent} /></span>
   <span class="tile__label">{concern.label}</span>
   <span class="tile__line">{concern.tile}</span>
   <span class="tile__more link-arrow">

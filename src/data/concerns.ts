@@ -11,6 +11,9 @@ export interface Concern {
   slug: string;
   label: string;
   tile: string; // short tile line for grids
+  // Concern icons use their own brighter palette, deliberately distinct from
+  // the muted treatment-family accents, so the two systems read apart.
+  accent: string;
   humanHeadline: string;
   open: string; // empathetic 2 to 3 sentence open
   howItHelps: string; // honest "may support" paragraph
@@ -25,6 +28,7 @@ export const concerns: Concern[] = [
     slug: 'low-energy-fatigue',
     label: 'Low energy & fatigue',
     tile: 'Running low more often than you would like.',
+    accent: '#5A57A6',
     humanHeadline: 'When your energy runs out before your day does',
     open: 'Some weeks ask more of you than you have to give. The afternoons feel heavy, the mornings feel slow, and the rest you get does not seem to refill the tank. That is a common and very human place to be.',
     howItHelps:
@@ -36,6 +40,7 @@ export const concerns: Concern[] = [
     slug: 'immune-support',
     label: 'Immune support',
     tile: 'Bracing for a demanding season.',
+    accent: '#2E8A66',
     humanHeadline: 'Support for the seasons that ask the most of you',
     open: 'A full calendar, travel, and the change of seasons can leave you feeling exposed. Many people want to give their body steady support before they feel run down, not after.',
     howItHelps:
@@ -47,6 +52,7 @@ export const concerns: Concern[] = [
     slug: 'skin-hair-nails',
     label: 'Skin, hair & nails',
     tile: 'Caring for how you look from within.',
+    accent: '#C2598E',
     humanHeadline: 'Radiance, supported from the inside',
     open: 'Skin, hair, and nails reflect a lot about how the rest of you is doing. When they feel dull or fragile, it is natural to want to care for them thoughtfully, not chase a quick fix.',
     howItHelps:
@@ -58,6 +64,7 @@ export const concerns: Concern[] = [
     slug: 'recovery-performance',
     label: 'Recovery & performance',
     tile: 'Training hard and recovering harder.',
+    accent: '#2C72C4',
     humanHeadline: 'For the work after the workout',
     open: 'Hard training, long events, and heavy stretches take a toll. The recovery is where the progress actually happens, and it is easy to under-support it.',
     howItHelps:
@@ -69,6 +76,7 @@ export const concerns: Concern[] = [
     slug: 'longevity',
     label: 'Longevity & healthy aging',
     tile: 'Investing in how you age.',
+    accent: '#8A57A2',
     humanHeadline: 'Aging well, on purpose',
     open: 'Healthy aging is less about any single thing and more about steady, considered care over time. Many people want a calm routine that supports how they feel and function for the long run.',
     howItHelps:
@@ -80,6 +88,7 @@ export const concerns: Concern[] = [
     slug: 'weight-metabolism',
     label: 'Weight & metabolism',
     tile: 'Working toward a goal, with support.',
+    accent: '#B05741',
     humanHeadline: 'A medical approach to a personal goal',
     open: 'Weight is personal, and it deserves more than a quick fix or a one-size plan. Real change tends to come from a structured, supported approach over time.',
     howItHelps:
@@ -91,6 +100,7 @@ export const concerns: Concern[] = [
     slug: 'iron-low-ferritin',
     label: 'Iron deficiency & low ferritin',
     tile: 'When fatigue may be about iron.',
+    accent: '#B23A4F',
     humanHeadline: 'When your body needs more iron than supplements can give',
     open: 'Persistent fatigue, low ferritin, or heavy periods can point to iron deficiency. This is a clinical matter, and it deserves a clinical answer rather than a wellness drip.',
     howItHelps:
@@ -104,6 +114,7 @@ export const concerns: Concern[] = [
     slug: 'hydration-travel',
     label: 'Hydration & travel',
     tile: 'Resetting after the road.',
+    accent: '#1B8794',
     humanHeadline: 'A clean reset for travel and long weeks',
     open: 'Travel, heat, and packed schedules leave you depleted in a way water alone does not always fix. Sometimes you just want to feel like yourself again.',
     howItHelps:

@@ -5,8 +5,9 @@
 export interface Props {
   slug: string;
   class?: string;
+  color?: string; // sets currentColor for the stroke
 }
-const { slug, class: className = '' } = Astro.props;
+const { slug, class: className = '', color } = Astro.props;
 
 const paths: Record<string, string> = {
   // Lightning bolt: low energy & fatigue
@@ -44,5 +45,6 @@ const inner = paths[slug] ?? paths._default;
   stroke-linecap="round"
   stroke-linejoin="round"
   aria-hidden="true"
+  style={color ? `color:${color}` : undefined}
   set:html={inner}
 ></svg>

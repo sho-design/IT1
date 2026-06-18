@@ -38,7 +38,7 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
                     class="mega__item mega__item--concern"
                     href={c.externalHref ?? `/concerns/${c.slug}`}
                   >
-                    <ConcernIcon slug={c.slug} class="mega__cicon" />
+                    <ConcernIcon slug={c.slug} class="mega__cicon" color={c.accent} />
                     <span class="mega__name">{c.label}</span>
                     <span class="mega__desc">{c.tile}</span>
                   </a>
@@ -128,7 +128,7 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
         <div class="mobile__panel">
           {concerns.map((c) => (
             <a class="mobile__sublink" href={c.externalHref ?? `/concerns/${c.slug}`}>
-              <ConcernIcon slug={c.slug} class="mobile__cicon" />{c.label}
+              <ConcernIcon slug={c.slug} class="mobile__cicon" color={c.accent} />{c.label}
             </a>
           ))}
         </div>
