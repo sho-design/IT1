@@ -243,23 +243,30 @@ const jsonLd = {
   .advisory {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 0.5rem;
+    gap: 0.55rem;
     align-items: start;
     font-size: var(--step--1);
     line-height: 1.45;
     color: var(--ink);
-    background: var(--paper);
-    border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--accent-clinical) 12%, var(--paper));
+    border: 1px solid color-mix(in srgb, var(--accent-clinical) 35%, var(--line));
     border-left: 3px solid var(--accent-clinical);
     border-radius: var(--radius);
-    padding: 0.7rem 0.8rem;
+    padding: 0.75rem 0.85rem;
   }
   .advisory::before {
     content: '!';
+    display: grid;
+    place-items: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 50%;
+    background: var(--accent-clinical);
+    color: var(--paper);
     font-family: var(--mono);
     font-weight: 600;
-    color: var(--accent-clinical);
-    line-height: 1.4;
+    font-size: 0.72rem;
+    line-height: 1;
   }
   .summary__cta {
     justify-content: center;
