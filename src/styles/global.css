@@ -281,15 +281,22 @@ p {
 }
 
 /* ── Reveal on scroll ────────────────────────────────────────────────── */
+/* Diffusion reveal: content blooms into focus, blurred and faintly risen,
+   like ink settling in water, then resolves sharp. */
 .reveal {
   opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  transform: translateY(14px) scale(0.992);
+  filter: blur(9px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease),
+    filter 0.8s var(--ease);
   transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform, filter;
 }
 .reveal.is-in {
   opacity: 1;
   transform: none;
+  filter: blur(0);
+  will-change: auto;
 }
 
 /* CSS-only above-the-fold entrance (LCP-safe, not gated behind JS). */
@@ -304,6 +311,39 @@ p {
     opacity: 1;
     transform: none;
   }
+}
+
+/* Droplet cursor: a soft accent droplet that trails the pointer and swells
+   over interactive elements. Desktop / fine-pointer only (toggled in JS). */
+.droplet {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in srgb, var(--accent-recovery) 85%, transparent),
+    color-mix(in srgb, var(--accent-recovery) 0%, transparent) 70%
+  );
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0;
+  transform: translate3d(-100px, -100px, 0) scale(1);
+  transition: opacity 0.35s var(--ease), width 0.3s var(--ease),
+    height 0.3s var(--ease), margin 0.3s var(--ease);
+}
+.droplet.is-active {
+  opacity: 0.55;
+}
+.droplet.is-hot {
+  width: 42px;
+  height: 42px;
+  margin: -21px 0 0 -21px;
+  opacity: 0.32;
 }
 
 /* Paper grain: a barely-there fractal-noise wash so the white reads as fine
@@ -328,8 +368,12 @@ body::after {
   .in-load {
     opacity: 1 !important;
     transform: none !important;
+    filter: none !important;
     animation: none !important;
     transition: none !important;
+  }
+  .droplet {
+    display: none !important;
   }
   *,
   *::before,
