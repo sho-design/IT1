@@ -29,7 +29,7 @@ const { ingredient, showLine = false } = Astro.props;
     text-decoration: none;
     font-size: var(--step--1);
     color: var(--ink);
-    transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
   }
   .chip__dot {
     width: 8px;
@@ -37,6 +37,10 @@ const { ingredient, showLine = false } = Astro.props;
     border-radius: 50%;
     background: var(--dot);
     flex: none;
+    transition: box-shadow 0.2s var(--ease);
+  }
+  .chip__name {
+    transition: color 0.2s var(--ease);
   }
   .chip--line {
     display: grid;
@@ -58,10 +62,17 @@ const { ingredient, showLine = false } = Astro.props;
     color: var(--mist);
     letter-spacing: 0.01em;
   }
+  /* Hover: outline in the ingredient's own colour, matching the booster
+     cards. Name darkened slightly toward ink so lighter accents stay legible. */
   @media (hover: hover) and (pointer: fine) {
     .chip:hover {
-      border-color: var(--ink);
-      background: var(--cloud);
+      border-color: var(--dot);
+    }
+    .chip:hover .chip__name {
+      color: color-mix(in srgb, var(--dot) 70%, var(--ink));
+    }
+    .chip:hover .chip__dot {
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--dot) 22%, transparent);
     }
   }
 </style>
