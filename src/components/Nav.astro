@@ -597,11 +597,5 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') setMobile(false);
     });
-    // The nav persists across view-transition navigations, so close the
-    // mobile menu and any open dropdown once a new page swaps in.
-    document.addEventListener('astro:after-swap', () => {
-      setMobile(false);
-      if (openDrop) closeDrop(openDrop);
-    });
   }
 </script>

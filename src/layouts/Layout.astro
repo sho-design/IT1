@@ -1,6 +1,5 @@
 ---
 import '@/styles/global.css';
-import { ViewTransitions } from 'astro:transitions';
 import Nav from '@/components/Nav.astro';
 import Footer from '@/components/Footer.astro';
 import { site } from '@/data/site';
@@ -59,31 +58,25 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
         set:html={JSON.stringify(node)}
       />
     ))}
-
-    <ViewTransitions />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
-    <Nav transition:persist />
+    <Nav />
     <main id="main">
       <slot />
     </main>
-    <Footer transition:persist />
+    <Footer />
 
     <script>
       // Reveal-on-scroll runtime. Below-the-fold only; above-the-fold uses
       // a CSS-only entrance so the LCP text is never held at opacity:0.
-      // Re-runs on every page load, including view-transition navigations.
-      const initReveal = () => {
-        const reduce = window.matchMedia(
-          '(prefers-reduced-motion: reduce)'
-        ).matches;
-        const items = document.querySelectorAll('.reveal:not(.is-in)');
-        if (!items.length) return;
-        if (reduce || !('IntersectionObserver' in window)) {
-          items.forEach((el) => el.classList.add('is-in'));
-          return;
-        }
+      const reduce = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+      const items = document.querySelectorAll('.reveal');
+      if (reduce || !('IntersectionObserver' in window)) {
+        items.forEach((el) => el.classList.add('is-in'));
+      } else {
         const io = new IntersectionObserver(
           (entries) => {
             entries.forEach((e) => {
@@ -96,8 +89,7 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
           { rootMargin: '0px 0px -10% 0px', threshold: 0.05 }
         );
         items.forEach((el) => io.observe(el));
-      };
-      document.addEventListener('astro:page-load', initReveal);
+      }
     </script>
   </body>
 </html>

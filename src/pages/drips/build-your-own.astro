@@ -347,11 +347,7 @@ const jsonLd = {
 </style>
 
 <script>
-  // Re-run on every page load, including view-transition navigations. Guards
-  // against pages without the configurator, so it is safe to fire globally.
-  const initBuildYourOwn = () => {
   const bases = document.querySelectorAll<HTMLButtonElement>('.base');
-  if (!bases.length) return;
   const boosters = document.querySelectorAll<HTMLButtonElement>('.booster');
   const sumBase = document.querySelector('[data-summary-base]');
   const sumList = document.querySelector('[data-summary-list]');
@@ -474,7 +470,4 @@ const jsonLd = {
       render();
     });
   });
-  };
-
-  document.addEventListener('astro:page-load', initBuildYourOwn);
 </script>
