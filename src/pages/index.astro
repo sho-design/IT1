@@ -61,6 +61,17 @@ const steps = [
 <Layout title="home" jsonLd={jsonLd}>
   <!-- Hero: thesis, black and white -->
   <section class="hero">
+    <!-- Living IV bag: colour "ingredients" injected from the bottom port -->
+    <div class="hero__bag in-load" style="--load-delay: 220ms" aria-hidden="true">
+      <span class="hero__bag-hook"></span>
+      <div class="hero__bag-body">
+        <canvas class="hero__bag-canvas" data-hero-fluid></canvas>
+        <span class="hero__bag-ticks"></span>
+        <span class="hero__bag-tag">IV · 500 mL</span>
+      </div>
+      <span class="hero__bag-neck"></span>
+      <span class="hero__bag-tube"></span>
+    </div>
     <div class="wrap hero__inner">
       <p class="eyebrow hero__eyebrow in-load">
         Infusion Therapy · Refined by Medicine
@@ -225,7 +236,107 @@ const steps = [
 
 <style>
   .hero {
+    position: relative;
+    overflow: hidden;
     padding-block: clamp(3.5rem, 8vh, 7rem) var(--space-l);
+  }
+  .hero__inner,
+  .hero__meta {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* The IV bag, a line-art vessel holding the live liquid canvas. */
+  .hero__bag {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    right: clamp(0.5rem, 5vw, 5rem);
+    transform: translateY(-50%);
+    width: clamp(200px, 23vw, 296px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+  }
+  .hero__bag-hook {
+    width: 24px;
+    height: 24px;
+    border: 1.5px solid color-mix(in srgb, var(--graphite) 30%, var(--line));
+    border-radius: 50%;
+    margin-bottom: -3px;
+  }
+  .hero__bag-body {
+    position: relative;
+    width: 100%;
+    height: clamp(310px, 46vh, 430px);
+    border: 1.5px solid color-mix(in srgb, var(--graphite) 32%, var(--line));
+    border-radius: 16px 16px 22px 22px;
+    background: color-mix(in srgb, var(--cloud) 55%, transparent);
+    overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+  .hero__bag-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    mix-blend-mode: multiply;
+    -webkit-mask-image: linear-gradient(to top, #000 0 66%, transparent 100%);
+    mask-image: linear-gradient(to top, #000 0 66%, transparent 100%);
+  }
+  .hero__bag-ticks {
+    position: absolute;
+    left: 11px;
+    top: 14%;
+    bottom: 16%;
+    width: 9px;
+    background: repeating-linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--graphite) 38%, transparent) 0 1px,
+      transparent 1px 27px
+    );
+    opacity: 0.7;
+  }
+  .hero__bag-tag {
+    position: absolute;
+    top: 12px;
+    right: 13px;
+    font-family: var(--mono);
+    font-size: 0.5rem;
+    letter-spacing: 0.18em;
+    color: var(--mist);
+  }
+  .hero__bag-neck {
+    width: 26px;
+    height: 12px;
+    border: 1.5px solid color-mix(in srgb, var(--graphite) 32%, var(--line));
+    border-top: none;
+    border-radius: 0 0 7px 7px;
+    background: var(--cloud);
+  }
+  .hero__bag-tube {
+    width: 2px;
+    height: clamp(20px, 5vh, 42px);
+    background: color-mix(in srgb, var(--graphite) 32%, var(--line));
+  }
+  @media (min-width: 1000px) {
+    .hero__inner,
+    .hero__meta {
+      padding-right: clamp(270px, 27vw, 380px);
+    }
+  }
+  @media (max-width: 999px) {
+    .hero__bag {
+      right: clamp(-70px, -4vw, -20px);
+      opacity: 0.28 !important;
+      width: clamp(190px, 40vw, 260px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__bag {
+      transition: none;
+    }
   }
   .hero__eyebrow {
     margin-bottom: 2rem;
@@ -370,3 +481,101 @@ const steps = [
     }
   }
 </style>
+
+<script>
+  const initHeroFluid = () => {
+    const canvas = document.querySelector("[data-hero-fluid]");
+    if (!(canvas instanceof HTMLCanvasElement) || canvas.dataset.init === "1") return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    canvas.dataset.init = "1";
+
+    // Ingredient palette: the family + base accents, the colours added to a drip.
+    const palette = [
+      "#3e5c6e", "#b98aae", "#c2703d", "#c9a227", "#6e8b5a",
+      "#4f7c82", "#0e9bc9", "#c65f73", "#3e4c8a",
+    ];
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const rand = (a, b) => a + Math.random() * (b - a);
+    let w = 0, h = 0, raf = 0, frame = 0;
+    const drops = [];
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      w = rect.width; h = rect.height;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(1, Math.round(w * dpr));
+      canvas.height = Math.max(1, Math.round(h * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const spawn = () => {
+      drops.push({
+        x: w * rand(0.34, 0.66),
+        y: h + 14,
+        vy: -rand(0.12, 0.30),
+        drift: rand(-0.4, 0.4),
+        phase: rand(0, Math.PI * 2),
+        r: rand(w * 0.10, w * 0.18),
+        grow: rand(0.05, 0.11),
+        life: 0,
+        ttl: rand(520, 820),
+        color: palette[Math.floor(Math.random() * palette.length)],
+      });
+    };
+
+    const paint = (d, alpha) => {
+      const g = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r);
+      g.addColorStop(0, d.color);
+      g.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
+    const tick = () => {
+      ctx.clearRect(0, 0, w, h);
+      for (let i = drops.length - 1; i >= 0; i--) {
+        const d = drops[i];
+        d.life++;
+        d.y += d.vy;
+        d.x += Math.sin(d.life * 0.02 + d.phase) * 0.3 + d.drift * 0.02;
+        d.r += d.grow;
+        const t = d.life / d.ttl;
+        const fade = Math.sin(Math.min(t, 1) * Math.PI);
+        paint(d, Math.max(0, fade) * 0.5);
+        if (t >= 1 || d.y + d.r < -20) drops.splice(i, 1);
+      }
+      ctx.globalAlpha = 1;
+      if (frame % 46 === 0 && drops.length < 16) spawn();
+      frame++;
+      raf = requestAnimationFrame(tick);
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+
+    if (reduce) {
+      for (let i = 0; i < 5; i++) {
+        const d = { x: w * rand(0.3, 0.7), y: h * rand(0.45, 0.92), r: w * rand(0.16, 0.26), color: palette[i % palette.length] };
+        paint(d, 0.4);
+      }
+      ctx.globalAlpha = 1;
+      return;
+    }
+
+    for (let i = 0; i < 4; i++) { spawn(); const d = drops[drops.length - 1]; d.life = i * 130; d.y = h * rand(0.5, 0.95); }
+    raf = requestAnimationFrame(tick);
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
+      else if (!raf) raf = requestAnimationFrame(tick);
+    });
+  };
+
+  if (document.readyState !== "loading") initHeroFluid();
+  else document.addEventListener("DOMContentLoaded", initHeroFluid);
+  document.addEventListener("astro:page-load", initHeroFluid);
+</script>
