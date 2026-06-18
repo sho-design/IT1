@@ -10,9 +10,9 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
 
 <header class="nav" data-nav>
   <div class="nav__bar wrap">
-    <a class="nav__brand" href="/">
-      <span class="nav__brand-name">{site.brand}</span>
-      <span class="nav__brand-line">{site.line}</span>
+    <a class="nav__brand" href="/" aria-label={site.fullName}>
+      <span class="nav__brand-name">{site.line}</span>
+      <span class="nav__brand-line">{site.parentNote}</span>
     </a>
 
     <nav class="nav__links" aria-label="Primary">

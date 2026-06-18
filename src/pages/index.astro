@@ -12,7 +12,7 @@ const featuredDrips = signatureDrips.filter((d) => !d.configurator).slice(0, 6);
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'MedicalBusiness',
-  name: `${site.brand} · ${site.line}`,
+  name: site.fullName,
   description: site.description,
   medicalSpecialty: 'PreventiveMedicine',
   url: Astro.site?.href,

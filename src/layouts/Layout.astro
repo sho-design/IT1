@@ -20,8 +20,8 @@ const {
 
 const fullTitle =
   title === 'home'
-    ? `${site.line} at ${site.brand} · ${site.tagline}`
-    : `${title} · ${site.line} at ${site.brand}`;
+    ? `${site.fullName} · ${site.tagline}`
+    : `${title} · ${site.fullName}`;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
@@ -38,7 +38,7 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content={`${site.brand} · ${site.line}`} />
+    <meta property="og:site_name" content={site.fullName} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />

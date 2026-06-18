@@ -10,8 +10,10 @@ export const isFilled = (value: string | undefined | null): boolean =>
   !!value && value !== PLACEHOLDER;
 
 export const site = {
+  fullName: 'Infusion Therapy at Restoration Medical',
   brand: 'Restoration Medical',
   line: 'Infusion Therapy',
+  parentNote: 'at Restoration Medical',
   tagline: 'Refined by Medicine.',
   description:
     'Physician-led IV infusion therapy and injection shots at Restoration Medical. Wellness drips, clinical iron infusions, and a physician-supervised metabolic program in Thornhill and Woodbridge.',
