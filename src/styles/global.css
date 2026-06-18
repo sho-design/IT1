@@ -306,6 +306,55 @@ p {
   }
 }
 
+/* Scroll-infusion line: a hairline IV track on the left that fills with the
+   wellness palette as the page is read. The fill's gradient is anchored to the
+   full track height (set in JS) so colour is revealed top-down, like fluid. */
+.infuse {
+  position: fixed;
+  left: max(14px, 1.6vw);
+  top: calc(var(--header-h) + 1.5rem);
+  bottom: 1.5rem;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--line);
+  overflow: hidden;
+  z-index: 40;
+  pointer-events: none;
+}
+.infuse__fill {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 0;
+  border-radius: inherit;
+  background-image: linear-gradient(
+    to bottom,
+    var(--accent-recovery),
+    var(--accent-radiance),
+    var(--accent-energy),
+    var(--accent-immune)
+  );
+  background-repeat: no-repeat;
+}
+@media (max-width: 768px) {
+  .infuse {
+    display: none;
+  }
+}
+
+/* Paper grain: a barely-there fractal-noise wash so the white reads as fine
+   stationery rather than flat #fff. Sits above everything but never blocks. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.028;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -316,6 +365,9 @@ p {
     transform: none !important;
     animation: none !important;
     transition: none !important;
+  }
+  .infuse {
+    display: none;
   }
   *,
   *::before,
