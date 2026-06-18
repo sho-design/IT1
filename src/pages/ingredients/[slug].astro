@@ -2,7 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import CtaBand from '@/components/CtaBand.astro';
 import TreatmentCard from '@/components/TreatmentCard.astro';
-import { ingredients, ingredientBySlug, evidenceLevel } from '@/data/ingredients';
+import { ingredients, ingredientBySlug, ingredientEvidence } from '@/data/ingredients';
 import { treatmentsWithIngredient } from '@/data/treatments';
 import { families } from '@/data/families';
 
@@ -14,7 +14,7 @@ const { slug } = Astro.params;
 const ingredient = ingredientBySlug(slug!)!;
 const fam = families[ingredient.family];
 const foundIn = treatmentsWithIngredient(ingredient.slug);
-const evidence = evidenceLevel(ingredient.slug);
+const evidence = ingredientEvidence(ingredient.slug);
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -43,13 +43,11 @@ const jsonLd = {
             {ingredient.role}
           </span>
           <span
-            class={`ev ev--${evidence === 'Established' ? 'est' : 'emg'}`}
-            title={evidence === 'Established'
-              ? 'An essential nutrient with well-defined physiological roles.'
-              : 'Promising, but human evidence is still developing.'}
+            class={`ev ev--${evidence.level === 'Established' ? 'est' : 'emg'}`}
+            title={evidence.note}
           >
             <span class="ev__dot" aria-hidden="true"></span>
-            {evidence} evidence
+            {evidence.level} evidence
           </span>
         </div>
         <h1 class="hl ih__title display-2">{ingredient.name}</h1>

@@ -335,16 +335,37 @@ export const ingredients: Ingredient[] = [
 export const ingredientBySlug = (slug: string): Ingredient | undefined =>
   ingredients.find((i) => i.slug === slug);
 
-// Honest evidence tier per ingredient. "Established" = an essential nutrient
-// with well-defined physiological roles and/or clinical use. "Emerging" =
-// promising, but human evidence is still developing. Keep this conservative.
-const emergingEvidence = new Set<string>([
-  'glutathione',
-  'nad',
-  'amino-blend',
-  'l-carnitine',
-  'mic-lipotropic',
-]);
+// Honest, per-ingredient evidence. "Established" = an essential nutrient with
+// well-defined physiological roles and/or clinical use. "Emerging" = promising,
+// but human evidence is still developing. Notes are deliberately conservative.
+type Evidence = { level: 'Established' | 'Emerging'; note: string };
 
-export const evidenceLevel = (slug: string): 'Established' | 'Emerging' =>
-  emergingEvidence.has(slug) ? 'Emerging' : 'Established';
+const evidenceData: Record<string, Evidence> = {
+  'vitamin-a': { level: 'Established', note: 'Well-defined roles in vision, skin and immunity; supplementation matters most when intake is low.' },
+  'vitamin-c': { level: 'Established', note: 'Strong evidence for immune and collagen roles; high-dose IV effects are still being studied.' },
+  'vitamin-d3': { level: 'Established', note: 'Well-established for bone, muscle and immune function; dosing is best guided by your blood level.' },
+  'vitamin-e': { level: 'Established', note: 'Recognised antioxidant role; isolated high-dose benefits are less clear.' },
+  'b-complex': { level: 'Established', note: 'B vitamins have well-defined roles in energy metabolism; benefit is clearest when you run low.' },
+  b12: { level: 'Established', note: 'Well-established for nerve and red-cell health; most useful when levels are low.' },
+  b6: { level: 'Established', note: 'Defined roles in metabolism and mood-related pathways; kept within sensible limits.' },
+  thiamine: { level: 'Established', note: 'Well-established essential B vitamin for energy and nervous-system function.' },
+  'folic-acid': { level: 'Established', note: 'Strongly established before and during early pregnancy; otherwise guided by need.' },
+  biotin: { level: 'Established', note: 'Its essential role is established; hair and nail benefits beyond deficiency are limited.' },
+  'b3-niacinamide': { level: 'Established', note: 'Defined roles in metabolism and skin; a gentle, well-tolerated form of B3.' },
+  'b5-panthenol': { level: 'Established', note: 'Established role in energy metabolism and maintaining skin.' },
+  magnesium: { level: 'Established', note: 'Well-established for muscle and nerve function; helpful when intake or levels are low.' },
+  zinc: { level: 'Established', note: 'Defined roles in immunity, healing and skin; most useful when you run low.' },
+  calcium: { level: 'Established', note: 'Well-established for bone strength and muscle and nerve function.' },
+  glutathione: { level: 'Emerging', note: 'Its antioxidant role is recognised, but IV skin and wellness benefits are still being studied.' },
+  nad: { level: 'Emerging', note: 'Early human research; much of the current evidence is still preclinical.' },
+  'amino-blend': { level: 'Emerging', note: 'Plausible support for muscle recovery; direct IV evidence is limited.' },
+  'l-carnitine': { level: 'Emerging', note: 'Its role in fat metabolism is known, but weight and performance benefits are mixed.' },
+  'mic-lipotropic': { level: 'Emerging', note: 'Used within physician-led programs; standalone evidence is limited.' },
+  'iron-sucrose': { level: 'Established', note: 'Strong clinical evidence for treating diagnosed iron deficiency under physician direction.' },
+};
+
+export const ingredientEvidence = (slug: string): Evidence =>
+  evidenceData[slug] ?? {
+    level: 'Established',
+    note: 'An essential nutrient with well-defined physiological roles.',
+  };
