@@ -31,7 +31,7 @@ export const locations = [
     mapUrl: PLACEHOLDER,
   },
   {
-    name: 'Maple',
+    name: 'Maple (Coming Soon)',
     address: '2620 Rutherford Rd, Unit 105-107, Vaughan, ON L4K 0H1',
     hours: PLACEHOLDER,
     mapUrl: PLACEHOLDER,
