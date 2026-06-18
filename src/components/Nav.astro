@@ -2,6 +2,7 @@
 import { site } from '@/data/site';
 import { signatureDrips, shots } from '@/data/treatments';
 import { concerns } from '@/data/concerns';
+import ConcernIcon from './ConcernIcon.astro';
 
 // Accent dot uses the family CSS variable. This and treatment cards are the
 // only places the site shows prominent colour.
@@ -54,9 +55,10 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
                 {concerns.map((c) => (
                   <li>
                     <a
-                      class="mega__item mega__item--plain"
+                      class="mega__item mega__item--concern"
                       href={c.externalHref ?? `/concerns/${c.slug}`}
                     >
+                      <ConcernIcon slug={c.slug} class="mega__cicon" />
                       <span class="mega__name">{c.label}</span>
                     </a>
                   </li>
@@ -109,9 +111,10 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
               {concerns.map((c) => (
                 <li>
                   <a
-                    class="mega__item mega__item--plain"
+                    class="mega__item mega__item--concern"
                     href={c.externalHref ?? `/concerns/${c.slug}`}
                   >
+                    <ConcernIcon slug={c.slug} class="mega__cicon" />
                     <span class="mega__name">{c.label}</span>
                     <span class="mega__desc">{c.tile}</span>
                   </a>
@@ -166,7 +169,9 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
         <summary class="mobile__sum">By Concern</summary>
         <div class="mobile__panel">
           {concerns.map((c) => (
-            <a class="mobile__sublink" href={c.externalHref ?? `/concerns/${c.slug}`}>{c.label}</a>
+            <a class="mobile__sublink" href={c.externalHref ?? `/concerns/${c.slug}`}>
+              <ConcernIcon slug={c.slug} class="mobile__cicon" />{c.label}
+            </a>
           ))}
         </div>
       </details>
@@ -330,6 +335,21 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
   .mega__item--plain {
     grid-template-columns: 1fr;
   }
+  .mega__item--concern {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    column-gap: 0.7rem;
+  }
+  .mega__cicon {
+    grid-row: 1 / -1;
+    align-self: center;
+    color: var(--mist);
+    font-size: 1rem;
+    transition: color 0.2s var(--ease);
+  }
+  .mega__item--concern:hover .mega__cicon {
+    color: var(--ink);
+  }
   .mega__dot {
     width: 8px;
     height: 8px;
@@ -454,6 +474,10 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
   .mobile__sublink--learn {
     color: var(--ink);
   }
+  .mobile__cicon {
+    font-size: 1rem;
+    color: var(--mist);
+  }
   .mobile__cta {
     margin-top: 1.2rem;
     justify-content: center;
@@ -485,19 +509,33 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
   const nav = document.querySelector('[data-nav]');
   if (nav) {
     const dropdowns = Array.from(nav.querySelectorAll('[data-dropdown]'));
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     let openDrop: Element | null = null;
+    let pinned = false; // a click pins the menu open until you click away
+    let closeTimer: number | undefined;
+    const CLOSE_DELAY = 260; // grace period to travel from trigger to panel
+
+    const clearCloseTimer = () => {
+      if (closeTimer) {
+        window.clearTimeout(closeTimer);
+        closeTimer = undefined;
+      }
+    };
 
     const closeDrop = (d: Element | null) => {
       if (!d) return;
+      clearCloseTimer();
       d.classList.remove('is-open');
       const trigger = d.querySelector('[data-trigger]');
       const panel = d.querySelector('[data-panel]');
       trigger?.setAttribute('aria-expanded', 'false');
       panel?.setAttribute('hidden', '');
       if (openDrop === d) openDrop = null;
+      pinned = false;
     };
 
     const openDropFn = (d: Element) => {
+      clearCloseTimer();
       if (openDrop && openDrop !== d) closeDrop(openDrop);
       d.classList.add('is-open');
       const trigger = d.querySelector('[data-trigger]');
@@ -507,17 +545,29 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
       openDrop = d;
     };
 
+    // Close after a short delay, so moving the cursor across the small gap
+    // between the trigger and the panel does not dismiss the menu. A pinned
+    // (clicked-open) menu ignores hover-out entirely.
+    const scheduleClose = (d: Element) => {
+      if (pinned) return;
+      clearCloseTimer();
+      closeTimer = window.setTimeout(() => closeDrop(d), CLOSE_DELAY);
+    };
+
     dropdowns.forEach((d) => {
       const trigger = d.querySelector('[data-trigger]');
       trigger?.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (d.classList.contains('is-open')) closeDrop(d);
-        else openDropFn(d);
+        if (d.classList.contains('is-open')) {
+          closeDrop(d);
+        } else {
+          openDropFn(d);
+          pinned = true; // an explicit click keeps it open
+        }
       });
-      // Open on hover for fine pointers, but keyboard/click still drives it.
-      if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      if (fine) {
         d.addEventListener('mouseenter', () => openDropFn(d));
-        d.addEventListener('mouseleave', () => closeDrop(d));
+        d.addEventListener('mouseleave', () => scheduleClose(d));
       }
     });
 

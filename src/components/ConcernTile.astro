@@ -1,5 +1,6 @@
 ---
 import type { Concern } from '@/data/concerns';
+import ConcernIcon from './ConcernIcon.astro';
 
 export interface Props {
   concern: Concern;
@@ -9,6 +10,7 @@ const href = concern.externalHref ?? `/concerns/${concern.slug}`;
 ---
 
 <a class="tile" href={href}>
+  <span class="tile__icon" aria-hidden="true"><ConcernIcon slug={concern.slug} /></span>
   <span class="tile__label">{concern.label}</span>
   <span class="tile__line">{concern.tile}</span>
   <span class="tile__more link-arrow">
@@ -30,6 +32,12 @@ const href = concern.externalHref ?? `/concerns/${concern.slug}`;
     text-decoration: none;
     transition: transform 0.3s var(--ease), border-color 0.3s var(--ease),
       box-shadow 0.3s var(--ease);
+  }
+  .tile__icon {
+    font-size: 1.4rem;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+    transition: color 0.3s var(--ease), transform 0.3s var(--ease);
   }
   .tile__label {
     font-family: var(--display);
@@ -55,6 +63,9 @@ const href = concern.externalHref ?? `/concerns/${concern.slug}`;
     }
     .tile:hover .tile__more {
       border-color: var(--ink);
+    }
+    .tile:hover .tile__icon {
+      transform: translateY(-2px);
     }
   }
 </style>

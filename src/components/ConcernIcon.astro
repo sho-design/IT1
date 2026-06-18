@@ -1,0 +1,48 @@
+---
+// Line-art icons for each concern, single-stroke, currentColor, so they
+// inherit text colour and size. Add a concern by adding a path here keyed to
+// its slug; a neutral default is used if a slug is missing.
+export interface Props {
+  slug: string;
+  class?: string;
+}
+const { slug, class: className = '' } = Astro.props;
+
+const paths: Record<string, string> = {
+  // Lightning bolt: low energy & fatigue
+  'low-energy-fatigue': '<path d="M13 2 5 13h5l-1 9 9-12h-5l1-8z"/>',
+  // Shield: immune support
+  'immune-support':
+    '<path d="M12 3l7 3v5.5c0 4.2-2.9 7.4-7 8.9-4.1-1.5-7-4.7-7-8.9V6z"/>',
+  // Sparkle: skin, hair & nails
+  'skin-hair-nails':
+    '<path d="M12 3c.9 3.9 2.4 5.4 6 6-3.6.9-5.1 2.4-6 6-.9-3.6-2.4-5.1-6-6 3.6-.9 5.1-2.4 6-6z"/>',
+  // Pulse line: recovery & performance
+  'recovery-performance': '<path d="M3 12h4l2.5-6 4 12 2.5-6H21"/>',
+  // Hourglass: longevity & healthy aging
+  longevity: '<path d="M7 3h10l-5 9 5 9H7l5-9z"/>',
+  // Flame: weight & metabolism
+  'weight-metabolism':
+    '<path d="M12 3c3 3.4 5 6 5 9a5 5 0 0 1-10 0c0-1.7.8-3 2-4 .3 1 .9 1.7 1.8 2 .6-2.4-.4-4.7 1.2-7z"/>',
+  // Droplet: iron deficiency & low ferritin
+  'iron-low-ferritin':
+    '<path d="M12 3c3.5 5 6 7.5 6 10.5a6 6 0 0 1-12 0C6 10.5 8.5 8 12 3z"/>',
+  // Paper plane: hydration & travel
+  'hydration-travel': '<path d="M21 3 3 10.5l7 2.6L12.6 21 21 3z"/><path d="M10 13.1 21 3"/>',
+  _default: '<circle cx="12" cy="12" r="8"/>',
+};
+
+const inner = paths[slug] ?? paths._default;
+---
+
+<svg
+  class={`cicon ${className}`}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  set:html={inner}
+></svg>
