@@ -3,6 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import TreatmentCard from '@/components/TreatmentCard.astro';
 import ConcernTile from '@/components/ConcernTile.astro';
 import CtaBand from '@/components/CtaBand.astro';
+import PullQuote from '@/components/PullQuote.astro';
 import { treatmentBySlug, type Treatment } from '@/data/treatments';
 import { concerns } from '@/data/concerns';
 import { site, locations } from '@/data/site';
@@ -178,6 +179,16 @@ const steps = [
         <a class="btn btn--ghost" href="/drips">See all drips</a>
         <a class="link-arrow" href="/shots">Visit the Injection Bar &rarr;</a>
       </div>
+    </div>
+  </section>
+
+  <!-- Editorial beat -->
+  <section class="section-tight">
+    <div class="wrap">
+      <PullQuote cite="The standard, not a slogan" accent="var(--accent-recovery)">
+        Wellness deserves the same rigour as
+        <span class="it">the rest of medicine.</span>
+      </PullQuote>
     </div>
   </section>
 

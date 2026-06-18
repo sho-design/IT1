@@ -1,0 +1,53 @@
+---
+// Oversized editorial pull-quote. Place between sections for a confident,
+// typographic beat. Emphasise a fragment with <span class="it"> in the slot.
+export interface Props {
+  cite?: string;
+  accent?: string; // optional CSS colour for the mark + rule
+}
+const { cite, accent } = Astro.props;
+---
+
+<figure class="pq reveal" style={accent ? `--pq-accent:${accent}` : undefined}>
+  <span class="pq__mark" aria-hidden="true"></span>
+  <blockquote class="pq__q">
+    <slot />
+  </blockquote>
+  {cite && <figcaption class="pq__cite">{cite}</figcaption>}
+</figure>
+
+<style>
+  .pq {
+    margin: 0;
+    padding-block: clamp(3rem, 7vw, 6rem);
+    display: grid;
+    justify-items: center;
+    gap: 1.4rem;
+    text-align: center;
+  }
+  .pq__mark {
+    width: 38px;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--pq-accent, var(--ink));
+    opacity: 0.85;
+  }
+  .pq__q {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 360;
+    font-size: var(--step-4);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    max-width: 18ch;
+    text-wrap: balance;
+  }
+  .pq__cite {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+</style>
