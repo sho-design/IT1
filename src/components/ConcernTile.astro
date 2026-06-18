@@ -9,7 +9,7 @@ const { concern } = Astro.props;
 const href = concern.externalHref ?? `/concerns/${concern.slug}`;
 ---
 
-<a class="tile" href={href}>
+<a class="tile" href={href} style={`--accent:${concern.accent}`}>
   <span class="tile__icon" aria-hidden="true"><ConcernIcon slug={concern.slug} color={concern.accent} /></span>
   <span class="tile__label">{concern.label}</span>
   <span class="tile__line">{concern.tile}</span>
@@ -20,6 +20,7 @@ const href = concern.externalHref ?? `/concerns/${concern.slug}`;
 
 <style>
   .tile {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -30,8 +31,34 @@ const href = concern.externalHref ?? `/concerns/${concern.slug}`;
     border: 1px solid var(--line);
     border-radius: var(--radius);
     text-decoration: none;
-    transition: transform 0.3s var(--ease), border-color 0.3s var(--ease),
-      box-shadow 0.3s var(--ease);
+    transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  }
+  /* A drop of the concern's colour that travels around the card edge on
+     hover, masked to just the border. Loops until you leave or click. */
+  .tile::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: conic-gradient(
+      from var(--beam-angle),
+      var(--accent),
+      color-mix(in srgb, var(--accent) 0%, transparent) 14%,
+      transparent 100%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s var(--ease);
+    pointer-events: none;
+  }
+  .tile > * {
+    position: relative;
+    z-index: 1;
   }
   .tile__icon {
     font-size: 1.4rem;
@@ -57,15 +84,29 @@ const href = concern.externalHref ?? `/concerns/${concern.slug}`;
   }
   @media (hover: hover) and (pointer: fine) {
     .tile:hover {
-      transform: translateY(-3px);
-      border-color: var(--ink);
-      box-shadow: 0 18px 30px -24px rgba(26, 27, 29, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 18px 30px -24px rgba(26, 27, 29, 0.25);
     }
-    .tile:hover .tile__more {
-      border-color: var(--ink);
+    .tile:hover::before {
+      opacity: 1;
+      animation: beam-spin 2.4s linear infinite;
     }
     .tile:hover .tile__icon {
-      transform: translateY(-2px);
+      animation: icon-spin 3s linear infinite;
+    }
+    .tile:hover .tile__more {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tile:hover::before {
+      animation: none;
+      background: var(--accent);
+      opacity: 0.55;
+    }
+    .tile:hover .tile__icon {
+      animation: none;
     }
   }
 </style>
