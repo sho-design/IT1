@@ -93,6 +93,12 @@ const jsonLd = {
     padding-top: var(--space-l);
     padding-bottom: var(--space-m);
     border-bottom: 1px solid var(--line);
+    /* A slight wash of the ingredient's accent rising up from the line. */
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--accent) 13%, transparent),
+      transparent 60%
+    );
   }
   .ih__back {
     display: inline-block;

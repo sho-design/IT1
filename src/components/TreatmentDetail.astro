@@ -111,6 +111,12 @@ const backLabel = treatment.type === 'drip' ? 'All drips' : 'The Injection Bar';
     padding-top: var(--space-l);
     padding-bottom: var(--space-m);
     border-bottom: 1px solid var(--line);
+    /* A slight wash of the treatment's accent rising up from the line. */
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--accent) 13%, transparent),
+      transparent 60%
+    );
   }
   .detail__back {
     display: inline-block;
