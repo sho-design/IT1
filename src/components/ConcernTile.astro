@@ -92,7 +92,7 @@ const href = concern.externalHref ?? `/concerns/${concern.slug}`;
       animation: beam-spin 2.4s linear infinite;
     }
     .tile:hover .tile__icon {
-      animation: icon-spin 3s linear infinite;
+      transform: translateY(-2px);
     }
     .tile:hover .tile__more {
       color: var(--accent);
@@ -104,9 +104,6 @@ const href = concern.externalHref ?? `/concerns/${concern.slug}`;
       animation: none;
       background: var(--accent);
       opacity: 0.55;
-    }
-    .tile:hover .tile__icon {
-      animation: none;
     }
   }
 </style>

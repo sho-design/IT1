@@ -355,8 +355,3 @@ p {
     --beam-angle: 360deg;
   }
 }
-@keyframes icon-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
