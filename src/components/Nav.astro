@@ -35,7 +35,7 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
           <div class="mega__inner wrap">
             <div class="mega__col">
               <p class="mega__heading">Signature Drips</p>
-              <ul class="mega__list">
+              <ul class="mega__list mega__list--signature">
                 {signatureDrips.map((t) => (
                   <li>
                     <a class="mega__item" href={`/drips/${t.slug}`} style={dot(t.family)}>
@@ -143,17 +143,21 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
         <summary class="mobile__sum">Drips &amp; Shots</summary>
         <div class="mobile__panel">
           <p class="mega__heading">Signature Drips</p>
-          {signatureDrips.map((t) => (
-            <a class="mobile__sublink" href={`/drips/${t.slug}`} style={dot(t.family)}>
-              <span class="mega__dot" aria-hidden="true"></span>{t.name}
-            </a>
-          ))}
+          <div class="mobile__cols">
+            {signatureDrips.map((t) => (
+              <a class="mobile__sublink" href={`/drips/${t.slug}`} style={dot(t.family)}>
+                <span class="mega__dot" aria-hidden="true"></span>{t.name}
+              </a>
+            ))}
+          </div>
           <p class="mega__heading">Shots</p>
-          {shots.map((t) => (
-            <a class="mobile__sublink" href={`/shots/${t.slug}`} style={dot(t.family)}>
-              <span class="mega__dot" aria-hidden="true"></span>{t.name.replace(' Shot', '')}
-            </a>
-          ))}
+          <div class="mobile__cols">
+            {shots.map((t) => (
+              <a class="mobile__sublink" href={`/shots/${t.slug}`} style={dot(t.family)}>
+                <span class="mega__dot" aria-hidden="true"></span>{t.name.replace(' Shot', '')}
+              </a>
+            ))}
+          </div>
           <a class="mobile__sublink mobile__sublink--learn" href="/ingredients">Browse all ingredients</a>
         </div>
       </details>
@@ -270,7 +274,7 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
   }
   .mega__inner {
     display: grid;
-    grid-template-columns: 1.1fr 1fr 1fr;
+    grid-template-columns: 1.8fr 1fr 1fr;
     gap: 2.5rem;
     padding-block: 2.2rem 1.6rem;
   }
@@ -297,6 +301,10 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
   .mega__list--two {
     grid-template-columns: 1fr 1fr;
     gap: 0.15rem 2.5rem;
+  }
+  .mega__list--signature {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.15rem 1.5rem;
   }
   .mega__list--shots {
     grid-template-columns: 1fr 1fr;
@@ -429,6 +437,11 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
+  }
+  .mobile__cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1rem;
   }
   .mobile__sublink {
     display: flex;
