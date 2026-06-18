@@ -285,7 +285,7 @@ export const treatments: Treatment[] = [
   },
   {
     slug: 'pregnancy-care',
-    name: 'Restoration Pregnancy Care',
+    name: 'Pregnancy Care',
     type: 'drip',
     family: 'wellness',
     essence: 'Gentle, physician-supervised hydration and nutrient support through pregnancy.',
