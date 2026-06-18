@@ -346,6 +346,22 @@ p {
   opacity: 0.32;
 }
 
+/* Water-ripple on headings: point at a main title and it undulates. */
+.ripple-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .hl {
+    transition: filter 0.3s var(--ease);
+  }
+  .hl:hover {
+    filter: url('#title-ripple');
+  }
+}
+
 /* Paper grain: a barely-there fractal-noise wash so the white reads as fine
    stationery rather than flat #fff. Sits above everything but never blocks. */
 body::after {

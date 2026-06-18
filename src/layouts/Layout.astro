@@ -69,6 +69,32 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
     <div class="droplet" aria-hidden="true"></div>
 
+    <!-- Water-ripple filter for headings on hover. The turbulence animates
+         continuously; the filter is only applied (via CSS :hover) to the
+         heading you point at, so the text undulates like a water surface. -->
+    <svg class="ripple-defs" aria-hidden="true" focusable="false" width="0" height="0">
+      <defs>
+        <filter
+          id="title-ripple"
+          x="-6%"
+          y="-35%"
+          width="112%"
+          height="170%"
+          color-interpolation-filters="sRGB"
+        >
+          <feTurbulence type="fractalNoise" baseFrequency="0.008 0.016" numOctaves="2" seed="7" result="n">
+            <animate
+              attributeName="baseFrequency"
+              dur="11s"
+              values="0.008 0.016; 0.014 0.010; 0.008 0.016"
+              repeatCount="indefinite"
+            ></animate>
+          </feTurbulence>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="4.5" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
+        </filter>
+      </defs>
+    </svg>
+
     <script>
       // Reveal-on-scroll runtime. Below-the-fold only; above-the-fold uses
       // a CSS-only entrance so the LCP text is never held at opacity:0.
