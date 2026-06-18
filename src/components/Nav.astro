@@ -17,82 +17,6 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
     </a>
 
     <nav class="nav__links" aria-label="Primary">
-      <a class="nav__link" href="/how-it-works">How It Works</a>
-
-      <div class="nav__has-panel" data-dropdown>
-        <button
-          class="nav__link nav__trigger"
-          aria-expanded="false"
-          aria-controls="mega-drips"
-          data-trigger
-        >
-          Drips &amp; Shots
-          <svg class="nav__chev" viewBox="0 0 10 6" aria-hidden="true"
-            ><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.3"
-          /></svg>
-        </button>
-
-        <div class="mega" id="mega-drips" data-panel hidden>
-          <div class="mega__inner wrap">
-            <div class="mega__col">
-              <p class="mega__heading">Signature Drips</p>
-              <ul class="mega__list mega__list--signature">
-                {signatureDrips.map((t) => (
-                  <li>
-                    <a class="mega__item" href={`/drips/${t.slug}`} style={dot(t.family)}>
-                      <span class="mega__dot" aria-hidden="true"></span>
-                      <span class="mega__name">{t.name}</span>
-                      <span class="mega__desc">{t.menuDescriptor}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div class="mega__col">
-              <p class="mega__heading">By Concern</p>
-              <ul class="mega__list">
-                {concerns.map((c) => (
-                  <li>
-                    <a
-                      class="mega__item mega__item--concern"
-                      href={c.externalHref ?? `/concerns/${c.slug}`}
-                    >
-                      <ConcernIcon slug={c.slug} class="mega__cicon" />
-                      <span class="mega__name">{c.label}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div class="mega__col">
-              <p class="mega__heading">Shots · The Injection Bar</p>
-              <ul class="mega__list mega__list--shots">
-                {shots.map((t) => (
-                  <li>
-                    <a class="mega__item mega__item--tight" href={`/shots/${t.slug}`} style={dot(t.family)}>
-                      <span class="mega__dot" aria-hidden="true"></span>
-                      <span class="mega__name">{t.name.replace(' Shot', '')}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-              <p class="mega__heading mega__heading--learn">Learn</p>
-              <ul class="mega__list">
-                <li><a class="mega__item mega__item--plain" href="/ingredients">Browse all ingredients</a></li>
-                <li><a class="mega__item mega__item--plain" href="/how-it-works">How infusion therapy works</a></li>
-                <li><a class="mega__item mega__item--plain" href="/safety">Is this right for me?</a></li>
-              </ul>
-            </div>
-          </div>
-          <p class="mega__foot">
-            Every treatment is physician-reviewed and nurse-administered.
-            Wellness services are elective. Iron therapy may be clinically indicated.
-          </p>
-        </div>
-      </div>
-
       <div class="nav__has-panel" data-dropdown>
         <button
           class="nav__link nav__trigger"
@@ -125,6 +49,65 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
         </div>
       </div>
 
+      <div class="nav__has-panel" data-dropdown>
+        <button
+          class="nav__link nav__trigger"
+          aria-expanded="false"
+          aria-controls="mega-drips"
+          data-trigger
+        >
+          Drips &amp; Shots
+          <svg class="nav__chev" viewBox="0 0 10 6" aria-hidden="true"
+            ><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.3"
+          /></svg>
+        </button>
+
+        <div class="mega" id="mega-drips" data-panel hidden>
+          <div class="mega__inner wrap">
+            <div class="mega__col">
+              <p class="mega__heading">Signature Drips</p>
+              <ul class="mega__list mega__list--signature">
+                {signatureDrips.map((t) => (
+                  <li>
+                    <a class="mega__item" href={`/drips/${t.slug}`} style={dot(t.family)}>
+                      <span class="mega__dot" aria-hidden="true"></span>
+                      <span class="mega__name">{t.name}</span>
+                      <span class="mega__desc">{t.menuDescriptor}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="mega__col">
+              <p class="mega__heading">Shots · The Injection Bar</p>
+              <ul class="mega__list mega__list--shots">
+                {shots.map((t) => (
+                  <li>
+                    <a class="mega__item mega__item--tight" href={`/shots/${t.slug}`} style={dot(t.family)}>
+                      <span class="mega__dot" aria-hidden="true"></span>
+                      <span class="mega__name">{t.name.replace(' Shot', '')}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <p class="mega__heading mega__heading--learn">Learn</p>
+              <ul class="mega__list">
+                <li><a class="mega__item mega__item--plain" href="/concerns">Browse by concern</a></li>
+                <li><a class="mega__item mega__item--plain" href="/ingredients">Browse all ingredients</a></li>
+                <li><a class="mega__item mega__item--plain" href="/how-it-works">How infusion therapy works</a></li>
+                <li><a class="mega__item mega__item--plain" href="/safety">Is this right for me?</a></li>
+              </ul>
+            </div>
+          </div>
+          <p class="mega__foot">
+            Every treatment is physician-reviewed and nurse-administered.
+            Wellness services are elective. Iron therapy may be clinically indicated.
+          </p>
+        </div>
+      </div>
+
+      <a class="nav__link" href="/how-it-works">How It Works</a>
       <a class="nav__link" href="/iron-therapy">Iron Therapy</a>
       <a class="nav__link" href="/about">About</a>
       <a class="btn nav__cta" href="/book">Book a consult</a>
@@ -140,7 +123,16 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
   <!-- Mobile: clean accordion -->
   <div class="mobile" id="mobile-nav" data-mobile hidden>
     <nav class="mobile__inner" aria-label="Mobile">
-      <a class="mobile__link" href="/how-it-works">How It Works</a>
+      <details class="mobile__acc">
+        <summary class="mobile__sum">By Concern</summary>
+        <div class="mobile__panel">
+          {concerns.map((c) => (
+            <a class="mobile__sublink" href={c.externalHref ?? `/concerns/${c.slug}`}>
+              <ConcernIcon slug={c.slug} class="mobile__cicon" />{c.label}
+            </a>
+          ))}
+        </div>
+      </details>
 
       <details class="mobile__acc">
         <summary class="mobile__sum">Drips &amp; Shots</summary>
@@ -165,17 +157,7 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
         </div>
       </details>
 
-      <details class="mobile__acc">
-        <summary class="mobile__sum">By Concern</summary>
-        <div class="mobile__panel">
-          {concerns.map((c) => (
-            <a class="mobile__sublink" href={c.externalHref ?? `/concerns/${c.slug}`}>
-              <ConcernIcon slug={c.slug} class="mobile__cicon" />{c.label}
-            </a>
-          ))}
-        </div>
-      </details>
-
+      <a class="mobile__link" href="/how-it-works">How It Works</a>
       <a class="mobile__link" href="/iron-therapy">Iron Therapy</a>
       <a class="mobile__link" href="/metabolic-program">Metabolic Program</a>
       <a class="mobile__link" href="/memberships">Memberships</a>
@@ -279,8 +261,8 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
   }
   .mega__inner {
     display: grid;
-    grid-template-columns: 1.8fr 1fr 1fr;
-    gap: 2.5rem;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 3rem;
     padding-block: 2.2rem 1.6rem;
   }
   .mega__inner--narrow {
