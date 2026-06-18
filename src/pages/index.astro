@@ -501,15 +501,15 @@ const steps = [
 
     const spawn = () => {
       drops.push({
-        x: w * rand(0.2, 0.8),
-        y: h + 12,
-        vy: -rand(0.18, 0.4),
+        x: w * rand(0.18, 0.82),
+        y: h + 10,
+        vy: -rand(0.03, 0.09),
         drift: rand(-0.5, 0.5),
         phase: rand(0, Math.PI * 2),
-        r: rand(w * 0.07, w * 0.13),
-        grow: rand(0.015, 0.04),
+        r: rand(w * 0.1, w * 0.17),
+        grow: rand(0.02, 0.05),
         life: 0,
-        ttl: rand(420, 640),
+        ttl: rand(900, 1400),
         color: palette[Math.floor(Math.random() * palette.length)],
       });
     };
@@ -517,7 +517,6 @@ const steps = [
     const paint = (d, alpha) => {
       const g = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r);
       g.addColorStop(0, d.color);
-      g.addColorStop(0.45, d.color);
       g.addColorStop(1, "rgba(255,255,255,0)");
       ctx.globalAlpha = alpha;
       ctx.fillStyle = g;
@@ -529,7 +528,7 @@ const steps = [
     // The settled fluid the bag is filled with: a soft tint rising from the
     // bottom, its hue drifting slowly as new ingredients blend in.
     const paintBase = () => {
-      baseT += 0.0016;
+      baseT += 0.0009;
       const i = Math.floor(baseT) % palette.length;
       const mix = baseT % 1;
       const g = ctx.createLinearGradient(0, h, 0, h * 0.18);
@@ -553,15 +552,15 @@ const steps = [
         const d = drops[i];
         d.life++;
         d.y += d.vy;
-        d.x += Math.sin(d.life * 0.02 + d.phase) * 0.35 + d.drift * 0.02;
+        d.x += Math.sin(d.life * 0.007 + d.phase) * 0.4 + d.drift * 0.01;
         d.r += d.grow;
         const t = d.life / d.ttl;
         const fade = Math.sin(Math.min(t, 1) * Math.PI);
-        paint(d, Math.max(0, fade) * 0.62);
+        paint(d, Math.max(0, fade) * 0.45);
         if (t >= 1 || d.y + d.r < -20) drops.splice(i, 1);
       }
       ctx.globalAlpha = 1;
-      if (frame % 38 === 0 && drops.length < 11) spawn();
+      if (frame % 72 === 0 && drops.length < 10) spawn();
       frame++;
       raf = requestAnimationFrame(tick);
     };
