@@ -284,6 +284,30 @@ export const treatments: Treatment[] = [
     signature: true,
   },
   {
+    slug: 'pregnancy-care',
+    name: 'Restoration Pregnancy Care',
+    type: 'drip',
+    family: 'wellness',
+    essence: 'Gentle, physician-supervised hydration and nutrient support through pregnancy.',
+    menuDescriptor: 'Maternal wellness support',
+    whatItIs:
+      'A gentle drip offering hydration and the core nutrients that support maternal wellness during pregnancy, including B vitamins, folate, and vitamin C. Given only under clinical supervision and tailored to where you are in your pregnancy.',
+    supports: [
+      'May help ease nausea and support comfort in early pregnancy.',
+      'Supports hydration and maternal nutrient replenishment.',
+      'Provides folate and B vitamins that support healthy fetal development.',
+      "Designed to support both maternal wellness and your baby's growth.",
+    ],
+    ingredients: ['b6', 'thiamine', 'b12', 'folic-acid', 'vitamin-a', 'vitamin-c', 'vitamin-d3'],
+    whatToExpect:
+      'A calm session of around forty-five to sixty minutes. Many patients return every two to four weeks through pregnancy, on a cadence your physician sets after reviewing your stage and your health.',
+    goodToKnow:
+      'Offered only under clinical supervision during pregnancy. Your physician reviews your health, your stage of pregnancy, and your medications first, and will adjust or decline on clinical grounds. Some nutrients, including vitamin A, are dosed carefully in pregnancy. Wellness services are elective. Results vary, and a consult confirms it is right for you.',
+    concerns: [],
+    pairsWith: ['foundation', 'b12-shot'],
+    signature: true,
+  },
+  {
     slug: 'build-your-own',
     name: 'Build Your Own',
     type: 'drip',

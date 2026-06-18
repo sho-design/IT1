@@ -131,6 +131,36 @@ export const ingredients: Ingredient[] = [
     ],
   },
   {
+    slug: 'thiamine',
+    name: 'Thiamine (B1)',
+    role: 'Vitamin',
+    family: 'energy',
+    oneLine: 'Supports energy metabolism and the nervous system.',
+    whatItIs:
+      'A B vitamin the body uses to turn carbohydrates into usable energy and to support normal nervous-system function.',
+    maySupport: [
+      'Supports normal energy-yielding metabolism.',
+      'Helps maintain normal nervous-system and heart function.',
+    ],
+    goodToKnow:
+      'Thiamine is water-soluble, so the body keeps what it needs and clears the rest. Results vary.',
+  },
+  {
+    slug: 'folic-acid',
+    name: 'Folic Acid (B9)',
+    role: 'Vitamin',
+    family: 'wellness',
+    oneLine: 'Supports cell growth and healthy development.',
+    whatItIs:
+      'The B vitamin folate, which the body uses to make new cells and form healthy blood cells. It is especially important before and during early pregnancy.',
+    maySupport: [
+      'Supports normal cell growth and the formation of blood cells.',
+      'Supports healthy development in early pregnancy.',
+    ],
+    goodToKnow:
+      'Folate is widely recommended before and during early pregnancy to support healthy development. Your physician guides the right amount for you. Results vary.',
+  },
+  {
     slug: 'biotin',
     name: 'Biotin (B7)',
     role: 'Vitamin',
