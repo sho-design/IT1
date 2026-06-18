@@ -7,18 +7,22 @@ import { treatmentBySlug, type Treatment } from '@/data/treatments';
 import { concerns } from '@/data/concerns';
 import { site, locations } from '@/data/site';
 
-// The eight most-requested drips, surfaced on the home teaser. This is an
-// estimate of typical demand at a physician-led wellness clinic; reorder to
-// match real booking data. The full set lives on /drips.
+// Home teaser: the eight highest-priced drips (price estimated from
+// ingredients and infusion length, since the site shows no pricing), then
+// ordered by estimated popularity within that set. Tune both with real
+// price and booking data. The full set lives on /drips.
+// Estimated price rank (high to low): nad-longevity, beauty-elixir,
+// pregnancy-care, metabolic, radiance, kingmaker, immune-shield, healing,
+// then recover, hair-nails, foundation, revive.
 const featuredSlugs = [
   'healing',
-  'foundation',
-  'immune-shield',
   'radiance',
+  'immune-shield',
   'nad-longevity',
-  'revive',
-  'recover',
   'beauty-elixir',
+  'metabolic',
+  'kingmaker',
+  'pregnancy-care',
 ];
 const featuredDrips = featuredSlugs
   .map((s) => treatmentBySlug(s))
