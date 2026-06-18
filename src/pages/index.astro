@@ -3,11 +3,26 @@ import Layout from '@/layouts/Layout.astro';
 import TreatmentCard from '@/components/TreatmentCard.astro';
 import ConcernTile from '@/components/ConcernTile.astro';
 import CtaBand from '@/components/CtaBand.astro';
-import { signatureDrips } from '@/data/treatments';
+import { treatmentBySlug, type Treatment } from '@/data/treatments';
 import { concerns } from '@/data/concerns';
 import { site, locations } from '@/data/site';
 
-const featuredDrips = signatureDrips.filter((d) => !d.configurator).slice(0, 8);
+// The eight most-requested drips, surfaced on the home teaser. This is an
+// estimate of typical demand at a physician-led wellness clinic; reorder to
+// match real booking data. The full set lives on /drips.
+const featuredSlugs = [
+  'healing',
+  'foundation',
+  'immune-shield',
+  'radiance',
+  'nad-longevity',
+  'revive',
+  'recover',
+  'beauty-elixir',
+];
+const featuredDrips = featuredSlugs
+  .map((s) => treatmentBySlug(s))
+  .filter((t): t is Treatment => Boolean(t));
 
 const jsonLd = {
   '@context': 'https://schema.org',
