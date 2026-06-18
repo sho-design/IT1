@@ -6,12 +6,23 @@ import { ingredients } from '@/data/ingredients';
 
 // Educational configurator. No pricing. The nurse finalises the blend.
 // `hasC` marks bases that already contain vitamin C, which matters for the
-// vitamin C / glutathione separation flagged in the summary.
+// vitamin C / glutathione separation flagged in the summary. Each base has
+// its own accent (outside the family palette) and a line icon.
 const bases = [
-  { id: 'hydrate', name: 'Hydration base', note: 'Electrolytes and fluids, the canvas for everything else.', hasC: false },
-  { id: 'myers', name: "Healing base", note: "Our Myers' style blend of B vitamins, vitamin C, and minerals.", hasC: true },
-  { id: 'foundation', name: 'Foundation base', note: 'A balanced everyday baseline of core vitamins and minerals.', hasC: true },
+  { id: 'hydrate', name: 'Hydration base', note: 'Electrolytes and fluids, the canvas for everything else.', hasC: false, accent: 'var(--base-hydrate)' },
+  { id: 'myers', name: "Healing base", note: "Our Myers' style blend of B vitamins, vitamin C, and minerals.", hasC: true, accent: 'var(--base-healing)' },
+  { id: 'foundation', name: 'Foundation base', note: 'A balanced everyday baseline of core vitamins and minerals.', hasC: true, accent: 'var(--base-foundation)' },
 ];
+
+// Line icons keyed to each base id, same style as the concern icons.
+const baseIcons: Record<string, string> = {
+  // Waves: hydration
+  hydrate: '<path d="M3 8c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M3 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/>',
+  // Cross in a circle: a healing, restorative blend
+  myers: '<circle cx="12" cy="12" r="8.5"/><path d="M12 8v8M8 12h8"/>',
+  // Stacked layers: a baseline foundation
+  foundation: '<path d="M12 4 3 8.5l9 4.5 9-4.5z"/><path d="M3 13.5 12 18l9-4.5"/>',
+};
 
 // Offer wellness boosters only (no clinical iron in a build-your-own).
 const boosters = ingredients.filter(
@@ -55,9 +66,24 @@ const jsonLd = {
                 data-base={b.id}
                 data-name={b.name}
                 data-has-c={String(b.hasC)}
+                style={`--accent:${b.accent}`}
               >
-                <span class="base__name">{b.name}</span>
-                <span class="base__note">{b.note}</span>
+                <span class="base__icon" aria-hidden="true">
+                  <svg
+                    class="cicon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    set:html={baseIcons[b.id]}
+                  ></svg>
+                </span>
+                <span class="base__text">
+                  <span class="base__name">{b.name}</span>
+                  <span class="base__note">{b.note}</span>
+                </span>
               </button>
             ))}
           </div>
@@ -140,12 +166,29 @@ const jsonLd = {
     padding: 1.1rem 1.2rem;
     cursor: pointer;
     display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.9rem;
+    align-items: center;
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+  .base__icon {
+    color: var(--accent);
+    font-size: 1.55rem;
+    display: grid;
+    place-items: center;
+  }
+  .base__text {
+    display: grid;
     gap: 0.3rem;
-    transition: border-color 0.2s var(--ease);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .base:hover {
+      border-color: var(--accent);
+    }
   }
   .base[aria-checked='true'] {
-    border-color: var(--ink);
-    box-shadow: inset 3px 0 0 var(--ink);
+    border-color: var(--accent);
+    box-shadow: inset 3px 0 0 var(--accent);
   }
   .base__name {
     font-family: var(--display);
