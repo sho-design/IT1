@@ -2,16 +2,38 @@
    Infusion Therapy at Restoration Medical
    Aesthetic: "Refined by Medicine". Black-and-white editorial, colour as a
    controlled signal. Restraint is the luxury.
+
+   Base tones are drawn from the clinic's real finishes:
+   - Soft Touch Black (matte, deep, neutral)  -> --ink
+   - Ultra Pure White (bright, clean walls)   -> --paper
+   - High Gloss Sparkle White (glossy panels) -> --gloss-white + --sparkle
    ═══════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Base palette */
-  --ink: #141414;
-  --paper: #fbfaf8;
-  --graphite: #3a3a3a;
-  --mist: #6e6e6e;
-  --line: #e4e2dd;
-  --cloud: #f2f0ec;
+  /* Base palette, keyed to the clinic's material swatches */
+  --ink: #1a1b1d;        /* soft touch matte black, neutral and deep */
+  --paper: #fcfcfd;      /* ultra pure white, the matte walls */
+  --graphite: #3b3d40;   /* secondary text */
+  --mist: #6c6e73;       /* captions, meta */
+  --line: #e6e8eb;       /* cool hairlines, dividers */
+  --cloud: #eff1f3;      /* quiet cool section fills */
+
+  /* High gloss sparkle white, for elevated panels and cards */
+  --white-pure: #ffffff;
+  --gloss-white: linear-gradient(
+    157deg,
+    #ffffff 0%,
+    #fbfcfd 46%,
+    #eef1f4 100%
+  );
+  /* A whisper of sparkle, like the galaxy-white finish catching light. */
+  --sparkle:
+    radial-gradient(1.2px 1.2px at 17% 24%, rgba(150, 160, 176, 0.3), transparent 60%),
+    radial-gradient(1px 1px at 67% 36%, rgba(150, 160, 176, 0.24), transparent 60%),
+    radial-gradient(1.1px 1.1px at 41% 70%, rgba(150, 160, 176, 0.26), transparent 60%),
+    radial-gradient(1px 1px at 86% 78%, rgba(150, 160, 176, 0.2), transparent 60%),
+    radial-gradient(1px 1px at 29% 90%, rgba(150, 160, 176, 0.18), transparent 60%);
+
 
   /* Treatment-family accents. Used ONLY in the mega-menu and on cards. */
   --accent-wellness: #3e5c6e;

@@ -41,13 +41,31 @@ const dots = treatment.ingredients.slice(0, 5);
     flex-direction: column;
     gap: 0.5rem;
     padding: 1.6rem 1.4rem 1.3rem;
-    background: var(--paper);
+    /* High gloss sparkle white: glossy gradient with a faint fleck layer. */
+    background-color: var(--white-pure);
+    background-image: var(--sparkle), var(--gloss-white);
     border: 1px solid var(--line);
     border-radius: var(--radius);
     text-decoration: none;
     overflow: hidden;
     transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease),
       border-color 0.3s var(--ease);
+  }
+  /* The gloss reflection, a soft diagonal sheen that sweeps on hover. */
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      125deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.55) 50%,
+      transparent 60%
+    );
+    transform: translateX(-60%);
+    opacity: 0;
+    transition: opacity 0.4s var(--ease), transform 0.6s var(--ease);
+    pointer-events: none;
   }
   .card__rule {
     position: absolute;
@@ -110,13 +128,22 @@ const dots = treatment.ingredients.slice(0, 5);
     .card:hover {
       transform: translateY(-3px);
       border-color: var(--accent);
-      box-shadow: 0 18px 30px -22px rgba(20, 20, 20, 0.3);
+      box-shadow: 0 18px 34px -22px rgba(26, 27, 29, 0.32);
+    }
+    .card:hover::after {
+      opacity: 1;
+      transform: translateX(60%);
     }
     .card:hover .card__dot {
       opacity: 0.9;
     }
     .card:hover .card__more {
       border-color: var(--ink);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card::after {
+      display: none;
     }
   }
 </style>
