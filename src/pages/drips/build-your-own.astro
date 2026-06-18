@@ -171,7 +171,8 @@ const jsonLd = {
     grid-template-columns: auto 1fr;
     column-gap: 0.6rem;
     align-items: baseline;
-    transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+    transition: border-color 0.2s var(--ease), background 0.2s var(--ease),
+      box-shadow 0.2s var(--ease);
   }
   .booster__dot {
     width: 9px;
@@ -179,9 +180,11 @@ const jsonLd = {
     border-radius: 50%;
     background: var(--dot);
     align-self: center;
+    transition: box-shadow 0.2s var(--ease);
   }
   .booster__name {
     font-size: var(--step-0);
+    transition: color 0.2s var(--ease);
   }
   .booster__line {
     grid-column: 2;
@@ -189,9 +192,26 @@ const jsonLd = {
     font-size: 0.68rem;
     color: var(--mist);
   }
+  /* Hover: outline in the ingredient's own colour, white card kept. The name
+     is darkened slightly toward ink so lighter accents stay legible. */
+  @media (hover: hover) and (pointer: fine) {
+    .booster:hover {
+      border-color: var(--dot);
+    }
+    .booster:hover .booster__name {
+      color: color-mix(in srgb, var(--dot) 70%, var(--ink));
+    }
+    .booster:hover .booster__dot {
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--dot) 22%, transparent);
+    }
+  }
+  /* Selected: a light tint of the ingredient's colour fills the card. */
   .booster[aria-pressed='true'] {
-    border-color: var(--ink);
-    background: var(--cloud);
+    border-color: var(--dot);
+    background: color-mix(in srgb, var(--dot) 12%, var(--paper));
+  }
+  .booster[aria-pressed='true'] .booster__name {
+    color: color-mix(in srgb, var(--dot) 70%, var(--ink));
   }
   .booster[aria-pressed='true'] .booster__dot {
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--dot) 30%, transparent);
