@@ -346,19 +346,21 @@ p {
   opacity: 0.32;
 }
 
-/* Water-ripple on headings: point at a main title and it undulates. */
-.ripple-defs {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
+/* Water-ripple on headings: letters ripple out from where the cursor crosses
+   the words, propagate, then settle. Driven per-letter in JS. */
+.rl {
+  display: inline-block;
+  will-change: transform;
 }
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .hl {
-    transition: filter 0.3s var(--ease);
-  }
-  .hl:hover {
-    filter: url('#title-ripple');
+.rw {
+  display: inline-block;
+  white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rl,
+  .rw {
+    display: inline;
+    will-change: auto;
   }
 }
 

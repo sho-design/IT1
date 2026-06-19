@@ -69,32 +69,6 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
     <div class="droplet" aria-hidden="true"></div>
 
-    <!-- Water-ripple filter for headings on hover. The turbulence animates
-         continuously; the filter is only applied (via CSS :hover) to the
-         heading you point at, so the text undulates like a water surface. -->
-    <svg class="ripple-defs" aria-hidden="true" focusable="false" width="0" height="0">
-      <defs>
-        <filter
-          id="title-ripple"
-          x="-6%"
-          y="-35%"
-          width="112%"
-          height="170%"
-          color-interpolation-filters="sRGB"
-        >
-          <feTurbulence type="fractalNoise" baseFrequency="0.008 0.016" numOctaves="2" seed="7" result="n">
-            <animate
-              attributeName="baseFrequency"
-              dur="11s"
-              values="0.008 0.016; 0.014 0.010; 0.008 0.016"
-              repeatCount="indefinite"
-            ></animate>
-          </feTurbulence>
-          <feDisplacementMap in="SourceGraphic" in2="n" scale="4.5" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
-        </filter>
-      </defs>
-    </svg>
-
     <script>
       // Reveal-on-scroll runtime. Below-the-fold only; above-the-fold uses
       // a CSS-only entrance so the LCP text is never held at opacity:0.
@@ -152,6 +126,136 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
         );
         document.addEventListener('pointerleave', () => {
           droplet.classList.remove('is-active');
+        });
+      }
+
+      // Title water-ripple: split headings into letters, and on pointer move a
+      // damped wave travels out from where the cursor crosses the words, keeps
+      // moving, then slowly settles.
+      if (fine && !reduce) {
+        const splitHeading = (el: Element) => {
+          if ((el as HTMLElement).dataset.split) return;
+          (el as HTMLElement).dataset.split = '1';
+          const walk = (node: Node) => {
+            Array.from(node.childNodes).forEach((child) => {
+              if (child.nodeType === 3) {
+                const text = child.textContent || '';
+                if (!text.trim() && !/\S/.test(text)) return;
+                const frag = document.createDocumentFragment();
+                text.split(/(\s+)/).forEach((tok) => {
+                  if (tok === '') return;
+                  if (/^\s+$/.test(tok)) {
+                    frag.appendChild(document.createTextNode(tok));
+                    return;
+                  }
+                  const word = document.createElement('span');
+                  word.className = 'rw';
+                  for (const ch of tok) {
+                    const l = document.createElement('span');
+                    l.className = 'rl';
+                    l.textContent = ch;
+                    word.appendChild(l);
+                  }
+                  frag.appendChild(word);
+                });
+                child.parentNode?.replaceChild(frag, child);
+              } else if (child.nodeType === 1) {
+                walk(child);
+              }
+            });
+          };
+          walk(el);
+        };
+
+        type RState = {
+          letters: HTMLElement[];
+          centers: { x: number; y: number }[];
+          waves: { x: number; y: number; t0: number }[];
+          raf: number;
+          lastInject: number;
+          lastMeasure: number;
+        };
+        const states = new WeakMap<Element, RState>();
+        // Tuning: speed (px/s), pulse width, wavelength, amplitude, settle time.
+        const V = 700, PW = 42, WL = 54, AMP = 11, TAU = 0.85;
+
+        const measure = (st: RState) => {
+          st.centers = st.letters.map((l) => {
+            const r = l.getBoundingClientRect();
+            return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+          });
+          st.lastMeasure = performance.now();
+        };
+
+        const ensure = (el: Element): RState => {
+          let st = states.get(el);
+          if (!st) {
+            splitHeading(el);
+            st = {
+              letters: Array.from(el.querySelectorAll<HTMLElement>('.rl')),
+              centers: [],
+              waves: [],
+              raf: 0,
+              lastInject: 0,
+              lastMeasure: 0,
+            };
+            measure(st);
+            states.set(el, st);
+          }
+          return st;
+        };
+
+        const frame = (el: Element) => {
+          const st = states.get(el);
+          if (!st) return;
+          const now = performance.now();
+          st.waves = st.waves.filter((w) => (now - w.t0) / 1000 < TAU * 4);
+          for (let i = 0; i < st.letters.length; i++) {
+            const c = st.centers[i];
+            if (!c) continue;
+            let dy = 0;
+            for (const wv of st.waves) {
+              const a = (now - wv.t0) / 1000;
+              const d = Math.hypot(c.x - wv.x, c.y - wv.y);
+              const front = V * a;
+              const env = Math.exp(-((d - front) * (d - front)) / (2 * PW * PW));
+              const decay = Math.exp(-a / TAU);
+              dy += AMP * decay * env * Math.sin(((d - front) / WL) * Math.PI * 2);
+            }
+            st.letters[i].style.transform = dy
+              ? 'translate3d(' + (dy * 0.28).toFixed(2) + 'px,' + dy.toFixed(2) + 'px,0)'
+              : '';
+          }
+          if (st.waves.length) {
+            st.raf = requestAnimationFrame(() => frame(el));
+          } else {
+            st.raf = 0;
+            st.letters.forEach((l) => (l.style.transform = ''));
+          }
+        };
+
+        window.addEventListener(
+          'pointermove',
+          (e) => {
+            const el = (e.target as Element)?.closest?.('.hl');
+            if (!el) return;
+            const st = ensure(el);
+            const now = performance.now();
+            if (now - st.lastInject < 55) return;
+            st.lastInject = now;
+            if (now - st.lastMeasure > 200) measure(st);
+            st.waves.push({ x: e.clientX, y: e.clientY, t0: now });
+            if (st.waves.length > 14) st.waves.shift();
+            if (!st.raf) st.raf = requestAnimationFrame(() => frame(el));
+          },
+          { passive: true }
+        );
+        window.addEventListener('resize', () => {
+          // Re-measure any split headings on layout change.
+          document.querySelectorAll('.hl[data-split]').forEach((el) => {
+            const st = states.get(el);
+            if (st) measure(st);
+          });
         });
       }
     </script>
