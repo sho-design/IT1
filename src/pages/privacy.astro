@@ -1,0 +1,213 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { site, locations, isFilled } from '@/data/site';
+
+// NOTE: This is a sensible Ontario (PHIPA/PIPEDA) starting point. Have it
+// reviewed and approved by your own legal counsel before launch, and fill in
+// the bracketed placeholders (legal entity, Privacy Officer, etc.).
+const effective = 'June 19, 2026';
+const contactAddress = locations[0]?.address;
+---
+
+<Layout
+  title="Privacy Policy"
+  description={`How ${site.brand} collects, uses, and protects your personal information, including under Ontario's PHIPA and Canada's PIPEDA.`}
+>
+  <PageHeader eyebrow="Legal · Your privacy" lead="We treat your personal information with the same care we bring to everything else. This policy explains what we collect, why, and the choices you have.">
+    Privacy, <span class="it">handled with care.</span>
+  </PageHeader>
+
+  <section class="section-tight">
+    <div class="wrap-narrow legal">
+      <p class="legal__meta">Effective {effective}</p>
+
+      <p>
+        This Privacy Policy explains how {site.brand} (&ldquo;we,&rdquo;
+        &ldquo;us,&rdquo; or &ldquo;our&rdquo;) collects, uses, discloses, and
+        protects your personal information when you visit our website or contact
+        us. We are committed to handling your information in accordance with
+        Ontario&rsquo;s <em>Personal Health Information Protection Act</em>
+        (PHIPA) and Canada&rsquo;s <em>Personal Information Protection and
+        Electronic Documents Act</em> (PIPEDA).
+      </p>
+
+      <h2 class="legal__h">Information we collect</h2>
+      <p><strong>Information you give us.</strong> When you use our consult or
+        contact forms, we collect the details you choose to provide, such as your
+        name, email address, phone number, your preferred location, and any
+        message or area of interest you share (for example, the concern that
+        brought you in or a treatment you are curious about).</p>
+      <p><strong>Information collected automatically.</strong> Like most
+        websites, we may collect limited technical information through your
+        browser, such as your device type, general location, and how you move
+        through the site. We use this only to keep the site working well and to
+        understand, in aggregate, how it is used.</p>
+
+      <h2 class="legal__h">Personal health information</h2>
+      <p>
+        Our website forms are intended to start a conversation, not to collect a
+        medical history. Please do not send detailed health information through
+        the website. Any personal health information you share with us during a
+        consultation or course of care is collected and safeguarded as part of
+        your clinical record, in accordance with PHIPA, and is handled separately
+        from this website.
+      </p>
+
+      <h2 class="legal__h">How we use your information</h2>
+      <ul class="legal__list">
+        <li>To respond to your enquiry and arrange a consultation;</li>
+        <li>To provide, coordinate, and follow up on the care or information you request;</li>
+        <li>To operate, maintain, and improve our website;</li>
+        <li>To meet our legal, regulatory, and professional obligations.</li>
+      </ul>
+      <p>We do not sell your personal information, and we do not use it for
+        third-party advertising.</p>
+
+      <h2 class="legal__h">Consent</h2>
+      <p>
+        By submitting a form or contacting us, you consent to our collecting and
+        using your information for the purposes described above. You may withdraw
+        your consent at any time, subject to legal or professional record-keeping
+        requirements, by contacting us using the details below.
+      </p>
+
+      <h2 class="legal__h">Cookies and analytics</h2>
+      <p>
+        We may use privacy-respecting analytics to understand how the site is
+        used in aggregate. Where cookies or similar technologies are used, you
+        can control them through your browser settings. We will update this
+        section if our use of analytics changes.
+      </p>
+
+      <h2 class="legal__h">How we share information</h2>
+      <p>We share personal information only as needed to serve you and run the
+        clinic, including with:</p>
+      <ul class="legal__list">
+        <li><strong>Service providers</strong> who help us operate, such as our
+          website host and the provider that delivers form submissions to us, who
+          are permitted to use your information only to perform services for us;</li>
+        <li><strong>Regulatory or legal authorities</strong> where required or
+          permitted by law.</li>
+      </ul>
+
+      <h2 class="legal__h">How long we keep it</h2>
+      <p>
+        We keep personal information only as long as necessary to fulfil the
+        purposes described in this policy or as required by law and our
+        professional obligations, after which it is securely destroyed or
+        de-identified.
+      </p>
+
+      <h2 class="legal__h">How we protect it</h2>
+      <p>
+        We use reasonable administrative, technical, and physical safeguards to
+        protect your information against loss, theft, and unauthorized access,
+        use, or disclosure. No method of transmission over the internet is
+        completely secure, so please avoid sending sensitive details through the
+        website.
+      </p>
+
+      <h2 class="legal__h">Your rights and choices</h2>
+      <p>Subject to applicable law, you may:</p>
+      <ul class="legal__list">
+        <li>Ask what personal information we hold about you and request access to it;</li>
+        <li>Ask us to correct information that is inaccurate or incomplete;</li>
+        <li>Withdraw your consent or ask us to stop contacting you;</li>
+        <li>Raise a concern about how we have handled your information.</li>
+      </ul>
+      <p>
+        If we cannot resolve your concern, you may contact the Information and
+        Privacy Commissioner of Ontario or the Office of the Privacy Commissioner
+        of Canada.
+      </p>
+
+      <h2 class="legal__h">Other websites</h2>
+      <p>
+        Our site may link to third-party websites or services we do not control.
+        Their privacy practices are their own, and we encourage you to review
+        their policies.
+      </p>
+
+      <h2 class="legal__h">Children</h2>
+      <p>
+        Our website is intended for adults. We do not knowingly collect personal
+        information from children through the site without the involvement of a
+        parent or guardian.
+      </p>
+
+      <h2 class="legal__h">Changes to this policy</h2>
+      <p>
+        We may update this policy from time to time. The effective date above
+        shows when it was last revised, and material changes will be reflected
+        here.
+      </p>
+
+      <h2 class="legal__h">Contact us</h2>
+      <p>
+        For any privacy question or request, please contact our Privacy Officer:
+      </p>
+      <p class="legal__contact">
+        {site.brand}<br />
+        {isFilled(contactAddress) && (<>{contactAddress}<br /></>)}
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+        {isFilled(site.phone) && (<><br />{site.phone}</>)}
+      </p>
+
+      <p class="legal__note">
+        This policy is provided for general information and is not legal advice.
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .legal {
+    display: grid;
+    gap: 1rem;
+    color: var(--graphite);
+    font-size: var(--step-0);
+    line-height: 1.65;
+  }
+  .legal__meta {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+  .legal__h {
+    font-family: var(--display);
+    font-size: var(--step-2);
+    line-height: 1.2;
+    color: var(--ink);
+    margin-top: 1.6rem;
+  }
+  .legal a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .legal strong {
+    color: var(--ink);
+  }
+  .legal__list {
+    display: grid;
+    gap: 0.5rem;
+    padding-left: 1.1rem;
+  }
+  .legal__list li {
+    padding-left: 0.2rem;
+  }
+  .legal__contact {
+    border-left: 2px solid var(--line);
+    padding-left: 1rem;
+    color: var(--ink);
+  }
+  .legal__note {
+    margin-top: 1.4rem;
+    font-size: var(--step--1);
+    color: var(--mist);
+    font-style: italic;
+  }
+</style>

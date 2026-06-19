@@ -89,6 +89,9 @@ const columns = [
     <p class="footer__fine">
       &copy; {year} {site.brand}. {site.signOff}
     </p>
+    <p class="footer__legallinks">
+      <a href="/privacy">Privacy Policy</a>
+    </p>
   </div>
 </footer>
 
@@ -187,6 +190,17 @@ const columns = [
     font-size: 0.78rem;
     line-height: 1.6;
     max-width: 70ch;
+  }
+  .footer__legallinks {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+  }
+  .footer__legallinks a {
+    color: rgba(252, 252, 253, 0.6);
+  }
+  .footer__legallinks a:hover {
+    color: var(--paper);
   }
   @media (max-width: 820px) {
     .footer__top {
