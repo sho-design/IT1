@@ -1,0 +1,421 @@
+---
+import AeStarter from '@/layouts/AeStarter.astro';
+import {
+  aeSite,
+  aeFamilies,
+  aeConcerns,
+  aeModalities,
+} from '@/data/aesthetics';
+---
+
+<AeStarter title="Medical Aesthetics">
+  <!-- Hero: light-bloom motif (replaces the IV bag) -->
+  <section class="ae-hero">
+    <div class="ae-glow" aria-hidden="true"></div>
+    <div class="wrap ae-hero__in">
+      <p class="eyebrow">Medical Aesthetics · Refined by Medicine</p>
+      <h1 class="hl ae-hero__title">
+        Look like <span class="it">yourself, refined.</span>
+      </h1>
+      <p class="lead ae-hero__lead">{aeSite.lead}</p>
+      <div class="ae-actions">
+        <a class="btn btn--lg" href="#book">Book a consult</a>
+        <a class="link-arrow" href="#treatments">Explore treatments &rarr;</a>
+      </div>
+      <div class="ae-meta">
+        <span class="meta">Physician-led</span>
+        <span class="ae-sep" aria-hidden="true"></span>
+        <span class="meta">Natural-looking</span>
+        <span class="ae-sep" aria-hidden="true"></span>
+        <span class="meta">No pressure, ever</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- By concern -->
+  <section id="concerns" class="ae-section ae-fill">
+    <div class="wrap">
+      <p class="eyebrow">Start with how you feel</p>
+      <h2 class="hl ae-h2">What would you refine?</h2>
+      <div class="ae-tiles">
+        {aeConcerns.map((c) => (
+          <a class="ae-tile" href="#book" style={`--accent:${c.accent}`}>
+            <span class="ae-tile__dot" aria-hidden="true"></span>
+            <span class="ae-tile__name">{c.label}</span>
+            <span class="ae-tile__line">{c.line}</span>
+            <span class="ae-tile__more">Explore &rarr;</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Treatments by family -->
+  <section id="treatments" class="ae-section">
+    <div class="wrap">
+      <p class="eyebrow">Browse our treatments</p>
+      <h2 class="hl ae-h2">Five families, one standard.</h2>
+      <div class="ae-cards">
+        {aeFamilies.map((f) => (
+          <article class="ae-card" style={`--accent:${f.accent}; --accent-text:${f.text}`}>
+            <span class="ae-card__rule" aria-hidden="true"></span>
+            <span class="ae-card__fam">{f.label}</span>
+            <span class="ae-card__blurb">{f.blurb}</span>
+            <span class="ae-card__more link-arrow">See treatments &rarr;</span>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Editorial beat -->
+  <section class="ae-section">
+    <div class="wrap ae-quote">
+      <span class="ae-quote__mark" aria-hidden="true"></span>
+      <blockquote class="ae-quote__q">
+        Subtle by design. <span class="it">You, on a good day.</span>
+      </blockquote>
+      <p class="ae-quote__cite">Refined by Medicine</p>
+    </div>
+  </section>
+
+  <!-- Modalities with honest evidence tags -->
+  <section id="modalities" class="ae-section ae-fill">
+    <div class="wrap">
+      <p class="eyebrow">The actives, honestly</p>
+      <h2 class="hl ae-h2">What we use, and what the evidence says.</h2>
+      <div class="ae-mods">
+        {aeModalities.map((m) => {
+          const fam = aeFamilies.find((f) => f.key === m.family)!;
+          return (
+            <div class="ae-mod" style={`--accent:${fam.accent}`}>
+              <span class="ae-mod__dot" aria-hidden="true"></span>
+              <span class="ae-mod__name">{m.name}</span>
+              <span class="ae-mod__line" set:html={m.oneLine}></span>
+              <span
+                class={`ev ev--${m.evidence === 'Established' ? 'est' : 'emg'}`}
+                title={m.note}
+              >
+                <span class="ev__dot" aria-hidden="true"></span>
+                {m.evidence} evidence
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="book" class="ae-section">
+    <div class="wrap ae-cta">
+      <h2 class="hl ae-cta__h">The first step is a conversation.</h2>
+      <p class="lead ae-cta__p">
+        Tell us how you want to look and feel. A consult confirms what is right
+        for you, with no pressure and no guaranteed-outcome talk.
+      </p>
+      <a class="btn btn--lg" href="mailto:{aeSite.email}">Request a consult</a>
+    </div>
+  </section>
+</AeStarter>
+
+<style>
+  /* Hero light-bloom: the aesthetics motif (light, not fluid). */
+  .ae-hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(4rem, 9vh, 8rem) var(--space-l);
+  }
+  .ae-glow {
+    position: absolute;
+    inset: -20% -10% auto auto;
+    width: min(60vw, 720px);
+    height: min(60vw, 720px);
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 50% 50%,
+      color-mix(in srgb, #c58a77 55%, transparent),
+      color-mix(in srgb, #9c6b86 28%, transparent) 38%,
+      transparent 68%
+    );
+    filter: blur(28px);
+    opacity: 0.55;
+    animation: ae-float 16s var(--ease) infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes ae-float {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(-6%, 5%) scale(1.08); }
+  }
+  .ae-hero__in {
+    position: relative;
+    z-index: 1;
+    max-width: 40ch;
+  }
+  .ae-hero__title {
+    font-size: var(--step-5);
+    margin-top: 1.2rem;
+  }
+  .ae-hero__lead {
+    margin-top: 1.6rem;
+    font-size: var(--step-1);
+    max-width: 46ch;
+  }
+  .ae-actions {
+    margin-top: 2.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    flex-wrap: wrap;
+  }
+  .ae-meta {
+    margin-top: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--line);
+    padding-top: 1.4rem;
+  }
+  .ae-sep {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--line);
+  }
+
+  .ae-section {
+    padding-block: var(--space-xl);
+  }
+  .ae-fill {
+    background: var(--cloud);
+  }
+  .ae-h2 {
+    font-size: var(--step-3);
+    margin: 0.6rem 0 var(--space-m);
+  }
+
+  /* Concern tiles */
+  .ae-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 0.9rem;
+  }
+  .ae-tile {
+    display: grid;
+    gap: 0.45rem;
+    padding: 1.5rem 1.4rem;
+    background: var(--white-pure);
+    background-image: var(--gloss-white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: border-color 0.25s var(--ease), transform 0.25s var(--ease),
+      box-shadow 0.25s var(--ease);
+  }
+  .ae-tile__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .ae-tile__name {
+    font-family: var(--display);
+    font-size: var(--step-1);
+    color: var(--ink);
+  }
+  .ae-tile__line {
+    color: var(--graphite);
+    font-size: var(--step--1);
+  }
+  .ae-tile__more {
+    margin-top: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--mist);
+  }
+  @media (hover: hover) {
+    .ae-tile:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px -24px rgba(26, 27, 29, 0.3);
+    }
+    .ae-tile:hover .ae-tile__more {
+      color: var(--accent);
+    }
+  }
+
+  /* Treatment-family cards */
+  .ae-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.1rem;
+  }
+  .ae-card {
+    position: relative;
+    display: grid;
+    gap: 0.5rem;
+    padding: 1.7rem 1.4rem 1.3rem;
+    background: var(--white-pure);
+    background-image: var(--gloss-white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.25s var(--ease), transform 0.25s var(--ease),
+      box-shadow 0.25s var(--ease);
+  }
+  .ae-card__rule {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: var(--accent);
+    opacity: 0.85;
+  }
+  .ae-card__fam {
+    font-family: var(--display);
+    font-size: var(--step-2);
+    color: var(--ink);
+    margin-top: 0.3rem;
+  }
+  .ae-card__blurb {
+    color: var(--graphite);
+    font-size: var(--step--1);
+  }
+  .ae-card__more {
+    margin-top: 0.4rem;
+    color: var(--accent-text);
+    border-color: transparent;
+  }
+  @media (hover: hover) {
+    .ae-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 18px 34px -22px rgba(26, 27, 29, 0.32);
+    }
+  }
+
+  /* Quote */
+  .ae-quote {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 1.3rem;
+    padding-block: var(--space-m);
+  }
+  .ae-quote__mark {
+    width: 38px;
+    height: 3px;
+    border-radius: 3px;
+    background: #9c6b86;
+  }
+  .ae-quote__q {
+    font-family: var(--display);
+    font-weight: 360;
+    font-size: var(--step-4);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    max-width: 20ch;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .ae-quote__cite {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+
+  /* Modalities */
+  .ae-mods {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .ae-mod {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.5rem 0.9rem;
+    padding: 0.9rem 1rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .ae-mod__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .ae-mod__name {
+    font-size: var(--step-0);
+    color: var(--ink);
+  }
+  .ae-mod__line {
+    grid-column: 2;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--mist);
+  }
+  .ae-mod .ev {
+    grid-row: 1 / span 2;
+    grid-column: 3;
+  }
+
+  /* Evidence tag (shared pattern) */
+  .ev {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--graphite);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.26rem 0.6rem;
+    cursor: help;
+    white-space: nowrap;
+  }
+  .ev__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+  .ev--est .ev__dot {
+    background: #6e8b5a;
+  }
+  .ev--emg .ev__dot {
+    background: transparent;
+    border: 1.5px solid var(--mist);
+  }
+
+  /* CTA */
+  .ae-cta {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 1.2rem;
+    max-width: 48ch;
+    margin-inline: auto;
+  }
+  .ae-cta__h {
+    font-size: var(--step-3);
+  }
+  .ae-cta__p {
+    margin: 0;
+  }
+
+  @media (max-width: 700px) {
+    .ae-mod {
+      grid-template-columns: auto 1fr;
+    }
+    .ae-mod .ev {
+      grid-row: auto;
+      grid-column: 1 / -1;
+      justify-self: start;
+    }
+  }
+</style>

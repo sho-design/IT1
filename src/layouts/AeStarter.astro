@@ -1,0 +1,135 @@
+---
+// Slim, self-contained layout for the Medical Aesthetics STARTER preview.
+// Reuses the shared design tokens (global.css) but its own minimal chrome, so
+// it demonstrates the reskin without pulling in the infusion line's nav.
+import '@/styles/global.css';
+import { aeSite } from '@/data/aesthetics';
+
+export interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · {aeSite.line} {aeSite.parentNote}</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,340;0,9..144,380;0,9..144,480;1,9..144,340;1,9..144,440&family=Inter+Tight:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap"
+    />
+  </head>
+  <body>
+    <header class="aebar">
+      <div class="wrap aebar__in">
+        <a class="aebar__brand" href="/medical-aesthetics">
+          <span class="aebar__name">{aeSite.line}</span>
+          <span class="aebar__sub">{aeSite.parentNote}</span>
+        </a>
+        <nav class="aebar__nav">
+          <a href="#concerns">By Concern</a>
+          <a href="#treatments">Treatments</a>
+          <a href="#modalities">Modalities</a>
+          <a class="btn aebar__cta" href="#book">Book a consult</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="aefoot">
+      <div class="wrap aefoot__in">
+        <p class="aefoot__name hl">{aeSite.line}</p>
+        <p class="eyebrow">{aeSite.parentNote} · {aeSite.tagline}</p>
+        <p class="aefoot__note">
+          Starter preview built on the Restoration Medical design system. Wellness
+          and aesthetic services are elective. Every treatment is physician-reviewed.
+        </p>
+      </div>
+    </footer>
+
+    <style>
+      .aebar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: color-mix(in srgb, var(--paper) 88%, transparent);
+        backdrop-filter: saturate(1.1) blur(10px);
+        border-bottom: 1px solid var(--line);
+      }
+      .aebar__in {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: var(--header-h);
+      }
+      .aebar__brand {
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+        line-height: 1.05;
+      }
+      .aebar__name {
+        font-family: var(--display);
+        font-size: 1.5rem;
+      }
+      .aebar__sub {
+        font-family: var(--mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--mist);
+      }
+      .aebar__nav {
+        display: flex;
+        align-items: center;
+        gap: 1.6rem;
+        font-size: var(--step--1);
+      }
+      .aebar__nav a {
+        text-decoration: none;
+        color: var(--ink);
+      }
+      .aebar__nav a:not(.btn):hover {
+        color: var(--mist);
+      }
+      .aebar__cta {
+        padding: 0.6em 1.1em;
+      }
+      @media (max-width: 760px) {
+        .aebar__nav a:not(.btn) {
+          display: none;
+        }
+      }
+
+      .aefoot {
+        background: var(--ink);
+        color: var(--paper);
+        padding-block: var(--space-l) var(--space-m);
+        margin-top: var(--space-xl);
+      }
+      .aefoot__name {
+        font-size: var(--step-2);
+        margin-bottom: 0.4rem;
+      }
+      .aefoot .eyebrow {
+        color: rgba(252, 252, 253, 0.6);
+      }
+      .aefoot__note {
+        margin-top: 1rem;
+        color: rgba(252, 252, 253, 0.7);
+        font-size: var(--step--1);
+        max-width: 60ch;
+      }
+    </style>
+  </body>
+</html>
