@@ -1,0 +1,80 @@
+---
+import { site } from '../data/site';
+
+const links = [
+  { label: 'By Concern', href: '/#concerns' },
+  { label: 'Treatments', href: '/#treatments' },
+  { label: 'Modalities', href: '/#modalities' },
+  { label: 'About', href: '/#about' },
+];
+---
+
+<header class="nav">
+  <div class="wrap nav__bar">
+    <a class="nav__brand" href="/" aria-label={`${site.line} ${site.parentNote}`}>
+      <span class="nav__name">{site.line}</span>
+      <span class="nav__sub">{site.parentNote}</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      {links.map((l) => (
+        <a class="nav__link" href={l.href}>{l.label}</a>
+      ))}
+      <a class="btn nav__cta" href="/book">Book a consult</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: saturate(1.1) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-h);
+  }
+  .nav__brand {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    line-height: 1.05;
+  }
+  .nav__name {
+    font-family: var(--display);
+    font-size: 1.5rem;
+  }
+  .nav__sub {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    font-size: var(--step--1);
+  }
+  .nav__link {
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .nav__link:hover {
+    color: var(--mist);
+  }
+  .nav__cta {
+    padding: 0.6em 1.1em;
+  }
+  @media (max-width: 780px) {
+    .nav__link {
+      display: none;
+    }
+  }
+</style>

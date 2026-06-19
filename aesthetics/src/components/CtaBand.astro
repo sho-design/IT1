@@ -1,0 +1,38 @@
+---
+export interface Props {
+  heading?: string;
+  body?: string;
+}
+const {
+  heading = 'The first step is a conversation.',
+  body = 'Tell us how you want to look and feel. A consult confirms what is right for you, with no pressure and no guaranteed-outcome talk.',
+} = Astro.props;
+---
+
+<section class="cta reveal">
+  <div class="wrap cta__in">
+    <h2 class="hl cta__h">{heading}</h2>
+    <p class="lead cta__p">{body}</p>
+    <a class="btn btn--lg" href="/book">Request a consult</a>
+  </div>
+</section>
+
+<style>
+  .cta {
+    padding-block: var(--space-xl);
+  }
+  .cta__in {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 1.2rem;
+    max-width: 48ch;
+    margin-inline: auto;
+  }
+  .cta__h {
+    font-size: var(--step-3);
+  }
+  .cta__p {
+    margin: 0;
+  }
+</style>

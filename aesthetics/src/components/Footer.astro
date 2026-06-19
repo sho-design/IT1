@@ -1,0 +1,100 @@
+---
+import { site, isFilled } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="foot">
+  <div class="wrap foot__top">
+    <div>
+      <p class="foot__name hl">{site.line}</p>
+      <p class="eyebrow foot__eyebrow">{site.parentNote} · {site.tagline}</p>
+      <p class="foot__pitch">
+        Physician-led aesthetic medicine. Reviewed by our physician, delivered by
+        our clinicians. Natural-looking, never pressured.
+      </p>
+      <a class="btn foot__cta" href="/book">Book a consult</a>
+    </div>
+    <div class="foot__contact">
+      <p class="foot__h">Reach us</p>
+      {isFilled(site.phone) && <p class="foot__meta">{site.phone}</p>}
+      <p class="foot__meta"><a href={`mailto:${site.email}`}>{site.email}</a></p>
+    </div>
+  </div>
+  <div class="wrap foot__legal">
+    <p class="foot__fine">
+      Aesthetic services are elective. Every treatment is physician-reviewed.
+      Information here is educational and not medical advice. Results vary.
+    </p>
+    <p class="foot__fine">&copy; {year} {site.brand}. {site.signOff}</p>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    background: var(--ink);
+    color: var(--paper);
+    padding-block: var(--space-l) var(--space-m);
+    margin-top: var(--space-xl);
+  }
+  .foot a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .foot__top {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 3rem;
+    padding-bottom: var(--space-l);
+    border-bottom: 1px solid rgba(252, 252, 253, 0.14);
+  }
+  .foot__name {
+    font-size: var(--step-2);
+    margin-bottom: 0.4rem;
+  }
+  .foot .eyebrow {
+    color: rgba(252, 252, 253, 0.6);
+  }
+  .foot__pitch {
+    margin-top: 1rem;
+    color: rgba(252, 252, 253, 0.75);
+    max-width: 48ch;
+  }
+  .foot__cta {
+    margin-top: 1.4rem;
+    background: var(--paper);
+    color: var(--ink);
+    border-color: var(--paper);
+  }
+  .foot__cta:hover {
+    background: transparent;
+    color: var(--paper);
+  }
+  .foot__h {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(252, 252, 253, 0.55);
+    margin-bottom: 1rem;
+  }
+  .foot__meta {
+    color: rgba(252, 252, 253, 0.72);
+    font-size: var(--step--1);
+  }
+  .foot__legal {
+    padding-top: var(--space-m);
+    display: grid;
+    gap: 0.7rem;
+  }
+  .foot__fine {
+    color: rgba(252, 252, 253, 0.5);
+    font-size: 0.78rem;
+    max-width: 70ch;
+  }
+  @media (max-width: 760px) {
+    .foot__top {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+import type { Concern } from '../data/concerns';
+export interface Props {
+  concern: Concern;
+}
+const { concern } = Astro.props;
+---
+
+<a class="tile" href={`/concerns/${concern.slug}`} style={`--accent:${concern.accent}`}>
+  <span class="tile__dot" aria-hidden="true"></span>
+  <span class="tile__name">{concern.label}</span>
+  <span class="tile__line">{concern.line}</span>
+  <span class="tile__more">Explore &rarr;</span>
+</a>
+
+<style>
+  .tile {
+    position: relative;
+    display: grid;
+    gap: 0.45rem;
+    padding: 1.5rem 1.4rem;
+    background: var(--white-pure);
+    background-image: var(--gloss-white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    text-decoration: none;
+    overflow: hidden;
+    transition: border-color 0.25s var(--ease), transform 0.25s var(--ease),
+      box-shadow 0.25s var(--ease);
+  }
+  .tile__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .tile__name {
+    font-family: var(--display);
+    font-size: var(--step-1);
+    color: var(--ink);
+  }
+  .tile__line {
+    color: var(--graphite);
+    font-size: var(--step--1);
+  }
+  .tile__more {
+    margin-top: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--mist);
+  }
+  @media (hover: hover) {
+    .tile:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px -24px rgba(26, 27, 29, 0.3);
+    }
+    .tile:hover .tile__more {
+      color: var(--accent);
+    }
+  }
+</style>

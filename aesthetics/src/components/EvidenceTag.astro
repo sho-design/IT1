@@ -1,0 +1,12 @@
+---
+export interface Props {
+  level: 'Established' | 'Emerging';
+  note: string;
+}
+const { level, note } = Astro.props;
+---
+
+<span class={`ev ev--${level === 'Established' ? 'est' : 'emg'}`} title={note}>
+  <span class="ev__dot" aria-hidden="true"></span>
+  {level} evidence
+</span>
