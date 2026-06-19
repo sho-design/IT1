@@ -1,0 +1,127 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { site, isFilled } from '@/data/site';
+
+// NOTE: Reflects the site's current accessibility approach. Review with counsel
+// for AODA compliance specifics and keep it accurate as the site evolves.
+const effective = 'June 19, 2026';
+---
+
+<Layout
+  title="Accessibility"
+  description={`${site.brand} is committed to an accessible website, in line with the AODA and WCAG 2.0 Level AA.`}
+>
+  <PageHeader eyebrow="Legal · Accessibility" lead="We want everyone to be able to use this site comfortably. Here is our commitment, and how to reach us if something gets in your way.">
+    Accessible <span class="it">by intention.</span>
+  </PageHeader>
+
+  <section class="section-tight">
+    <div class="wrap-narrow legal">
+      <p class="legal__meta">Effective {effective}</p>
+
+      <p>
+        {site.brand} is committed to providing a website that is accessible to
+        the widest possible audience, regardless of ability. We aim to meet the
+        requirements of the <em>Accessibility for Ontarians with Disabilities
+        Act</em> (AODA) and to conform with the Web Content Accessibility
+        Guidelines (WCAG) 2.0 at Level AA.
+      </p>
+
+      <h2 class="legal__h">What we do</h2>
+      <ul class="legal__list">
+        <li>Build with semantic, standards-based HTML so content works with screen readers and assistive technology;</li>
+        <li>Support keyboard navigation and visible focus for interactive elements;</li>
+        <li>Respect the &ldquo;reduce motion&rdquo; setting in your operating system, animation is minimized or turned off when you ask for it;</li>
+        <li>Aim for sufficient colour contrast and readable, scalable text;</li>
+        <li>Provide text alternatives for meaningful images and keep decorative visuals out of the way of assistive technology.</li>
+      </ul>
+
+      <h2 class="legal__h">Ongoing effort</h2>
+      <p>
+        Accessibility is an ongoing process, not a one-time task. We review the
+        site as it changes and work to fix barriers as we find them. Some
+        third-party content or tools we rely on may not be fully under our
+        control, and we work with those providers to improve them where we can.
+      </p>
+
+      <h2 class="legal__h">Tips for a comfortable visit</h2>
+      <ul class="legal__list">
+        <li>You can zoom your browser to enlarge text and layout;</li>
+        <li>Turning on &ldquo;reduce motion&rdquo; in your device settings will calm the site&rsquo;s animations;</li>
+        <li>Most browsers offer a reader or high-contrast mode that this site supports.</li>
+      </ul>
+
+      <h2 class="legal__h">Feedback and accessible formats</h2>
+      <p>
+        If you encounter a barrier on this site, or need information from it in
+        another format, please tell us, your feedback helps us improve, and we
+        will do our best to provide what you need in a reasonable timeframe and
+        without extra cost.
+      </p>
+      <p class="legal__contact">
+        {site.brand}<br />
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+        {isFilled(site.phone) && (<><br />{site.phone}</>)}
+      </p>
+
+      <h2 class="legal__h">Changes</h2>
+      <p>
+        We may update this statement as the site and our practices evolve. The
+        effective date above shows when it was last revised.
+      </p>
+
+      <p class="legal__note">
+        This page is provided for general information and is not legal advice.
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .legal {
+    display: grid;
+    gap: 1rem;
+    color: var(--graphite);
+    font-size: var(--step-0);
+    line-height: 1.65;
+  }
+  .legal__meta {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+  .legal__h {
+    font-family: var(--display);
+    font-size: var(--step-2);
+    line-height: 1.2;
+    color: var(--ink);
+    margin-top: 1.6rem;
+  }
+  .legal a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .legal strong {
+    color: var(--ink);
+  }
+  .legal__list {
+    display: grid;
+    gap: 0.5rem;
+    padding-left: 1.1rem;
+  }
+  .legal__contact {
+    border-left: 2px solid var(--line);
+    padding-left: 1rem;
+    color: var(--ink);
+  }
+  .legal__note {
+    margin-top: 1.4rem;
+    font-size: var(--step--1);
+    color: var(--mist);
+    font-style: italic;
+  }
+</style>

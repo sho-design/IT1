@@ -1,0 +1,173 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { site } from '@/data/site';
+
+// NOTE: A sensible Ontario starting point. Have your legal counsel review and
+// approve before launch, and confirm your registered legal entity name.
+const effective = 'June 19, 2026';
+---
+
+<Layout
+  title="Terms of Use"
+  description={`The terms that govern your use of the ${site.brand} website.`}
+>
+  <PageHeader eyebrow="Legal · Terms of use" lead="The plain-language terms for using this website. Using the site means you agree to them.">
+    The terms, <span class="it">kept clear.</span>
+  </PageHeader>
+
+  <section class="section-tight">
+    <div class="wrap-narrow legal">
+      <p class="legal__meta">Effective {effective}</p>
+
+      <p>
+        These Terms of Use govern your access to and use of the {site.brand}
+        website (the &ldquo;Site&rdquo;). By using the Site, you agree to these
+        terms. If you do not agree, please do not use the Site.
+      </p>
+
+      <h2 class="legal__h">Information only, not medical advice</h2>
+      <p>
+        The Site is for general information and education. Its content is not
+        medical advice and is not a substitute for a consultation, diagnosis, or
+        treatment by a qualified health professional. Always seek the advice of
+        your physician or another qualified provider with any questions about a
+        medical condition, and never disregard or delay seeking it because of
+        something you read here.
+      </p>
+
+      <h2 class="legal__h">No provider relationship from the Site</h2>
+      <p>
+        Using the Site, or submitting a consult or contact request, does not by
+        itself create a physician&ndash;patient or other care relationship. Such
+        a relationship begins only after an appropriate consultation and
+        screening, and at our professional discretion.
+      </p>
+
+      <h2 class="legal__h">Wellness services and outcomes</h2>
+      <p>
+        Many of our services are elective wellness services and are not a
+        treatment for any disease. Certain services, such as iron therapy, may be
+        clinically indicated. We do not promise or guarantee any particular
+        result, and individual results vary. Every treatment is reviewed by our
+        physician and we may adjust or decline a service on clinical grounds, for
+        your safety.
+      </p>
+
+      <h2 class="legal__h">Requests, not confirmed appointments</h2>
+      <p>
+        Forms on the Site let you <em>request</em> a consultation or send a
+        message. A submission is not a confirmed appointment until we follow up
+        and arrange a time with you.
+      </p>
+
+      <h2 class="legal__h">Eligibility</h2>
+      <p>
+        The Site is intended for adults in Ontario. By using it you confirm you
+        are of the age of majority in your province or territory.
+      </p>
+
+      <h2 class="legal__h">Acceptable use</h2>
+      <p>You agree not to misuse the Site, including by attempting to disrupt it,
+        access it without authorization, or use it for any unlawful purpose.</p>
+
+      <h2 class="legal__h">Intellectual property</h2>
+      <p>
+        The Site and its content, including text, design, graphics, and logos,
+        are owned by or licensed to {site.brand} and are protected by applicable
+        laws. You may view and share the content for personal, non-commercial
+        purposes, but you may not copy, reproduce, or use it commercially without
+        our permission.
+      </p>
+
+      <h2 class="legal__h">Third-party links</h2>
+      <p>
+        The Site may link to third-party websites or services we do not control.
+        We are not responsible for their content or practices, and a link is not
+        an endorsement.
+      </p>
+
+      <h2 class="legal__h">Disclaimers and limitation of liability</h2>
+      <p>
+        The Site is provided &ldquo;as is&rdquo; and &ldquo;as available,&rdquo;
+        without warranties of any kind, to the fullest extent permitted by law.
+        To the fullest extent permitted by law, {site.brand} is not liable for
+        any indirect, incidental, or consequential damages arising from your use
+        of the Site. Nothing in these terms limits any rights you may have that
+        cannot be limited under applicable law.
+      </p>
+
+      <h2 class="legal__h">Governing law</h2>
+      <p>
+        These terms are governed by the laws of the Province of Ontario and the
+        laws of Canada that apply there, and you agree to the exclusive
+        jurisdiction of the courts of Ontario.
+      </p>
+
+      <h2 class="legal__h">Changes</h2>
+      <p>
+        We may update these terms from time to time. The effective date above
+        shows when they were last revised, and continued use of the Site means
+        you accept the current terms.
+      </p>
+
+      <h2 class="legal__h">Contact us</h2>
+      <p class="legal__contact">
+        {site.brand}<br />
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </p>
+
+      <p class="legal__note">
+        This page is provided for general information and is not legal advice.
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .legal {
+    display: grid;
+    gap: 1rem;
+    color: var(--graphite);
+    font-size: var(--step-0);
+    line-height: 1.65;
+  }
+  .legal__meta {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+  .legal__h {
+    font-family: var(--display);
+    font-size: var(--step-2);
+    line-height: 1.2;
+    color: var(--ink);
+    margin-top: 1.6rem;
+  }
+  .legal a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .legal strong {
+    color: var(--ink);
+  }
+  .legal__list {
+    display: grid;
+    gap: 0.5rem;
+    padding-left: 1.1rem;
+  }
+  .legal__contact {
+    border-left: 2px solid var(--line);
+    padding-left: 1rem;
+    color: var(--ink);
+  }
+  .legal__note {
+    margin-top: 1.4rem;
+    font-size: var(--step--1);
+    color: var(--mist);
+    font-style: italic;
+  }
+</style>
