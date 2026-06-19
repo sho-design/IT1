@@ -13,7 +13,7 @@ const { eyebrow, accent, lead } = Astro.props;
       {accent && <span class="ph__dot" style={`background:${accent}`} aria-hidden="true"></span>}
       {eyebrow}
     </p>
-    <h1 class="hl ph__title display-2"><slot /></h1>
+    <h1 class="hl ph__title display-2 ripple"><slot /></h1>
     {lead && <p class="lead ph__lead"><slot name="lead">{lead}</slot></p>}
   </div>
 </header>

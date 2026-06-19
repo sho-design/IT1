@@ -255,7 +255,7 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
         window.addEventListener(
           'pointermove',
           (e) => {
-            const el = (e.target as Element)?.closest?.('.hl');
+            const el = (e.target as Element)?.closest?.('.ripple');
             if (!el) return;
             const st = ensure(el);
             const now = performance.now();
@@ -275,7 +275,7 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
         );
         window.addEventListener('resize', () => {
           // Re-measure any split headings on layout change.
-          document.querySelectorAll('.hl[data-split]').forEach((el) => {
+          document.querySelectorAll('.ripple[data-split]').forEach((el) => {
             const st = states.get(el);
             if (st) measure(st);
           });

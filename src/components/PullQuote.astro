@@ -10,7 +10,7 @@ const { cite, accent } = Astro.props;
 
 <figure class="pq reveal" style={accent ? `--pq-accent:${accent}` : undefined}>
   <span class="pq__mark" aria-hidden="true"></span>
-  <blockquote class="pq__q">
+  <blockquote class="pq__q ripple">
     <slot />
   </blockquote>
   {cite && <figcaption class="pq__cite">{cite}</figcaption>}
