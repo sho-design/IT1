@@ -219,6 +219,7 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
             const c = st.centers[i];
             if (!c) continue;
             let dy = 0;
+            let tilt = 0;
             for (const wv of st.waves) {
               const a = (now - wv.t0) / 1000;
               const d = Math.hypot(c.x - wv.x, c.y - wv.y);
@@ -226,11 +227,22 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
               const env = Math.exp(-((d - front) * (d - front)) / (2 * PW * PW));
               const decay = Math.exp(-a / TAU);
               const spatial = Math.exp(-d / D);
-              dy += AMP * decay * spatial * env * Math.sin(((d - front) / WL) * Math.PI * 2);
+              const base = AMP * decay * spatial * env;
+              const phase = ((d - front) / WL) * Math.PI * 2;
+              dy += base * Math.sin(phase);
+              tilt += base * Math.cos(phase); // surface slope -> lean/stretch
             }
-            st.letters[i].style.transform = dy
-              ? 'translate3d(' + (dy * 0.12).toFixed(2) + 'px,' + dy.toFixed(2) + 'px,0)'
-              : '';
+            const el2 = st.letters[i];
+            if (Math.abs(dy) < 0.05 && Math.abs(tilt) < 0.05) {
+              if (el2.style.transform) el2.style.transform = '';
+              continue;
+            }
+            // Warp the letterform: vertical stretch at crests, shear with slope.
+            const sy = 1 + Math.min(0.18, (Math.abs(dy) / AMP) * 0.18);
+            const skew = Math.max(-9, Math.min(9, tilt * 0.85));
+            el2.style.transform =
+              'translate3d(' + (dy * 0.1).toFixed(2) + 'px,' + dy.toFixed(2) +
+              'px,0) scaleY(' + sy.toFixed(3) + ') skewX(' + skew.toFixed(2) + 'deg)';
           }
           if (st.waves.length) {
             st.raf = requestAnimationFrame(() => frame(el));

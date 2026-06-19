@@ -351,6 +351,7 @@ p {
 .rl {
   display: inline-block;
   will-change: transform;
+  transform-origin: 50% 70%;
 }
 .rw {
   display: inline-block;
