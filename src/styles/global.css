@@ -18,6 +18,11 @@
   --line: #e6e8eb;       /* cool hairlines, dividers */
   --cloud: #eff1f3;      /* quiet cool section fills */
 
+  /* Surfaces that stay dark in BOTH themes (footer, dark CTAs). */
+  --surface-dark: #1a1b1d;
+  --on-dark: #fcfcfd;
+  color-scheme: light;
+
   /* High gloss sparkle white, for elevated panels and cards */
   --white-pure: #ffffff;
   --gloss-white: linear-gradient(
@@ -78,6 +83,53 @@
   --header-h: 68px;
 
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* ── Dark theme ──────────────────────────────────────────────────────────
+   Re-derive neutrals and brighten accents for contrast on dark. Surfaces that
+   are meant to read "dark" in both themes use --surface-dark / --on-dark. */
+[data-theme='dark'] {
+  --ink: #eceef2;
+  --paper: #131418;
+  --graphite: #b6b9c0;
+  --mist: #888b92;
+  --line: #2a2c33;
+  --cloud: #1a1c21;
+  --white-pure: #1c1e24;
+  --gloss-white: linear-gradient(157deg, #21242b 0%, #1b1e25 46%, #15171d 100%);
+  --surface-dark: #1e2127;
+  --on-dark: #eceef2;
+  color-scheme: dark;
+
+  --accent-wellness: #80a7be;
+  --accent-radiance: #d4abc8;
+  --accent-immune: #e29c6b;
+  --accent-energy: #e1c155;
+  --accent-metabolic: #9dbc87;
+  --accent-clinical: #cd8181;
+  --accent-recovery: #84b5bd;
+  --accent-neutral: #a2a4a9;
+  --base-hydrate: #4fc2e7;
+  --base-healing: #e695a5;
+  --base-foundation: #8d99d8;
+}
+/* The small accent labels use a darkened "text" variant tuned for white; on
+   dark, use the (now brighter) accent itself. Specificity beats the inline. */
+[data-theme='dark'] .card .card__family,
+[data-theme='dark'] .card .card__more,
+[data-theme='dark'] .detail .detail__eyebrow,
+[data-theme='dark'] .ih .ih__eyebrow {
+  color: var(--accent);
+}
+/* Blend modes flip on dark: multiply hides on dark, screen reveals. */
+[data-theme='dark'] body::after {
+  mix-blend-mode: screen;
+  opacity: 0.04;
+}
+[data-theme='dark'] .droplet,
+[data-theme='dark'] .drip-particle,
+[data-theme='dark'] .hero__bag-canvas {
+  mix-blend-mode: screen;
 }
 
 /* ── Reset ───────────────────────────────────────────────────────────── */
