@@ -557,6 +557,27 @@ export const signatureDrips = drips.filter((t) => t.signature);
 export const treatmentBySlug = (slug: string): Treatment | undefined =>
   treatments.find((t) => t.slug === slug);
 
+// Curated add-on boosters per signature drip: complementary actives that are
+// NOT already in the blend, that a nurse can include after screening. Keyed by
+// drip slug. Pregnancy Care is intentionally omitted — any additions there are
+// strictly physician-directed.
+export const recommendedAddOns: Record<string, string[]> = {
+  foundation: ['glutathione', 'vitamin-d3', 'biotin'],
+  healing: ['glutathione', 'zinc', 'amino-blend'],
+  radiance: ['biotin', 'vitamin-d3', 'b-complex'],
+  'hair-nails': ['glutathione', 'amino-blend', 'vitamin-d3'],
+  'beauty-elixir': ['vitamin-e', 'vitamin-d3', 'amino-blend'],
+  'immune-shield': ['vitamin-d3', 'b12', 'magnesium'],
+  kingmaker: ['nad', 'l-carnitine', 'zinc'],
+  recover: ['b12', 'glutathione', 'zinc'],
+  revive: ['b12', 'glutathione', 'amino-blend'],
+  'nad-longevity': ['glutathione', 'amino-blend', 'magnesium'],
+  metabolic: ['amino-blend', 'magnesium', 'vitamin-d3'],
+};
+
+export const addOnsFor = (slug: string): string[] =>
+  recommendedAddOns[slug] ?? [];
+
 // Derive which treatments contain a given ingredient (for ingredient pages).
 export const treatmentsWithIngredient = (ingredientSlug: string): Treatment[] =>
   treatments.filter((t) => t.ingredients.includes(ingredientSlug));

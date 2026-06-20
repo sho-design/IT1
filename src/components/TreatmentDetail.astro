@@ -1,9 +1,11 @@
 ---
 import type { Treatment } from '@/data/treatments';
-import { treatmentBySlug } from '@/data/treatments';
+import { treatmentBySlug, addOnsFor } from '@/data/treatments';
+import { ingredientBySlug } from '@/data/ingredients';
 import { families } from '@/data/families';
 import { concernBySlug } from '@/data/concerns';
 import WhatsInside from './WhatsInside.astro';
+import IngredientChip from './IngredientChip.astro';
 import TreatmentCard from './TreatmentCard.astro';
 
 export interface Props {
@@ -11,6 +13,10 @@ export interface Props {
 }
 const { treatment } = Astro.props;
 const fam = families[treatment.family];
+
+const addOns = addOnsFor(treatment.slug)
+  .map((s) => ingredientBySlug(s))
+  .filter((i): i is NonNullable<ReturnType<typeof ingredientBySlug>> => Boolean(i));
 
 const related = treatment.pairsWith
   .map((s) => treatmentBySlug(s))
@@ -58,6 +64,21 @@ const backLabel = treatment.type === 'drip' ? 'All drips' : 'The Injection Bar';
       <section class="reveal detail__block detail__inside">
         <WhatsInside ingredientSlugs={treatment.ingredients} />
       </section>
+
+      {addOns.length > 0 && (
+        <section class="reveal detail__block detail__addons">
+          <h2 class="detail__h">Recommended add-ons</h2>
+          <p class="detail__p measure">
+            Boosters that pair well with this drip. Your nurse can include any
+            after a quick screening, on clinical grounds. No pricing.
+          </p>
+          <ul class="addons">
+            {addOns.map((ing) => (
+              <li><IngredientChip ingredient={ing} showLine={true} /></li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section class="reveal detail__block">
         <h2 class="detail__h">What to expect</h2>
@@ -154,9 +175,18 @@ const backLabel = treatment.type === 'drip' ? 'All drips' : 'The Injection Bar';
     color: var(--graphite);
   }
   .detail__inside,
+  .detail__addons,
   .detail__note {
     border-top: 1px solid var(--line);
     padding-top: var(--space-m);
+  }
+  .addons {
+    list-style: none;
+    padding: 0;
+    margin: 1.1rem 0 0;
+    display: grid;
+    gap: 0.6rem;
+    max-width: var(--measure);
   }
   .supports {
     list-style: none;
