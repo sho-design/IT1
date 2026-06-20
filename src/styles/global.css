@@ -85,33 +85,41 @@
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-/* ── Dark theme ──────────────────────────────────────────────────────────
-   Re-derive neutrals and brighten accents for contrast on dark. Surfaces that
-   are meant to read "dark" in both themes use --surface-dark / --on-dark. */
+/* ── On-brand "Night" theme ──────────────────────────────────────────────
+   The clinic's own finishes with the lights low: Soft Touch Black surfaces, a
+   warm off-white ink, and High Gloss Sparkle panels inverted into dark glossy
+   cards that still catch light. Colour stays a quiet reward. */
 [data-theme='dark'] {
-  --ink: #eceef2;
-  --paper: #131418;
-  --graphite: #b6b9c0;
-  --mist: #888b92;
-  --line: #2a2c33;
-  --cloud: #1a1c21;
-  --white-pure: #1c1e24;
-  --gloss-white: linear-gradient(157deg, #21242b 0%, #1b1e25 46%, #15171d 100%);
-  --surface-dark: #1e2127;
-  --on-dark: #eceef2;
+  --ink: #f1efea;        /* warm off-white text */
+  --paper: #161518;      /* soft touch black, the room at night */
+  --graphite: #bcb8b1;   /* warm secondary text */
+  --mist: #8b8881;
+  --line: #2c2a2f;       /* warm hairlines */
+  --cloud: #1d1c20;      /* quiet elevated fill */
+  --white-pure: #201f24; /* dark glossy panel base */
+  --gloss-white: linear-gradient(157deg, #26242b 0%, #201e25 46%, #19171c 100%);
+  /* Sparkle catches light on the dark panels (the galaxy-black finish). */
+  --sparkle:
+    radial-gradient(1.2px 1.2px at 17% 24%, rgba(214, 220, 232, 0.28), transparent 60%),
+    radial-gradient(1px 1px at 67% 36%, rgba(214, 220, 232, 0.22), transparent 60%),
+    radial-gradient(1.1px 1.1px at 41% 70%, rgba(214, 220, 232, 0.24), transparent 60%),
+    radial-gradient(1px 1px at 86% 78%, rgba(214, 220, 232, 0.18), transparent 60%),
+    radial-gradient(1px 1px at 29% 90%, rgba(214, 220, 232, 0.16), transparent 60%);
+  --surface-dark: #201f24;
+  --on-dark: #f1efea;
   color-scheme: dark;
 
-  --accent-wellness: #80a7be;
-  --accent-radiance: #d4abc8;
-  --accent-immune: #e29c6b;
-  --accent-energy: #e1c155;
-  --accent-metabolic: #9dbc87;
-  --accent-clinical: #cd8181;
-  --accent-recovery: #84b5bd;
-  --accent-neutral: #a2a4a9;
-  --base-hydrate: #4fc2e7;
-  --base-healing: #e695a5;
-  --base-foundation: #8d99d8;
+  --accent-wellness: #84abc2;
+  --accent-radiance: #d8aecb;
+  --accent-immune: #e6a06f;
+  --accent-energy: #e4c55c;
+  --accent-metabolic: #a1c08b;
+  --accent-clinical: #d28686;
+  --accent-recovery: #88b9c1;
+  --accent-neutral: #a6a7ab;
+  --base-hydrate: #54c6ea;
+  --base-healing: #ea98a8;
+  --base-foundation: #919dda;
 }
 /* The small accent labels use a darkened "text" variant tuned for white; on
    dark, use the (now brighter) accent itself. Specificity beats the inline. */
