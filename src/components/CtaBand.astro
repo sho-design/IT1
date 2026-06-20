@@ -42,8 +42,8 @@ const named = locations.filter((l) => l.name).map((l) => l.name);
 
 <style>
   .band {
-    background: var(--ink);
-    color: var(--paper);
+    background: var(--surface-dark);
+    color: var(--on-dark);
     padding-block: var(--space-xl);
   }
   .band__inner {
@@ -68,20 +68,20 @@ const named = locations.filter((l) => l.name).map((l) => l.name);
     margin-top: 0.6rem;
   }
   .band__primary {
-    background: var(--paper);
-    color: var(--ink);
-    border-color: var(--paper);
+    background: var(--on-dark);
+    color: var(--surface-dark);
+    border-color: var(--on-dark);
   }
   .band__primary:hover {
     background: transparent;
-    color: var(--paper);
+    color: var(--on-dark);
   }
   .band .link-arrow {
-    color: var(--paper);
+    color: var(--on-dark);
     border-color: rgba(252, 252, 253, 0.35);
   }
   .band .link-arrow:hover {
-    border-color: var(--paper);
+    border-color: var(--on-dark);
   }
   .band__loc {
     color: rgba(252, 252, 253, 0.55);
