@@ -1,0 +1,127 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import CtaBand from '@/components/CtaBand.astro';
+
+const principles = [
+  { t: 'A consult first', d: 'We confirm what is right for you before anything else. You will know what is involved, and what it costs, before you decide. No surprises.' },
+  { t: 'Personalised, so priced that way', d: 'Because we tailor and screen, the right plan differs from person to person. We share clear, itemised costs at your consult rather than a one-size price list.' },
+  { t: 'No pressure, no upsell', d: 'We would rather you do less, more thoughtfully. We will never push add-ons you do not need.' },
+  { t: 'Elective, and clear about it', d: 'Wellness infusions are elective and not covered by OHIP. Clinically indicated care, like iron therapy, may be different, and we will tell you which is which.' },
+];
+
+const membership = [
+  'A simple way to make regular wellness more affordable and consistent.',
+  'Member pricing on drips and shots, with a predictable monthly rhythm.',
+  'Priority booking and the same physician oversight on every visit.',
+  'No long lock-ins, your health, your pace.',
+];
+---
+
+<Layout
+  title="Pricing & Memberships"
+  description="How pricing and memberships work at Restoration Medical: a consult-first, no-surprise approach to elective infusion therapy, and how membership makes regular care simpler."
+>
+  <PageHeader
+    eyebrow="How pricing works"
+    lead="We keep pricing simple and honest: a consult first, clear costs before you decide, and no pressure. Here is how it works, and how memberships can help."
+  >
+    Clear costs, <span class="it">no surprises.</span>
+  </PageHeader>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="grid reveal">
+        {principles.map((p) => (
+          <article class="pcard">
+            <h2 class="pcard__t">{p.t}</h2>
+            <p class="pcard__d">{p.d}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight fill">
+    <div class="wrap-narrow stack reveal">
+      <p class="eyebrow">Memberships</p>
+      <h2 class="hl display-3">Regular care, made simpler.</h2>
+      <p class="lead">
+        If wellness is part of your routine, a membership makes it easier and
+        more affordable, without changing the standard of care.
+      </p>
+      <ul class="ticks">
+        {membership.map((m) => (
+          <li><span class="tick" aria-hidden="true"></span>{m}</li>
+        ))}
+      </ul>
+      <p class="fine">
+        Membership details and current pricing are shared at your consult and on
+        the <a href="/memberships">Memberships</a> page as they are finalised.
+      </p>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Have a question about cost?"
+    heading="Ask us, plainly."
+    body="A consult is the easiest way to get clear, personalised numbers, with no obligation."
+    secondaryLabel="Read the FAQ"
+    secondaryHref="/faq"
+  />
+</Layout>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.4rem;
+  }
+  .pcard {
+    border-top: 1px solid var(--ink);
+    padding-top: 1.1rem;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .pcard__t {
+    font-size: var(--step-1);
+  }
+  .pcard__d {
+    color: var(--graphite);
+    font-size: var(--step--1);
+    line-height: 1.6;
+  }
+  .stack {
+    display: grid;
+    gap: 1rem;
+  }
+  .ticks {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 0.4rem;
+  }
+  .ticks li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.7rem;
+    align-items: baseline;
+    color: var(--graphite);
+  }
+  .tick {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-wellness);
+    transform: translateY(-1px);
+  }
+  .fine {
+    margin-top: 0.6rem;
+    font-size: var(--step--1);
+    color: var(--mist);
+  }
+  .fine a {
+    color: var(--ink);
+  }
+</style>

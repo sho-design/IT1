@@ -1,0 +1,70 @@
+---
+// CPSO-safe reassurance band (no testimonials). Use at decision points like
+// the booking page.
+const items = [
+  { t: 'Physician-reviewed', d: 'Every treatment, every time.' },
+  { t: 'Nurse-administered', d: 'Placed and monitored by an RN.' },
+  { t: 'Pharmaceutical-grade', d: 'Prepared to clinical standards.' },
+  { t: 'We screen first', d: 'For your safety, always.' },
+];
+---
+
+<section class="trustband">
+  <div class="wrap trustband__in">
+    {items.map((i) => (
+      <div class="trustband__item">
+        <span class="trustband__mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M8.5 12.5l2.4 2.4 4.6-5" />
+          </svg>
+        </span>
+        <div>
+          <p class="trustband__t">{i.t}</p>
+          <p class="trustband__d">{i.d}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .trustband {
+    background: var(--cloud);
+    padding-block: var(--space-m);
+  }
+  .trustband__in {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.4rem;
+  }
+  .trustband__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.7rem;
+    align-items: start;
+  }
+  .trustband__mark {
+    color: var(--accent-wellness);
+  }
+  .trustband__mark svg {
+    width: 22px;
+    height: 22px;
+  }
+  .trustband__t {
+    font-family: var(--display);
+    font-size: var(--step-0);
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .trustband__d {
+    font-size: var(--step--1);
+    color: var(--graphite);
+  }
+  @media (max-width: 760px) {
+    .trustband__in {
+      grid-template-columns: 1fr 1fr;
+      gap: 1.1rem;
+    }
+  }
+</style>

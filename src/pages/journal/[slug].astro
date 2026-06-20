@@ -1,0 +1,79 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { posts, postBySlug } from '@/data/journal';
+
+export function getStaticPaths() {
+  return posts.map((p) => ({ params: { slug: p.slug } }));
+}
+
+const { slug } = Astro.params;
+const post = postBySlug(slug!)!;
+const fmt = (iso: string) =>
+  new Date(iso).toLocaleDateString('en-CA', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.title,
+  description: post.excerpt,
+  datePublished: post.date,
+  author: { '@type': 'Organization', name: 'Restoration Medical' },
+  url: new URL(`/journal/${post.slug}`, Astro.site).href,
+};
+---
+
+<Layout title={post.title} description={post.excerpt} jsonLd={jsonLd}>
+  <header class="ph reveal">
+    <div class="wrap-narrow">
+      <a class="link-arrow jp__back" href="/journal">&larr; The Journal</a>
+      <p class="meta jp__meta">{fmt(post.date)} · {post.readingMinutes} min read</p>
+      <h1 class="hl jp__title display-2">{post.title}</h1>
+      <p class="meta jp__by">{post.author}</p>
+    </div>
+  </header>
+
+  <section class="section-tight">
+    <article class="wrap-narrow jp__body" set:html={post.body}></article>
+  </section>
+
+  <CtaBand />
+</Layout>
+
+<style>
+  .ph {
+    padding-top: var(--space-l);
+    padding-bottom: var(--space-s);
+  }
+  .jp__back {
+    display: inline-block;
+    margin-bottom: 1.6rem;
+    border-color: transparent;
+  }
+  .jp__meta {
+    margin-bottom: 0.8rem;
+  }
+  .jp__by {
+    margin-top: 1rem;
+  }
+  .jp__body {
+    display: grid;
+    gap: 1.1rem;
+    color: var(--graphite);
+    font-size: var(--step-1);
+    line-height: 1.65;
+  }
+  .jp__body :global(h2) {
+    font-size: var(--step-2);
+    color: var(--ink);
+    margin-top: 1.4rem;
+    line-height: 1.2;
+  }
+  .jp__body :global(strong) {
+    color: var(--ink);
+  }
+</style>

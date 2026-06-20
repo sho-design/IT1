@@ -1,5 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import TrustBand from '@/components/TrustBand.astro';
 import { site, locations, integrations, isFilled } from '@/data/site';
 import { concerns } from '@/data/concerns';
 
@@ -102,6 +103,8 @@ const jsonLd = {
       </div>
     </div>
   </section>
+
+  <TrustBand />
 </Layout>
 
 <style>

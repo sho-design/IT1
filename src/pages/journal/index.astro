@@ -1,0 +1,80 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { posts } from '@/data/journal';
+
+const fmt = (iso: string) =>
+  new Date(iso).toLocaleDateString('en-CA', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+---
+
+<Layout
+  title="The Journal"
+  description="Short, physician-minded education on infusion therapy, ingredients, and care, from the team at Restoration Medical. Honest about the evidence."
+>
+  <PageHeader
+    eyebrow="The Journal"
+    lead="Short, honest writing on what we do and why, the science, the ingredients, and the thinking behind the calm."
+  >
+    Refined, <span class="it">and explained.</span>
+  </PageHeader>
+
+  <section class="section-tight">
+    <div class="wrap-narrow">
+      <ul class="posts reveal">
+        {posts.map((p) => (
+          <li>
+            <a class="post" href={`/journal/${p.slug}`}>
+              <p class="post__meta meta">{fmt(p.date)} · {p.readingMinutes} min read</p>
+              <h2 class="post__title hl">{p.title}</h2>
+              <p class="post__excerpt">{p.excerpt}</p>
+              <span class="link-arrow post__more">Read &rarr;</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand />
+</Layout>
+
+<style>
+  .posts {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0;
+  }
+  .post {
+    display: grid;
+    gap: 0.5rem;
+    padding: var(--space-m) 0;
+    border-top: 1px solid var(--line);
+    text-decoration: none;
+  }
+  .posts li:last-child .post {
+    border-bottom: 1px solid var(--line);
+  }
+  .post__title {
+    font-size: var(--step-3);
+    color: var(--ink);
+    line-height: 1.12;
+  }
+  .post__excerpt {
+    color: var(--graphite);
+    max-width: 58ch;
+  }
+  .post__more {
+    margin-top: 0.4rem;
+    width: max-content;
+    border-color: transparent;
+  }
+  .post:hover .post__more {
+    border-color: var(--ink);
+  }
+</style>
