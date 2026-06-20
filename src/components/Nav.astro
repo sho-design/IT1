@@ -116,8 +116,21 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
 
     <button class="nav__burger" data-burger aria-expanded="false" aria-controls="mobile-nav">
       <span class="sr-only">Open menu</span>
-      <span class="nav__burger-bar"></span>
-      <span class="nav__burger-bar"></span>
+      <span class="nav__burger-lines" aria-hidden="true">
+        <span class="nav__burger-bar"></span>
+        <span class="nav__burger-bar"></span>
+      </span>
+      <svg class="nav__burger-icon" data-icon="droplet" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3.5c3.2 4.6 5.5 6.9 5.5 9.7a5.5 5.5 0 0 1-11 0c0-2.8 2.3-5.1 5.5-9.7z" />
+      </svg>
+      <svg class="nav__burger-icon" data-icon="slot" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="4.5" y="9.5" width="15" height="5" rx="2.5" />
+      </svg>
+      <svg class="nav__burger-icon" data-icon="ripple" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 4c1.4 2 2.4 3 2.4 4.2a2.4 2.4 0 0 1-4.8 0C9.6 7 10.6 6 12 4z" />
+        <path d="M3.5 14c2.5 2 5.5 3 8.5 3s6-1 8.5-3" />
+        <path d="M6 17.4c1.8 1.3 4 2 6 2s4.2-.7 6-2" />
+      </svg>
     </button>
   </div>
 
@@ -365,27 +378,68 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
     padding: 0.85rem 1rem;
   }
 
-  /* Burger + mobile */
+  /* Burger + mobile. Closed = two lines; on open it randomly morphs into a
+     droplet, the IV-bag hanging slot, or ripple arcs (data-open set in JS). */
   .nav__burger {
     display: none;
-    flex-direction: column;
-    gap: 5px;
+    position: relative;
+    place-items: center;
+    width: 36px;
+    height: 36px;
     background: none;
     border: 0;
-    padding: 0.5rem;
+    padding: 0;
     cursor: pointer;
   }
+  .nav__burger-lines {
+    position: relative;
+    width: 22px;
+    height: 12px;
+  }
   .nav__burger-bar {
+    position: absolute;
+    left: 0;
     width: 22px;
     height: 1.5px;
     background: var(--ink);
-    transition: transform 0.25s var(--ease), opacity 0.25s var(--ease);
+    transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
   }
+  .nav__burger-bar:first-child {
+    top: 2px;
+  }
+  .nav__burger-bar:last-child {
+    bottom: 2px;
+  }
+  .nav__burger-icon {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+    transform: scale(0.55) rotate(-8deg);
+    transition: opacity 0.35s var(--ease), transform 0.45s var(--ease);
+    pointer-events: none;
+  }
+  /* Open: fade the lines out, scale the chosen icon in. */
   [data-burger][aria-expanded='true'] .nav__burger-bar:first-child {
-    transform: translateY(6.5px) rotate(45deg);
+    transform: translateY(4px);
+    opacity: 0;
   }
   [data-burger][aria-expanded='true'] .nav__burger-bar:last-child {
-    transform: translateY(-6.5px) rotate(-45deg);
+    transform: translateY(-4px);
+    opacity: 0;
+  }
+  [data-burger][data-open='droplet'] .nav__burger-icon[data-icon='droplet'],
+  [data-burger][data-open='slot'] .nav__burger-icon[data-icon='slot'],
+  [data-burger][data-open='ripple'] .nav__burger-icon[data-icon='ripple'] {
+    opacity: 1;
+    transform: scale(1) rotate(0);
   }
 
   .mobile {
@@ -487,7 +541,7 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
       display: none;
     }
     .nav__burger {
-      display: flex;
+      display: grid;
     }
   }
 
@@ -580,12 +634,19 @@ const dot = (family: string) => `--dot: var(--accent-${family})`;
     const burger = nav.querySelector('[data-burger]');
     const mobile = nav.querySelector('[data-mobile]');
     const scrim = nav.querySelector('[data-scrim]');
+    const openIcons = ['droplet', 'slot', 'ripple'];
     const setMobile = (open: boolean) => {
       burger?.setAttribute('aria-expanded', String(open));
       if (open) {
+        // Randomly morph the burger into one of the three on-brand marks.
+        if (burger instanceof HTMLElement) {
+          burger.dataset.open =
+            openIcons[Math.floor(Math.random() * openIcons.length)];
+        }
         mobile?.removeAttribute('hidden');
         scrim?.removeAttribute('hidden');
       } else {
+        if (burger instanceof HTMLElement) delete burger.dataset.open;
         mobile?.setAttribute('hidden', '');
         scrim?.setAttribute('hidden', '');
       }
