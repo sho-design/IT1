@@ -100,12 +100,30 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
       const droplet = document.querySelector('.droplet') as HTMLElement | null;
       if (droplet && fine && !reduce) {
         let tx = -100, ty = -100, x = -100, y = -100, raf = 0, active = false;
+        let lastSpawn = 0, drips = 0;
         const loop = () => {
           x += (tx - x) * 0.18;
           y += (ty - y) * 0.18;
           droplet.style.transform =
             'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
           raf = requestAnimationFrame(loop);
+        };
+        // A little droplet that drips off the cursor and fades, like a sparkle
+        // trail, while hovering interactive elements.
+        const spawnDrip = (px: number, py: number) => {
+          if (drips > 22) return;
+          const d = document.createElement('span');
+          d.className = 'drip-particle';
+          const s = 5 + Math.random() * 6;
+          d.style.left = (px + (Math.random() * 12 - 6)).toFixed(0) + 'px';
+          d.style.top = (py + (Math.random() * 8 - 4)).toFixed(0) + 'px';
+          d.style.width = s.toFixed(1) + 'px';
+          d.style.height = s.toFixed(1) + 'px';
+          d.style.setProperty('--fall', (12 + Math.random() * 18).toFixed(0) + 'px');
+          d.style.setProperty('--dur', (0.7 + Math.random() * 0.6).toFixed(2) + 's');
+          drips++;
+          d.addEventListener('animationend', () => { d.remove(); drips--; }, { once: true });
+          document.body.appendChild(d);
         };
         window.addEventListener(
           'pointermove',
@@ -120,6 +138,13 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
               'a, button, .card, .tile, .booster, .base, .chip, summary, [role="radio"]'
             );
             droplet.classList.toggle('is-hot', hot);
+            if (hot) {
+              const now = performance.now();
+              if (now - lastSpawn > 65) {
+                lastSpawn = now;
+                spawnDrip(e.clientX, e.clientY);
+              }
+            }
             if (!raf) raf = requestAnimationFrame(loop);
           },
           { passive: true }

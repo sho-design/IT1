@@ -345,6 +345,36 @@ p {
   margin: -21px 0 0 -21px;
   opacity: 0.32;
 }
+/* Hover droplet trail: little drips that fall off the cursor and fade. */
+.drip-particle {
+  position: fixed;
+  margin: -4px 0 0 -4px;
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  background: radial-gradient(
+    circle at 50% 35%,
+    color-mix(in srgb, var(--accent-recovery) 78%, transparent),
+    color-mix(in srgb, var(--accent-recovery) 0%, transparent) 70%
+  );
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 59;
+  opacity: 0;
+  animation: drip-fall var(--dur, 0.9s) var(--ease) forwards;
+}
+@keyframes drip-fall {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  22% {
+    opacity: 0.7;
+    transform: translateY(2px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(var(--fall, 16px)) scale(0.8);
+  }
+}
 
 /* Water-ripple on headings: letters ripple out from where the cursor crosses
    the words, propagate, then settle. Driven per-letter in JS. */
