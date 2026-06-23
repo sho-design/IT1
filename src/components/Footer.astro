@@ -65,40 +65,39 @@ const columns = [
     </nav>
   </div>
 
-  <div class="wrap footer__legal">
-    <div class="footer__addresses">
-      {locations.map((loc) =>
-        isFilled(loc.address) ? (
-          <p class="footer__addr">
-            <span class="footer__addr-name">{loc.name}</span>{loc.address}
-          </p>
-        ) : null
-      )}
-      <p class="footer__addr">
-        <span class="footer__addr-name">Reach us</span>
-        {isFilled(site.phone) && (
-          <>
-            <a href={`tel:${site.phone}`}>{site.phone}</a> ·{' '}
-          </>
-        )}
-        <a href={`mailto:${site.email}`}>{site.email}</a>
+  <div class="wrap footer__bottom">
+    <div class="footer__locations">
+      {locations.map((loc) => (
+        <div class="footer__loc">
+          <p class="footer__loc-title">{loc.name}</p>
+          {isFilled(loc.address) && <p class="footer__meta">{loc.address}</p>}
+          {isFilled(loc.hours) && <p class="footer__meta">{loc.hours}</p>}
+        </div>
+      ))}
+      <div class="footer__loc">
+        <p class="footer__loc-title">Reach us</p>
+        {isFilled(site.phone) && <p class="footer__meta"><a href={`tel:${site.phone}`}>{site.phone}</a></p>}
+        <p class="footer__meta"><a href={`mailto:${site.email}`}>{site.email}</a></p>
+      </div>
+    </div>
+
+    <div class="footer__legal">
+      <p class="footer__fine">
+        Wellness infusion services are elective and are not covered by OHIP.
+        Iron therapy may be clinically indicated. Every treatment is
+        physician-reviewed and nurse-administered. Information on this site is
+        educational and is not medical advice. Results vary from person to
+        person. A consult confirms what is right for you.
+      </p>
+      <p class="footer__fine">
+        &copy; {year} {site.brand}. {site.signOff}
+      </p>
+      <p class="footer__legallinks">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Use</a>
+        <a href="/accessibility">Accessibility</a>
       </p>
     </div>
-    <p class="footer__fine">
-      Wellness infusion services are elective and are not covered by OHIP.
-      Iron therapy may be clinically indicated. Every treatment is
-      physician-reviewed and nurse-administered. Information on this site is
-      educational and is not medical advice. Results vary from person to
-      person. A consult confirms what is right for you.
-    </p>
-    <p class="footer__fine">
-      &copy; {year} {site.brand}. {site.signOff}
-    </p>
-    <p class="footer__legallinks">
-      <a href="/privacy">Privacy Policy</a>
-      <a href="/terms">Terms of Use</a>
-      <a href="/accessibility">Accessibility</a>
-    </p>
   </div>
 </footer>
 
@@ -159,6 +158,14 @@ const columns = [
     color: rgba(252, 252, 253, 0.55);
     margin-bottom: 1rem;
   }
+  .footer__loc-title {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: var(--step-1);
+    letter-spacing: -0.01em;
+    color: var(--on-dark);
+    margin-bottom: 0.7rem;
+  }
   .footer__col ul {
     list-style: none;
     padding: 0;
@@ -168,37 +175,21 @@ const columns = [
   .footer__col a:hover {
     color: rgba(252, 252, 253, 0.65);
   }
+  .footer__locations {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding-block: var(--space-l);
+    border-bottom: 1px solid rgba(252, 252, 253, 0.14);
+  }
+  .footer__meta {
+    color: rgba(252, 252, 253, 0.72);
+    font-size: var(--step--1);
+  }
   .footer__legal {
     padding-top: var(--space-m);
     display: grid;
     gap: 0.8rem;
-  }
-  .footer__addresses {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem 2.4rem;
-    margin-bottom: 0.4rem;
-  }
-  .footer__addr {
-    font-size: 0.78rem;
-    line-height: 1.5;
-    color: rgba(252, 252, 253, 0.55);
-    max-width: 32ch;
-  }
-  .footer__addr-name {
-    display: block;
-    font-family: var(--mono);
-    font-size: 0.64rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--on-dark);
-    margin-bottom: 0.2rem;
-  }
-  .footer__addr a {
-    color: rgba(252, 252, 253, 0.72);
-  }
-  .footer__addr a:hover {
-    color: var(--on-dark);
   }
   .footer__fine {
     color: rgba(252, 252, 253, 0.5);
@@ -225,12 +216,14 @@ const columns = [
       grid-template-columns: 1fr;
       gap: 2.5rem;
     }
-    .footer__nav {
+    .footer__nav,
+    .footer__locations {
       grid-template-columns: 1fr 1fr;
     }
   }
   @media (max-width: 520px) {
-    .footer__nav {
+    .footer__nav,
+    .footer__locations {
       grid-template-columns: 1fr;
     }
   }
