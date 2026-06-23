@@ -38,6 +38,17 @@ export const locations = [
   },
 ];
 
+// Google Maps helpers. We derive both URLs from the plain address, so there is
+// nothing extra to maintain and no API key is needed.
+//   - embed: a keyless interactive map preview (used as a static-looking image).
+//   - directions: opens Google Maps routing; with no origin set, Google uses the
+//     visitor's own current location as the starting point.
+export const mapsEmbedUrl = (address: string): string =>
+  `https://maps.google.com/maps?q=${encodeURIComponent(address)}&z=15&output=embed`;
+
+export const mapsDirectionsUrl = (address: string): string =>
+  `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
+
 export const cta = {
   primary: { label: 'Book a consult', href: '/book' },
   secondary: { label: 'Explore drips & shots', href: '/drips' },
