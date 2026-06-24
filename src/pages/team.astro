@@ -273,13 +273,21 @@ const jsonLd = {
   }
 
   /* The rest of the team — portrait cards. */
+  /* Ten staff cards laid out as two rows of three, then a row of four. The
+     slots are positional, so the random shuffle just changes who sits where. */
   .team-grid {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    grid-template-columns: repeat(12, 1fr);
     gap: 1.2rem;
+  }
+  .team-grid > .pmember {
+    grid-column: span 4; /* 3 per row */
+  }
+  .team-grid > .pmember:nth-child(n + 7) {
+    grid-column: span 3; /* final four → a row of 4 */
   }
   .pmember {
     border: 1px solid var(--line);
@@ -400,9 +408,18 @@ const jsonLd = {
       gap: 1.4rem;
     }
   }
-  @media (max-width: 440px) {
+  @media (max-width: 900px) {
     .team-grid {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .team-grid > .pmember,
+    .team-grid > .pmember:nth-child(n + 7) {
+      grid-column: auto;
+    }
+  }
+  @media (max-width: 380px) {
+    .team-grid {
+      grid-template-columns: 1fr;
     }
   }
   @media (prefers-reduced-motion: reduce) {

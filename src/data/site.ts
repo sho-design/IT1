@@ -18,7 +18,7 @@ export const site = {
   description:
     'Physician-led IV infusion therapy and injection shots at Restoration Medical. Wellness drips, clinical iron infusions, and a physician-supervised metabolic program in Thornhill and Maple.',
   email: 'hello@restorationmedical.ca',
-  phone: PLACEHOLDER, // e.g. '+1 905 555 0100'
+  phone: '905-709-3222', // Thornhill
   signOff: 'With care, the Restoration Medical team.',
   // Primary domain is set in astro.config.mjs (`site`).
 };
