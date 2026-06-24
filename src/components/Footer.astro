@@ -5,6 +5,7 @@ import {
   isFilled,
   mapsEmbedUrl,
   mapsDirectionsUrl,
+  mapsSearchUrl,
 } from '@/data/site';
 import SocialLinks from './SocialLinks.astro';
 
@@ -80,14 +81,14 @@ const columns = [
           {isFilled(loc.address) && <p class="footer__meta">{loc.address}</p>}
           {isFilled(loc.hours) && <p class="footer__meta">{loc.hours}</p>}
           {isFilled(loc.address) && (
-            <a
-              class="footer__map"
-              href={mapsDirectionsUrl(loc.address)}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Get directions to ${loc.name} on Google Maps`}
-            >
-              <span class="footer__map-frame">
+            <div class="footer__map">
+              <a
+                class="footer__map-frame"
+                href={isFilled(loc.profileUrl) ? loc.profileUrl : mapsSearchUrl(loc.address)}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`View ${loc.name} on Google`}
+              >
                 <iframe
                   src={mapsEmbedUrl(loc.address)}
                   title={`Map of ${loc.name}`}
@@ -96,14 +97,20 @@ const columns = [
                   tabindex="-1"
                   aria-hidden="true"
                 />
-              </span>
-              <span class="footer__map-cta">
+              </a>
+              <a
+                class="footer__map-cta"
+                href={mapsDirectionsUrl(loc.address)}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Get directions to ${loc.name} on Google Maps`}
+              >
                 Get directions
                 <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M5 12h14M13 6l6 6-6 6" />
                 </svg>
-              </span>
-            </a>
+              </a>
+            </div>
           )}
         </div>
       ))}
@@ -214,33 +221,31 @@ const columns = [
     color: rgba(252, 252, 253, 0.72);
     font-size: var(--step--1);
   }
+  /* Container holds two separate links: the map (-> Google listing) and the
+     "Get directions" bar (-> routing). They behave independently. */
   .footer__map {
-    display: block;
     margin-top: 0.9rem;
     border-radius: var(--radius);
     overflow: hidden;
     border: 1px solid rgba(252, 252, 253, 0.14);
     background: rgba(252, 252, 253, 0.04);
-    transition:
-      border-color 0.3s var(--ease),
-      transform 0.3s var(--ease);
+    transition: border-color 0.3s var(--ease);
   }
   .footer__map:hover {
-    border-color: rgba(252, 252, 253, 0.4);
-    transform: translateY(-2px);
+    border-color: rgba(252, 252, 253, 0.32);
   }
-  .footer__map:focus-visible {
-    outline: 2px solid var(--on-dark);
-    outline-offset: 2px;
-  }
+  /* The map preview links to the Google listing. The iframe is a visual only;
+     pointer-events off so a click anywhere on it falls through to this anchor.
+     A subtle tint keeps the map on-brand against the dark footer. */
   .footer__map-frame {
     display: block;
     position: relative;
     height: 130px;
   }
-  /* The iframe is a visual only; pointer-events off so a click anywhere on the
-     card falls through to the anchor and opens directions. A subtle tint keeps
-     the map on-brand against the dark footer. */
+  .footer__map-frame:focus-visible {
+    outline: 2px solid var(--on-dark);
+    outline-offset: -2px;
+  }
   .footer__map-frame iframe {
     position: absolute;
     inset: 0;
@@ -249,6 +254,10 @@ const columns = [
     border: 0;
     pointer-events: none;
     filter: grayscale(0.35) contrast(0.95) brightness(0.96);
+    transition: filter 0.3s var(--ease);
+  }
+  .footer__map-frame:hover iframe {
+    filter: grayscale(0.1) contrast(1) brightness(1);
   }
   .footer__map-cta {
     display: flex;
@@ -261,18 +270,25 @@ const columns = [
     text-transform: uppercase;
     color: rgba(252, 252, 253, 0.8);
     border-top: 1px solid rgba(252, 252, 253, 0.12);
+    transition: color 0.3s var(--ease);
   }
-  .footer__map:hover .footer__map-cta {
+  .footer__map-cta:hover {
     color: var(--on-dark);
   }
-  .footer__map:hover .footer__map-cta svg {
-    transform: translateX(3px);
+  .footer__map-cta:focus-visible {
+    outline: 2px solid var(--on-dark);
+    outline-offset: -2px;
   }
   .footer__map-cta svg {
     transition: transform 0.3s var(--ease);
   }
+  .footer__map-cta:hover svg {
+    transform: translateX(3px);
+  }
   @media (prefers-reduced-motion: reduce) {
     .footer__map,
+    .footer__map-frame iframe,
+    .footer__map-cta,
     .footer__map-cta svg {
       transition: none;
     }

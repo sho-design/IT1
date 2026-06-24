@@ -29,12 +29,16 @@ export const locations = [
     address: '700 Centre St (Inside Walmart), Thornhill, ON L4J 0A7',
     hours: PLACEHOLDER, // e.g. 'Mon to Fri, 9 to 5'
     mapUrl: PLACEHOLDER,
+    // Google Business Profile / Maps listing link. The footer map links here.
+    profileUrl:
+      'https://www.google.com/maps/place/Restoration+Medical/@43.8116543,-79.4536255,17z/data=!3m1!4b1!4m6!3m5!1s0x882b2db3105c83d1:0x644d7da1c8c35de7!8m2!3d43.8116505!4d-79.4510506!16s%2Fg%2F11yl66jl7w',
   },
   {
     name: 'Maple (Coming Soon)',
     address: '2620 Rutherford Rd, Unit 105-107, Vaughan, ON L4K 0H1',
     hours: PLACEHOLDER,
     mapUrl: PLACEHOLDER,
+    profileUrl: PLACEHOLDER,
   },
 ];
 
@@ -53,6 +57,11 @@ export const mapsEmbedUrl = (address: string): string =>
 
 export const mapsDirectionsUrl = (address: string): string =>
   `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(mapQuery(address))}`;
+
+// Opens the place on Google Maps (used as a fallback when a location has no
+// Business Profile link yet).
+export const mapsSearchUrl = (address: string): string =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery(address))}`;
 
 export const cta = {
   primary: { label: 'Book a consult', href: '/book' },
