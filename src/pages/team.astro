@@ -63,7 +63,7 @@ const jsonLd = {
           </p>
           {isFilled(lead.name) && <h2 class="lead-member__name hl">{lead.name}</h2>}
           <p class="lead-member__cred">{lead.title ?? lead.credentials}</p>
-          {lead.bio.map((para) => (
+          {lead.bio?.map((para) => (
             <p class="lead-member__bio">{para}</p>
           ))}
         </div>
