@@ -39,15 +39,20 @@ export const locations = [
 ];
 
 // Google Maps helpers. We derive both URLs from the plain address, so there is
-// nothing extra to maintain and no API key is needed.
+// nothing extra to maintain and no API key is needed. Parenthetical asides
+// (e.g. "(Inside Walmart)") are stripped before geocoding so the pin lands on
+// the street address rather than confusing the search.
 //   - embed: a keyless interactive map preview (used as a static-looking image).
 //   - directions: opens Google Maps routing; with no origin set, Google uses the
 //     visitor's own current location as the starting point.
+const mapQuery = (address: string): string =>
+  address.replace(/\s*\([^)]*\)/g, '').replace(/\s{2,}/g, ' ').trim();
+
 export const mapsEmbedUrl = (address: string): string =>
-  `https://maps.google.com/maps?q=${encodeURIComponent(address)}&z=15&output=embed`;
+  `https://maps.google.com/maps?q=${encodeURIComponent(mapQuery(address))}&z=15&output=embed`;
 
 export const mapsDirectionsUrl = (address: string): string =>
-  `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
+  `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(mapQuery(address))}`;
 
 export const cta = {
   primary: { label: 'Book a consult', href: '/book' },
