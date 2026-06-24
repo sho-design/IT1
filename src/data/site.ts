@@ -59,6 +59,19 @@ export const cta = {
   secondary: { label: 'Explore drips & shots', href: '/drips' },
 };
 
+// Google rating strip. To stay clear of the CPSO rule against testimonials in a
+// physician's advertising, we show only the aggregate rating, the count, and a
+// link out to Google — never quoted review text on-page. The whole strip stays
+// hidden until all three are filled, so no fabricated rating is ever shown.
+//   - rating: the average, e.g. '4.9'
+//   - count:  number of reviews, e.g. '128'
+//   - url:    your Google Business "reviews" or profile link
+export const googleRating = {
+  rating: PLACEHOLDER,
+  count: PLACEHOLDER,
+  url: PLACEHOLDER,
+};
+
 // Social profiles, shown in the footer and the mobile menu. Add the full
 // profile URL for each. While a URL is on a placeholder the icon still shows
 // but is not a link, so there are never dead links before launch.

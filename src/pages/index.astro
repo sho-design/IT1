@@ -3,6 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import TreatmentCard from '@/components/TreatmentCard.astro';
 import ConcernTile from '@/components/ConcernTile.astro';
 import CtaBand from '@/components/CtaBand.astro';
+import GoogleRating from '@/components/GoogleRating.astro';
 import RandomPullQuote from '@/components/RandomPullQuote.astro';
 import { treatmentBySlug, type Treatment } from '@/data/treatments';
 import { concerns } from '@/data/concerns';
@@ -244,6 +245,8 @@ const steps = [
       </div>
     </div>
   </section>
+
+  <GoogleRating />
 
   <CtaBand
     eyebrow="Begin"

@@ -1,0 +1,163 @@
+---
+import { googleRating, isFilled } from '@/data/site';
+
+// Compliant rating strip: aggregate rating + count + link to Google, no quoted
+// review text. Renders only when all fields are filled, so a fabricated rating
+// is never shown before launch.
+const show =
+  isFilled(googleRating.rating) &&
+  isFilled(googleRating.count) &&
+  isFilled(googleRating.url);
+
+const value = show ? parseFloat(googleRating.rating) : 0;
+// Five star slots: 'full', 'half', or 'empty', from the rating.
+const stars = Array.from({ length: 5 }, (_, i) => {
+  const d = value - i;
+  return d >= 0.75 ? 'full' : d >= 0.25 ? 'half' : 'empty';
+});
+---
+
+{show && (
+  <section class="grev reveal" aria-label="Our Google rating">
+    <div class="wrap grev__inner">
+      <span class="grev__g" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84C6.71 7.3 9.14 5.38 12 5.38z"/>
+        </svg>
+      </span>
+
+      <div class="grev__rating">
+        <span class="grev__num">{googleRating.rating}</span>
+        <span class="grev__stars" role="img" aria-label={`${googleRating.rating} out of 5 stars`}>
+          {stars.map((kind) => (
+            <svg class="grev__star" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              {kind === 'half' && (
+                <defs>
+                  <linearGradient id="grev-half">
+                    <stop offset="50%" stop-color="#FBBC05" />
+                    <stop offset="50%" stop-color="transparent" />
+                  </linearGradient>
+                </defs>
+              )}
+              <path
+                d="M12 2.5l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 18.6 6.1 21.3l1.2-6.6L2.5 9.5l6.6-.9z"
+                fill={kind === 'full' ? '#FBBC05' : kind === 'half' ? 'url(#grev-half)' : 'none'}
+                stroke="#FBBC05"
+                stroke-width="1.2"
+                stroke-linejoin="round"
+              />
+            </svg>
+          ))}
+        </span>
+      </div>
+
+      <p class="grev__meta">
+        Rated by <strong>{googleRating.count}</strong> guests on Google
+      </p>
+
+      <a
+        class="grev__link"
+        href={googleRating.url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Read our reviews on Google
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </a>
+    </div>
+  </section>
+)}
+
+<style>
+  .grev {
+    border-block: 1px solid var(--line);
+    background: var(--paper);
+    padding-block: 1.4rem;
+  }
+  .grev__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.8rem 1.6rem;
+    text-align: center;
+  }
+  .grev__g {
+    display: inline-flex;
+  }
+  .grev__rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .grev__num {
+    font-family: var(--display);
+    font-size: var(--step-2);
+    font-weight: 400;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .grev__stars {
+    display: inline-flex;
+    gap: 1px;
+  }
+  .grev__star {
+    display: block;
+  }
+  .grev__meta {
+    color: var(--graphite);
+    font-size: var(--step--1);
+  }
+  .grev__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2px;
+    transition:
+      border-color 0.3s var(--ease),
+      color 0.3s var(--ease);
+  }
+  .grev__link:hover {
+    border-color: var(--ink);
+  }
+  .grev__link svg {
+    transition: transform 0.3s var(--ease);
+  }
+  .grev__link:hover svg {
+    transform: translateX(3px);
+  }
+  /* A subtle divider before the meta line on wider screens. */
+  @media (min-width: 720px) {
+    .grev__meta {
+      position: relative;
+      padding-left: 1.6rem;
+    }
+    .grev__meta::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 1.1em;
+      background: var(--line);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .grev__link,
+    .grev__link svg {
+      transition: none;
+    }
+  }
+</style>
