@@ -55,9 +55,10 @@ export const team: TeamMember[] = [
     name: 'Dr. Johnny Nguyen',
     title: 'Medical Director · Interventional Pain Physician',
     credentials: 'MD · University of Toronto',
-    // Drop the headshot at /public/team/dr-johnny-nguyen.jpg and set the path
-    // here to swap the monogram for the photo.
-    photo: PLACEHOLDER,
+    // Headshot lives at /public/team/dr-johnny-nguyen.jpg. Until that file
+    // exists the portrait falls back to the monogram (onerror in the template),
+    // so there is never a broken image.
+    photo: '/team/dr-johnny-nguyen.jpg',
     monogram: 'JN',
     family: 'var(--accent-clinical)',
     bio: [

@@ -51,7 +51,15 @@ const jsonLd = {
       >
         <div class="lead-member__portrait">
           {isFilled(lead.photo) ? (
-            <img src={lead.photo} alt={isFilled(lead.name) ? lead.name : lead.role} loading="lazy" />
+            <>
+              <img
+                src={lead.photo}
+                alt={isFilled(lead.name) ? lead.name : lead.role}
+                loading="lazy"
+                onerror="this.style.display='none';this.nextElementSibling.removeAttribute('hidden')"
+              />
+              <span class="lead-member__mono" aria-hidden="true" hidden>{lead.monogram}</span>
+            </>
           ) : (
             <span class="lead-member__mono" aria-hidden="true">{lead.monogram}</span>
           )}
@@ -89,7 +97,15 @@ const jsonLd = {
           <li class="pmember" style={`--fam:${m.family}`}>
             <div class="pmember__portrait">
               {isFilled(m.photo) ? (
-                <img src={m.photo} alt={isFilled(m.name) ? m.name : m.role} loading="lazy" />
+                <>
+                  <img
+                    src={m.photo}
+                    alt={isFilled(m.name) ? m.name : m.role}
+                    loading="lazy"
+                    onerror="this.style.display='none';this.nextElementSibling.removeAttribute('hidden')"
+                  />
+                  <span class="pmember__mono" aria-hidden="true" hidden>{m.monogram}</span>
+                </>
               ) : (
                 <span class="pmember__mono" aria-hidden="true">{m.monogram}</span>
               )}
