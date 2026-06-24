@@ -69,7 +69,7 @@ export const cta = {
 export const googleRating = {
   rating: PLACEHOLDER,
   count: PLACEHOLDER,
-  url: PLACEHOLDER,
+  url: 'https://www.google.com/maps/place/Restoration+Medical/@43.8116543,-79.4536255,17z/data=!3m1!4b1!4m6!3m5!1s0x882b2db3105c83d1:0x644d7da1c8c35de7!8m2!3d43.8116505!4d-79.4510506!16s%2Fg%2F11yl66jl7w',
 };
 
 // Social profiles, shown in the footer and the mobile menu. Add the full
