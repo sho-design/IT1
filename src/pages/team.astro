@@ -84,9 +84,9 @@ const jsonLd = {
         <p class="eyebrow">At the chair</p>
         <h2 class="hl display-3">Who looks after you.</h2>
       </div>
-      <div class="team-grid reveal">
+      <ul class="team-grid reveal" data-shuffle>
         {rest.map((m) => (
-          <article class="pmember" style={`--fam:${m.family}`}>
+          <li class="pmember" style={`--fam:${m.family}`}>
             <div class="pmember__portrait">
               {isFilled(m.photo) ? (
                 <img src={m.photo} alt={isFilled(m.name) ? m.name : m.role} loading="lazy" />
@@ -94,17 +94,17 @@ const jsonLd = {
                 <span class="pmember__mono" aria-hidden="true">{m.monogram}</span>
               )}
             </div>
-            <h3 class="pmember__role">{m.role}</h3>
-            {isFilled(m.name) && <p class="pmember__name">{m.name}</p>}
-            <p class="pmember__cred">{m.credentials}</p>
-            {m.bio.map((para) => (
+            <h3 class="pmember__name-lg">{isFilled(m.name) ? m.name : m.role}</h3>
+            <p class="pmember__cred">{isFilled(m.name) ? m.role : m.credentials}</p>
+            {m.bio?.map((para) => (
               <p class="pmember__bio">{para}</p>
             ))}
-          </article>
+          </li>
         ))}
-      </div>
+      </ul>
       <p class="team__note meta reveal">
-        Individual names and photographs are added as each team member joins the
+        Our nurses administer every infusion and our lab technician handles
+        bloodwork on site. Photographs are added as each team member joins the
         public page. Our physician is registered with the College of Physicians
         and Surgeons of Ontario; full registration details are shared on request
         and at your consult.
@@ -140,6 +140,20 @@ const jsonLd = {
     heading="Care you can put a face to."
     body="Book a consult and meet the team. We will take the time to understand what you need before we suggest anything."
   />
+
+  <script>
+    // Shuffle the staff cards into a fresh order on every page load, so no one
+    // is always listed first. Fisher–Yates, then re-append in the new order.
+    const grid = document.querySelector('[data-shuffle]');
+    if (grid) {
+      const cards = Array.from(grid.children);
+      for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+      }
+      cards.forEach((c) => grid.appendChild(c));
+    }
+  </script>
 </Layout>
 
 <style>
@@ -260,8 +274,11 @@ const jsonLd = {
 
   /* The rest of the team — portrait cards. */
   .team-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
     gap: 1.2rem;
   }
   .pmember {
@@ -305,13 +322,11 @@ const jsonLd = {
     font-weight: 360;
     color: var(--fam);
   }
-  .pmember__role {
+  .pmember__name-lg {
+    font-family: var(--display);
+    font-weight: 400;
     font-size: var(--step-1);
     line-height: 1.15;
-  }
-  .pmember__name {
-    font-family: var(--display);
-    font-size: var(--step-1);
     color: var(--ink);
   }
   .pmember__cred {
@@ -367,11 +382,6 @@ const jsonLd = {
       gap: 1.2rem;
     }
   }
-  @media (max-width: 900px) {
-    .team-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
   @media (max-width: 720px) {
     .lead-member,
     .lead-member--3col {
@@ -385,12 +395,14 @@ const jsonLd = {
       grid-template-columns: 1fr;
       gap: 1rem;
     }
-    .team-grid,
     .standards {
       grid-template-columns: 1fr;
-    }
-    .standards {
       gap: 1.4rem;
+    }
+  }
+  @media (max-width: 440px) {
+    .team-grid {
+      grid-template-columns: 1fr 1fr;
     }
   }
   @media (prefers-reduced-motion: reduce) {

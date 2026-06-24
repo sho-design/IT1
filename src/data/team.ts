@@ -1,20 +1,53 @@
-// The care team. Role-forward so the page reads well before real names and
-// photos are supplied: while `name` / `photo` sit on PLACEHOLDER the card falls
-// back to the role title and a monogram, so there are never broken images or
-// empty names. Fill these in before launch.
+// The care team. The featured member (index 0) leads the page; the rest are
+// shown below and shuffled into a random order on every page load (client-side).
+// Members keep a monogram fallback until a photo is supplied, so there are never
+// broken images.
 import { PLACEHOLDER } from './site';
 
 export interface TeamMember {
-  role: string; // shown as the card's standing title
+  role: string; // shown as the card's standing title / label
   name: string; // PLACEHOLDER until provided
   title?: string; // fuller title line under the name (featured member)
-  credentials: string; // e.g. 'MD, CCFP' — shown under the name
+  credentials: string; // shown under the name when there is no real name yet
   photo: string; // path under /public, or PLACEHOLDER
   monogram: string; // 1–2 letters drawn when there is no photo
   family: string; // accent token used for the monogram + hover
-  bio: string[]; // one entry per paragraph
+  bio?: string[]; // one entry per paragraph (optional for the staff cards)
   highlights?: string[]; // optional credential bullets (featured member)
 }
+
+// Accent palette cycled across the staff cards for quiet variety.
+const ACCENTS = [
+  'var(--accent-wellness)',
+  'var(--accent-recovery)',
+  'var(--accent-radiance)',
+  'var(--accent-energy)',
+  'var(--accent-immune)',
+  'var(--accent-metabolic)',
+  'var(--accent-clinical)',
+  'var(--accent-neutral)',
+];
+
+const nurseNames = [
+  'Michelle',
+  'Anh',
+  'Kim',
+  'Marika',
+  'Kelly',
+  'Tiffany',
+  'Rose',
+  'Hillary',
+  'Aastha',
+];
+
+const nurses: TeamMember[] = nurseNames.map((name, i) => ({
+  role: 'Registered Nurse',
+  name,
+  credentials: 'Registered Nurse',
+  photo: PLACEHOLDER,
+  monogram: name.charAt(0),
+  family: ACCENTS[i % ACCENTS.length],
+}));
 
 export const team: TeamMember[] = [
   {
@@ -38,37 +71,13 @@ export const team: TeamMember[] = [
       'Advanced Diplomate in Interventional Pain Management',
     ],
   },
+  ...nurses,
   {
-    role: 'Nurse Lead',
-    name: PLACEHOLDER,
-    credentials: 'RN · Registered Nurse',
+    role: 'Lab Technician',
+    name: 'Karen',
+    credentials: 'Lab Technician',
     photo: PLACEHOLDER,
-    monogram: 'RN',
-    family: 'var(--accent-wellness)',
-    bio: [
-      'Our lead registered nurse runs the floor: placing your line with a steady hand, watching how you respond, and keeping the pace calm. Every infusion in the clinic is nurse-administered.',
-    ],
-  },
-  {
-    role: 'Registered Nurses',
-    name: PLACEHOLDER,
-    credentials: 'RN · Infusion-trained',
-    photo: PLACEHOLDER,
-    monogram: 'RN',
-    family: 'var(--accent-recovery)',
-    bio: [
-      'Our nurses are trained in IV infusion and gentle technique. They take the time to answer questions, make the chair comfortable, and treat your visit as care rather than a transaction.',
-    ],
-  },
-  {
-    role: 'Patient Care',
-    name: PLACEHOLDER,
-    credentials: 'Front desk & coordination',
-    photo: PLACEHOLDER,
-    monogram: 'PC',
-    family: 'var(--accent-radiance)',
-    bio: [
-      'From your first question to booking your consult, our patient-care team keeps things easy and unhurried — scheduling, intake, and anything you need between visits.',
-    ],
+    monogram: 'K',
+    family: 'var(--accent-metabolic)',
   },
 ];
