@@ -6,6 +6,8 @@ import RandomPullQuote from '@/components/RandomPullQuote.astro';
 import { team } from '@/data/team';
 import { isFilled, locations } from '@/data/site';
 
+const [lead, ...rest] = team;
+
 const standards = [
   { t: 'Physician-reviewed', d: 'Every plan is reviewed by our physician before treatment — eligibility, dosing, and follow-up.' },
   { t: 'Nurse-administered', d: 'Registered nurses place every line and stay with you through the visit.' },
@@ -43,22 +45,47 @@ const jsonLd = {
 
   <section class="section-tight">
     <div class="wrap">
-      <div class="team reveal">
-        {team.map((m) => (
-          <article class="member" style={`--fam:${m.family}`}>
-            <div class="member__avatar">
+      <article class="lead-member reveal" style={`--fam:${lead.family}`}>
+        <div class="lead-member__portrait">
+          {isFilled(lead.photo) ? (
+            <img src={lead.photo} alt={isFilled(lead.name) ? lead.name : lead.role} loading="lazy" />
+          ) : (
+            <span class="lead-member__mono" aria-hidden="true">{lead.monogram}</span>
+          )}
+        </div>
+        <div class="lead-member__body">
+          <p class="eyebrow lead-member__eyebrow">
+            <span class="lead-member__dot" aria-hidden="true"></span>
+            {lead.role}
+          </p>
+          {isFilled(lead.name) && <h2 class="lead-member__name hl">{lead.name}</h2>}
+          <p class="lead-member__cred">{lead.credentials}</p>
+          <p class="lead-member__bio">{lead.bio}</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section-tight fill">
+    <div class="wrap">
+      <div class="reveal sec-head">
+        <p class="eyebrow">At the chair</p>
+        <h2 class="hl display-3">Who looks after you.</h2>
+      </div>
+      <div class="team-grid reveal">
+        {rest.map((m) => (
+          <article class="pmember" style={`--fam:${m.family}`}>
+            <div class="pmember__portrait">
               {isFilled(m.photo) ? (
                 <img src={m.photo} alt={isFilled(m.name) ? m.name : m.role} loading="lazy" />
               ) : (
-                <span class="member__mono" aria-hidden="true">{m.monogram}</span>
+                <span class="pmember__mono" aria-hidden="true">{m.monogram}</span>
               )}
             </div>
-            <div class="member__body">
-              <h2 class="member__role">{m.role}</h2>
-              {isFilled(m.name) && <p class="member__name">{m.name}</p>}
-              <p class="member__cred">{m.credentials}</p>
-              <p class="member__bio">{m.bio}</p>
-            </div>
+            <h3 class="pmember__role">{m.role}</h3>
+            {isFilled(m.name) && <p class="pmember__name">{m.name}</p>}
+            <p class="pmember__cred">{m.credentials}</p>
+            <p class="pmember__bio">{m.bio}</p>
           </article>
         ))}
       </div>
@@ -77,7 +104,7 @@ const jsonLd = {
     </div>
   </section>
 
-  <section class="section-tight fill">
+  <section class="section-tight">
     <div class="wrap">
       <div class="reveal sec-head">
         <p class="eyebrow">How we work</p>
@@ -102,72 +129,146 @@ const jsonLd = {
 </Layout>
 
 <style>
-  .team {
+  /* Featured physician — editorial split. */
+  .lead-member {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.2rem;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(1.6rem, 5vw, 4rem);
+    align-items: center;
   }
-  .member {
-    border: 1px solid var(--line);
+  .lead-member__portrait {
+    position: relative;
+    aspect-ratio: 4 / 5;
     border-radius: var(--radius);
-    padding: 1.8rem;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1.4rem;
-    align-items: start;
-    transition:
-      border-color 0.35s var(--ease),
-      transform 0.35s var(--ease);
-  }
-  .member:hover {
-    border-color: var(--fam);
-    transform: translateY(-3px);
-  }
-  .member__avatar {
-    width: 76px;
-    height: 76px;
-    border-radius: 50%;
     overflow: hidden;
     display: grid;
     place-items: center;
     background:
-      radial-gradient(circle at 32% 28%, color-mix(in oklab, var(--fam) 26%, transparent), transparent 70%),
+      radial-gradient(circle at 30% 24%, color-mix(in oklab, var(--fam) 30%, transparent), transparent 68%),
       var(--cloud, #f1f0ec);
     border: 1px solid var(--line);
   }
-  .member__avatar img {
+  .lead-member__portrait img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  .member__mono {
+  .lead-member__mono {
     font-family: var(--display);
-    font-size: var(--step-1);
-    font-weight: 400;
-    letter-spacing: 0.02em;
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 360;
     color: var(--fam);
+    letter-spacing: 0.01em;
   }
-  .member__body {
+  .lead-member__body {
+    display: grid;
+    gap: 0.5rem;
+    align-content: center;
+  }
+  .lead-member__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0.4rem;
+  }
+  .lead-member__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--fam);
+    display: inline-block;
+  }
+  .lead-member__name {
+    font-size: var(--step-3);
+    line-height: 1.05;
+  }
+  .lead-member__cred {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fam);
+    margin-bottom: 0.6rem;
+  }
+  .lead-member__bio {
+    color: var(--graphite);
+    font-size: var(--step-1);
+    line-height: 1.6;
+    max-width: 46ch;
+  }
+
+  .sec-head {
+    display: grid;
+    gap: 0.7rem;
+    margin-bottom: var(--space-m);
+  }
+
+  /* The rest of the team — portrait cards. */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+  }
+  .pmember {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.6rem;
     display: grid;
     gap: 0.35rem;
+    align-content: start;
+    transition:
+      border-color 0.35s var(--ease),
+      transform 0.35s var(--ease);
   }
-  .member__role {
+  .pmember:hover {
+    border-color: var(--fam);
+    transform: translateY(-3px);
+  }
+  .pmember__portrait {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    margin-bottom: 0.9rem;
+    background:
+      radial-gradient(circle at 32% 26%, color-mix(in oklab, var(--fam) 26%, transparent), transparent 70%),
+      var(--cloud, #f1f0ec);
+    border: 1px solid var(--line);
+  }
+  .pmember__portrait img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .pmember__mono {
+    font-family: var(--display);
+    font-size: var(--step-3);
+    font-weight: 360;
+    color: var(--fam);
+  }
+  .pmember__role {
     font-size: var(--step-1);
     line-height: 1.15;
   }
-  .member__name {
+  .pmember__name {
     font-family: var(--display);
     font-size: var(--step-1);
     color: var(--ink);
   }
-  .member__cred {
+  .pmember__cred {
     font-family: var(--mono);
-    font-size: 0.66rem;
+    font-size: 0.64rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--fam);
   }
-  .member__bio {
+  .pmember__bio {
     color: var(--graphite);
     font-size: var(--step--1);
     line-height: 1.6;
@@ -178,11 +279,7 @@ const jsonLd = {
     max-width: 70ch;
     color: var(--mist);
   }
-  .sec-head {
-    display: grid;
-    gap: 0.7rem;
-    margin-bottom: var(--space-m);
-  }
+
   .standards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -201,8 +298,20 @@ const jsonLd = {
     color: var(--graphite);
     font-size: var(--step--1);
   }
-  @media (max-width: 820px) {
-    .team,
+
+  @media (max-width: 900px) {
+    .team-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 720px) {
+    .lead-member {
+      grid-template-columns: 1fr;
+    }
+    .lead-member__portrait {
+      max-width: 320px;
+    }
+    .team-grid,
     .standards {
       grid-template-columns: 1fr;
     }
@@ -211,7 +320,7 @@ const jsonLd = {
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .member {
+    .pmember {
       transition: none;
     }
   }
