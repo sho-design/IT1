@@ -379,36 +379,85 @@ p {
    while it covers. Motion-safe only (JS never arms it under reduce). */
 .pour {
   position: fixed;
-  left: -2vw;
-  right: -2vw;
-  top: -9vh;
+  left: -4vw;
+  right: -4vw;
+  top: -8vh;
   height: 118vh;
   z-index: 200;
   pointer-events: none;
   background: var(--pour-color, var(--accent-recovery));
-  border-radius: 48% 52% 46% 54% / 4.5vh 6vh 5vh 5.5vh;
-  transform: translateY(108%);
+  transform: translateY(112%);
 }
-.pour::before {
-  /* a lighter echo that leads the wave */
+/* A liquid meniscus, not a wave: two soft blobs ride the sheet's edge and
+   slowly morph, so the surface undulates like syrup while it climbs. They
+   only animate while the sheet is moving (the sheet is offscreen at rest). */
+.pour::before,
+.pour::after {
   content: '';
   position: absolute;
-  inset: -3vh 0 auto 0;
-  height: 8vh;
+  left: -10%;
+  right: -10%;
+  height: 12vh;
   background: inherit;
-  opacity: 0.4;
-  border-radius: 52% 48% 60% 40% / 100% 100% 0 0;
 }
+.pour::before {
+  top: -5.5vh;
+  border-radius: 46% 54% 0 0 / 92% 74% 0 0;
+  animation: pour-meniscus-a 1.7s ease-in-out infinite alternate;
+}
+.pour::after {
+  top: -3vh;
+  opacity: 0.45;
+  border-radius: 58% 42% 0 0 / 68% 96% 0 0;
+  animation: pour-meniscus-b 1.3s ease-in-out infinite alternate;
+}
+@keyframes pour-meniscus-a {
+  from {
+    border-radius: 46% 54% 0 0 / 92% 74% 0 0;
+    transform: translateX(-1.5%);
+  }
+  to {
+    border-radius: 56% 44% 0 0 / 70% 95% 0 0;
+    transform: translateX(1.5%);
+  }
+}
+@keyframes pour-meniscus-b {
+  from {
+    border-radius: 58% 42% 0 0 / 68% 96% 0 0;
+    transform: translateX(2%);
+  }
+  to {
+    border-radius: 44% 56% 0 0 / 98% 66% 0 0;
+    transform: translateX(-2%);
+  }
+}
+/* Syrupy timing: quick surge, long viscous settle. */
 .pour--fill {
   transform: translateY(0);
-  transition: transform 0.5s cubic-bezier(0.5, 0, 0.15, 1);
+  transition: transform 0.62s cubic-bezier(0.32, 0.94, 0.34, 1);
 }
 .pour--cover {
   transform: translateY(0);
 }
 .pour--drain {
-  transform: translateY(-112%);
-  transition: transform 0.65s cubic-bezier(0.6, 0.05, 0.25, 1) 0.08s;
+  transform: translateY(-118%);
+  transition: transform 0.8s cubic-bezier(0.55, 0.06, 0.28, 0.99) 0.06s;
+}
+/* While draining, the meniscus rides the bottom edge instead. */
+.pour--drain::before,
+.pour--drain::after {
+  top: auto;
+  border-radius: 0;
+}
+.pour--drain::before {
+  bottom: -5.5vh;
+  border-radius: 0 0 54% 46% / 0 0 74% 92%;
+  animation: none;
+}
+.pour--drain::after {
+  bottom: -3vh;
+  border-radius: 0 0 42% 58% / 0 0 96% 68%;
+  animation: none;
 }
 
 /* Droplet cursor: a soft accent droplet that trails the pointer and swells
