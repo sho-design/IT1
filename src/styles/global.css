@@ -373,6 +373,46 @@ p {
   }
 }
 
+/* Meniscus fill: when the landing drop's wave reaches the primary CTA, a
+   tint of the drop's colour rises inside the button like liquid in a small
+   vessel, sloshes once, and drains. Triggered by the strike system adding
+   .is-wet at the wavefront's arrival. */
+[data-rip-cta] {
+  position: relative;
+  overflow: hidden;
+}
+[data-rip-cta]::before {
+  content: '';
+  position: absolute;
+  left: -8%;
+  right: -8%;
+  bottom: 0;
+  height: 140%;
+  background: color-mix(in srgb, var(--accent-recovery) 18%, transparent);
+  border-radius: 46% 54% 0 0 / 18% 26% 0 0;
+  transform: translateY(102%);
+  pointer-events: none;
+}
+[data-rip-cta].is-wet::before {
+  animation: cta-wet 1.5s var(--ease) forwards;
+}
+@keyframes cta-wet {
+  0% {
+    transform: translateY(102%);
+  }
+  36% {
+    transform: translateY(28%);
+    border-radius: 46% 54% 0 0 / 34% 46% 0 0;
+  }
+  60% {
+    transform: translateY(36%);
+    border-radius: 56% 44% 0 0 / 44% 30% 0 0;
+  }
+  100% {
+    transform: translateY(102%);
+  }
+}
+
 /* Colour-pour page transition: when a treatment card is chosen, its family
    colour pours up over the page; on the next page it drains away upward.
    The sheet is taller than the viewport so its wavy corners stay offscreen

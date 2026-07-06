@@ -391,6 +391,18 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
             if (st.waves.length > 8) st.waves.shift();
             if (!st.raf) st.raf = requestAnimationFrame(() => frame(el));
           });
+          // The primary CTA is a small vessel: when the wavefront reaches
+          // it, liquid rises inside it once (see .is-wet / cta-wet in CSS).
+          document.querySelectorAll('[data-rip-cta]').forEach((el) => {
+            const r = el.getBoundingClientRect();
+            if (r.bottom < 0 || r.top > window.innerHeight) return;
+            const d = Math.hypot(r.left + r.width / 2 - x, r.top + r.height / 2 - y);
+            if (Math.exp(-d / (D * k)) < 0.08) return;
+            window.setTimeout(() => {
+              el.classList.add('is-wet');
+              window.setTimeout(() => el.classList.remove('is-wet'), 1600);
+            }, (d / (V * 2)) * 1000);
+          });
           document.querySelectorAll('[data-rip-block]').forEach((el) => {
             const r = el.getBoundingClientRect();
             if (r.bottom < 0 || r.top > window.innerHeight) return;
