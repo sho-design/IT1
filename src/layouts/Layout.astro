@@ -255,7 +255,8 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
         type RState = {
           letters: HTMLElement[];
           centers: { x: number; y: number }[];
-          waves: { x: number; y: number; t0: number }[];
+          // k > 1 marks a boosted "strike" wave (bigger, faster, farther).
+          waves: { x: number; y: number; t0: number; k?: number }[];
           raf: number;
           lastInject: number;
           lastMeasure: number;
@@ -299,20 +300,24 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
           const st = states.get(el);
           if (!st) return;
           const now = performance.now();
-          st.waves = st.waves.filter((w) => (now - w.t0) / 1000 < TAU * 4);
+          st.waves = st.waves.filter(
+            (w) => (now - w.t0) / 1000 < TAU * 4 * (w.k ?? 1)
+          );
           for (let i = 0; i < st.letters.length; i++) {
             const c = st.centers[i];
             if (!c) continue;
             let dy = 0;
             let tilt = 0;
             for (const wv of st.waves) {
+              const k = wv.k ?? 1;
               const a = (now - wv.t0) / 1000;
               const d = Math.hypot(c.x - wv.x, c.y - wv.y);
-              const front = V * a;
-              const env = Math.exp(-((d - front) * (d - front)) / (2 * PW * PW));
-              const decay = Math.exp(-a / TAU);
-              const spatial = Math.exp(-d / D);
-              const base = AMP * decay * spatial * env;
+              const front = V * (k > 1 ? 2 : 1) * a;
+              const pw = PW * (k > 1 ? 2 : 1);
+              const env = Math.exp(-((d - front) * (d - front)) / (2 * pw * pw));
+              const decay = Math.exp(-a / (TAU * k));
+              const spatial = Math.exp(-d / (D * k));
+              const base = AMP * Math.min(k, 1.7) * decay * spatial * env;
               const phase = ((d - front) / WL) * Math.PI * 2;
               dy += base * Math.sin(phase);
               tilt += base * Math.cos(phase); // surface slope -> lean/stretch
@@ -365,6 +370,22 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
             if (st) measure(st);
           });
         });
+
+        // Programmatic strike: other systems (the landing drop) can hit the
+        // water at a point and any nearby .ripple heading answers with a
+        // boosted wave - larger, faster, and reaching farther than a hover.
+        (window as any).__titleRipple = (x: number, y: number, k = 2.5) => {
+          document.querySelectorAll('.ripple').forEach((el) => {
+            const r = el.getBoundingClientRect();
+            if (r.bottom < y - 700 || r.top > y + 700) return;
+            if (r.bottom < 0 || r.top > window.innerHeight) return;
+            const st = ensure(el);
+            measure(st);
+            st.waves.push({ x, y, t0: performance.now(), k });
+            if (st.waves.length > 8) st.waves.shift();
+            if (!st.raf) st.raf = requestAnimationFrame(() => frame(el));
+          });
+        };
       }
     </script>
   </body>

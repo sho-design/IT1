@@ -1254,6 +1254,9 @@ const steps = [
           landed = true;
           drop.style.opacity = "0";
           rippleAt(tipX, vpY);
+          // The strike spreads through the water: nearby ripple headings
+          // (the band's own words) warp outward from the landing point.
+          (window as any).__titleRipple?.(tipX + 7.5, vpY, 3);
           return;
         }
         if (vpY < -40 || vpY > window.innerHeight + 40) {
