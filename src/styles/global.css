@@ -373,6 +373,44 @@ p {
   }
 }
 
+/* Colour-pour page transition: when a treatment card is chosen, its family
+   colour pours up over the page; on the next page it drains away upward.
+   The sheet is taller than the viewport so its wavy corners stay offscreen
+   while it covers. Motion-safe only (JS never arms it under reduce). */
+.pour {
+  position: fixed;
+  left: -2vw;
+  right: -2vw;
+  top: -9vh;
+  height: 118vh;
+  z-index: 200;
+  pointer-events: none;
+  background: var(--pour-color, var(--accent-recovery));
+  border-radius: 48% 52% 46% 54% / 4.5vh 6vh 5vh 5.5vh;
+  transform: translateY(108%);
+}
+.pour::before {
+  /* a lighter echo that leads the wave */
+  content: '';
+  position: absolute;
+  inset: -3vh 0 auto 0;
+  height: 8vh;
+  background: inherit;
+  opacity: 0.4;
+  border-radius: 52% 48% 60% 40% / 100% 100% 0 0;
+}
+.pour--fill {
+  transform: translateY(0);
+  transition: transform 0.5s cubic-bezier(0.5, 0, 0.15, 1);
+}
+.pour--cover {
+  transform: translateY(0);
+}
+.pour--drain {
+  transform: translateY(-112%);
+  transition: transform 0.65s cubic-bezier(0.6, 0.05, 0.25, 1) 0.08s;
+}
+
 /* Droplet cursor: a soft accent droplet that trails the pointer and swells
    over interactive elements. Desktop / fine-pointer only (toggled in JS). */
 .droplet {

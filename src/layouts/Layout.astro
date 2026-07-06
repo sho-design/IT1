@@ -82,6 +82,7 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <Footer />
 
     <div class="droplet" aria-hidden="true"></div>
+    <div class="pour" aria-hidden="true"></div>
 
     <script>
       // Reveal-on-scroll runtime. Below-the-fold only; above-the-fold uses
@@ -165,6 +166,51 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
         );
         document.addEventListener('pointerleave', () => {
           droplet.classList.remove('is-active');
+        });
+      }
+
+      // Colour-pour page transition: choosing a treatment pours its family
+      // colour over the page; the destination page drains it away. Skipped
+      // entirely under reduced motion (links behave normally).
+      const pour = document.querySelector('.pour') as HTMLElement | null;
+      if (pour && !reduce) {
+        // Arriving mid-pour: cover instantly, then drain to reveal the page.
+        const arriving = sessionStorage.getItem('pour-color');
+        if (arriving) {
+          sessionStorage.removeItem('pour-color');
+          pour.style.setProperty('--pour-color', arriving);
+          pour.classList.add('pour--cover');
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() => {
+              pour.classList.add('pour--drain');
+              window.setTimeout(
+                () => pour.classList.remove('pour--cover', 'pour--drain'),
+                1000
+              );
+            })
+          );
+        }
+        // Back/forward cache restores must never leave the sheet covering.
+        window.addEventListener('pageshow', (e) => {
+          if (e.persisted)
+            pour.classList.remove('pour--fill', 'pour--cover', 'pour--drain');
+        });
+        document.addEventListener('click', (e) => {
+          if (e.defaultPrevented || e.button !== 0) return;
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+          const a = (e.target as Element)?.closest?.(
+            'a.card[href^="/drips/"], a.card[href^="/shots/"], a.tile[href^="/concerns/"]'
+          ) as HTMLAnchorElement | null;
+          if (!a || a.target === '_blank') return;
+          const accent = getComputedStyle(a).getPropertyValue('--accent').trim();
+          if (!accent || accent.startsWith('var(')) return;
+          e.preventDefault();
+          sessionStorage.setItem('pour-color', accent);
+          pour.style.setProperty('--pour-color', accent);
+          pour.classList.add('pour--fill');
+          window.setTimeout(() => {
+            location.href = a.href;
+          }, 500);
         });
       }
 

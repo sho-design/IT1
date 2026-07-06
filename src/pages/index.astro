@@ -95,6 +95,12 @@ const steps = [
       <p class="eyebrow hero__eyebrow in-load">
         Infusion Therapy · Refined by Medicine
       </p>
+      <!-- Arrival states: how people actually show up, dissolving like ink
+           until it settles. Static final line for no-JS and reduced motion. -->
+      <p class="hero__arrive in-load" style="--load-delay: 40ms">
+        <span class="visually-hidden">However you arrive.</span>
+        <span class="hero__arrive-w" data-arrive aria-hidden="true">However you arrive.</span>
+      </p>
       <h1 class="hl hero__title">
         <span class="visually-hidden">Come as you are. Leave feeling restored.</span>
         <!-- Liquid typography: the headline is a window onto moving fluid.
@@ -265,6 +271,56 @@ const steps = [
           <p class="trust__d">Pharmaceutical-grade ingredients, prepared to clinical standards.</p>
         </li>
       </ul>
+    </div>
+  </section>
+
+  <!-- The honest menu: overclaims struck through and rewritten, live -->
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal sec-head">
+        <p class="eyebrow">The honest menu</p>
+        <h2 class="hl display-3">
+          What a drip bar promises. <span class="it">What we say.</span>
+        </h2>
+      </div>
+      <ul class="honest reveal" data-honest>
+        <li class="honest__row">
+          <p class="honest__hype">
+            &ldquo;Cures your fatigue.&rdquo;
+            <span class="honest__strike" aria-hidden="true"></span>
+          </p>
+          <p class="honest__truth">
+            B vitamins support normal energy-yielding metabolism. And if you are
+            always tired, we look for the reason first &mdash; starting with
+            your iron.
+          </p>
+        </li>
+        <li class="honest__row">
+          <p class="honest__hype">
+            &ldquo;Detoxes and melts fat.&rdquo;
+            <span class="honest__strike" aria-hidden="true"></span>
+          </p>
+          <p class="honest__truth">
+            Metabolic support happens inside a physician-guided program, with
+            real screening and follow-up. No miracles &mdash; and we say so.
+          </p>
+        </li>
+        <li class="honest__row">
+          <p class="honest__hype">
+            &ldquo;10x your immune system.&rdquo;
+            <span class="honest__strike" aria-hidden="true"></span>
+          </p>
+          <p class="honest__truth">
+            Vitamin C supports normal immune function. That is what the
+            evidence supports, so that is exactly what we say.
+          </p>
+        </li>
+      </ul>
+      <p class="honest__note meta reveal">
+        Where the evidence is still developing, we label it Emerging &mdash;
+        right on the ingredient. Results vary from person to person, and we
+        screen first.
+      </p>
     </div>
   </section>
 
@@ -578,6 +634,28 @@ const steps = [
   .hero__eyebrow {
     margin-bottom: 2rem;
   }
+  /* Arrival states line */
+  .hero__arrive {
+    margin: -0.8rem 0 1.6rem;
+  }
+  .hero__arrive-w {
+    display: inline-block;
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 340;
+    font-size: var(--step-1);
+    color: var(--mist);
+    transition:
+      opacity 0.42s var(--ease),
+      filter 0.42s var(--ease),
+      transform 0.42s var(--ease);
+  }
+  .hero__arrive-w.is-out {
+    opacity: 0;
+    filter: blur(7px);
+    transform: translateY(-5px);
+  }
+
   .hero__lead {
     margin-top: 2rem;
     font-size: var(--step-1);
@@ -680,6 +758,74 @@ const steps = [
     font-size: var(--step--1);
   }
 
+  /* The honest menu: overclaim struck through, honest line settles in. */
+  .honest {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-width: 62rem;
+  }
+  .honest__row {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 0.8rem 3rem;
+    align-items: baseline;
+    border-top: 1px solid var(--line);
+    padding-block: 1.6rem;
+  }
+  .honest__hype {
+    position: relative;
+    justify-self: start;
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 340;
+    font-size: var(--step-2);
+    color: var(--mist);
+    line-height: 1.2;
+  }
+  .honest__strike {
+    position: absolute;
+    left: -1.5%;
+    right: -1.5%;
+    top: 55%;
+    height: 2px;
+    background: var(--accent-clinical);
+    transform-origin: left center;
+  }
+  .honest__truth {
+    color: var(--graphite);
+    line-height: 1.6;
+  }
+  .honest__note {
+    margin-top: 1.4rem;
+    color: var(--mist);
+  }
+  /* Armed by JS (motion-safe only): strikes draw, truths settle, staggered. */
+  .honest[data-armed] .honest__strike {
+    transform: scaleX(0);
+    transition: transform 0.55s var(--ease);
+  }
+  .honest[data-armed] .honest__truth {
+    opacity: 0;
+    transform: translateY(9px);
+    transition:
+      opacity 0.5s var(--ease),
+      transform 0.5s var(--ease);
+  }
+  .honest.honest--go .honest__strike {
+    transform: scaleX(1);
+  }
+  .honest.honest--go .honest__truth {
+    opacity: 1;
+    transform: none;
+  }
+  .honest--go .honest__row:nth-child(1) .honest__strike { transition-delay: 0.1s; }
+  .honest--go .honest__row:nth-child(1) .honest__truth { transition-delay: 0.5s; }
+  .honest--go .honest__row:nth-child(2) .honest__strike { transition-delay: 0.65s; }
+  .honest--go .honest__row:nth-child(2) .honest__truth { transition-delay: 1.05s; }
+  .honest--go .honest__row:nth-child(3) .honest__strike { transition-delay: 1.2s; }
+  .honest--go .honest__row:nth-child(3) .honest__truth { transition-delay: 1.6s; }
+
   .steps {
     list-style: none;
     padding: 0;
@@ -706,7 +852,8 @@ const steps = [
     .paths,
     .trust,
     .trust__list,
-    .steps {
+    .steps,
+    .honest__row {
       grid-template-columns: 1fr;
     }
     .trust__intro {
@@ -866,6 +1013,50 @@ const steps = [
         video.addEventListener("canplay", () => video.classList.add("is-playing"), { once: true });
         if (video.readyState >= 3) video.classList.add("is-playing");
       }
+    }
+
+    // Arrival states: cycle through how people actually show up, each word
+    // dissolving like ink, then settle. Static under reduced motion.
+    const arrive = document.querySelector("[data-arrive]");
+    if (arrive instanceof HTMLElement && !reduce) {
+      const words = [
+        "Jetlagged.",
+        "Run down.",
+        "Recovering.",
+        "Burnt out.",
+        "Just tired.",
+        "However you arrive.",
+      ];
+      let wi = 0;
+      const next = () => {
+        arrive.classList.add("is-out");
+        window.setTimeout(() => {
+          wi++;
+          arrive.textContent = words[wi];
+          arrive.classList.remove("is-out");
+          if (wi < words.length - 1) window.setTimeout(next, 1900);
+        }, 440);
+      };
+      arrive.textContent = words[0];
+      window.setTimeout(next, 1800);
+    }
+
+    // The honest menu: arm the strike-through choreography, fire on scroll.
+    const honest = document.querySelector("[data-honest]");
+    if (honest instanceof HTMLElement && !reduce && "IntersectionObserver" in window) {
+      honest.dataset.armed = "1";
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((en) => {
+            if (en.isIntersecting) {
+              honest.classList.add("honest--go");
+              io.disconnect();
+            }
+          });
+        },
+        { threshold: 0.3 }
+      );
+      io.observe(honest);
     }
 
     // Entrance overture is skippable: any scroll intent jumps to settled.
