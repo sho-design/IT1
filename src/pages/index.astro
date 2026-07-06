@@ -41,6 +41,12 @@ const jsonLd = {
   areaServed: locations.map((l) => l.name),
 };
 
+// Flip to true once the filmed loop exists at public/hero/fluid-loop.webm
+// (+ .mp4). Until then no <video> is rendered at all — an errored video can
+// paint a grey box on some mobile browsers — and the animated gradient
+// carries the liquid-typography effect.
+const heroTitleVideo = false;
+
 const steps = [
   {
     n: '01',
@@ -95,18 +101,20 @@ const steps = [
              A video loop fills the letters when present; an animated liquid
              gradient carries the effect until then. -->
         <span class="hero__title-fluid" aria-hidden="true">
-          <video
-            class="hero__title-video"
-            autoplay
-            muted
-            loop
-            playsinline
-            preload="metadata"
-            data-title-video
-          >
-            <source src="/hero/fluid-loop.webm" type="video/webm" />
-            <source src="/hero/fluid-loop.mp4" type="video/mp4" />
-          </video>
+          {heroTitleVideo && (
+            <video
+              class="hero__title-video"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              data-title-video
+            >
+              <source src="/hero/fluid-loop.webm" type="video/webm" />
+              <source src="/hero/fluid-loop.mp4" type="video/mp4" />
+            </video>
+          )}
           <svg class="hero__title-cover" viewBox="0 0 880 200" preserveAspectRatio="xMidYMid meet">
             <defs>
               <mask id="hero-title-mask">
@@ -326,6 +334,7 @@ const steps = [
     position: relative;
     display: block;
     width: min(100%, 56rem);
+    line-height: 0;
     background: linear-gradient(
       115deg,
       #3e5c6e,
@@ -336,6 +345,10 @@ const steps = [
       #3e4c8a 100%
     );
     background-size: 280% 280%;
+    /* Inset the liquid 1px inside the plate so no seam ever peeks out at
+       the edges from sub-pixel rounding. */
+    border: 1px solid transparent;
+    background-clip: padding-box;
     animation: hero-gradient-drift 22s ease-in-out infinite alternate;
   }
   .hero__title-video {
@@ -547,7 +560,12 @@ const steps = [
     }
   }
   @media (max-width: 999px) {
+    /* On small screens the bag sits low, behind the actions and meta rows,
+       so the headline plate never cuts across it. */
     .hero__bag {
+      top: auto;
+      bottom: -4%;
+      transform: none;
       right: clamp(-70px, -4vw, -20px);
       opacity: 0.28 !important;
       width: clamp(190px, 40vw, 260px);
