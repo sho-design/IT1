@@ -27,15 +27,17 @@ const named = locations.filter((l) => l.name).map((l) => l.name);
 
 <section class="band reveal">
   <div class="wrap band__inner">
-    <p class="eyebrow band__eyebrow">{eyebrow}</p>
+    <!-- Strike tiers: the landing drop's wave carries through the whole
+         band - letters warp on display text, blocks sway as one. -->
+    <p class="eyebrow band__eyebrow" data-rip>{eyebrow}</p>
     <h2 class="hl band__heading display-3 ripple">{heading}</h2>
-    <p class="band__body measure">{body}</p>
-    <div class="band__actions">
-      <a class="btn btn--lg band__primary" href={primaryHref}>{primaryLabel}</a>
+    <p class="band__body measure" data-rip-block>{body}</p>
+    <div class="band__actions" data-rip-block>
+      <a class="btn btn--lg band__primary" data-rip-cta href={primaryHref}>{primaryLabel}</a>
       <a class="link-arrow" href={secondaryHref}>{secondaryLabel} &rarr;</a>
     </div>
     {showLocations && named.length > 0 && (
-      <p class="band__loc meta">{named.join('  ·  ')}</p>
+      <p class="band__loc meta" data-rip>{named.join('  ·  ')}</p>
     )}
   </div>
 </section>
