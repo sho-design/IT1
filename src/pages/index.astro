@@ -129,16 +129,18 @@ const steps = [
               <source src="/hero/fluid-loop.mp4" type="video/mp4" />
             </video>
           )}
-          <svg class="hero__title-cover" viewBox="0 0 880 200" preserveAspectRatio="xMidYMid meet">
+          <!-- Line metrics mirror the house .hl style: 1.04 line-height,
+               -0.015em tracking, 380 weight with the italic line at 340. -->
+          <svg class="hero__title-cover" viewBox="0 0 880 164" preserveAspectRatio="xMidYMid meet">
             <defs>
               <mask id="hero-title-mask">
-                <rect x="-4" y="-4" width="888" height="208" fill="#fff" />
-                <text x="4" y="78" class="hero__mask-text">Come as you are.</text>
-                <text x="4" y="180" class="hero__mask-text hero__mask-text--it">Leave feeling restored.</text>
+                <rect x="-4" y="-4" width="888" height="172" fill="#fff" />
+                <text x="4" y="66" class="hero__mask-text">Come as you are.</text>
+                <text x="4" y="141" class="hero__mask-text hero__mask-text--it">Leave feeling restored.</text>
               </mask>
             </defs>
             <!-- Oversized so no gradient seam peeks at the plate's edges. -->
-            <rect x="-4" y="-4" width="888" height="208" class="hero__cover-rect" mask="url(#hero-title-mask)" />
+            <rect x="-4" y="-4" width="888" height="172" class="hero__cover-rect" mask="url(#hero-title-mask)" />
           </svg>
         </span>
       </h1>
@@ -438,13 +440,14 @@ const steps = [
   }
   .hero__mask-text {
     font-family: var(--display);
-    font-weight: 340;
+    font-weight: 380;
     font-size: 72px;
     letter-spacing: -0.015em;
     fill: #000;
   }
   .hero__mask-text--it {
     font-style: italic;
+    font-weight: 340;
   }
   @keyframes hero-gradient-drift {
     from {
