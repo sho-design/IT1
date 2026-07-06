@@ -75,6 +75,14 @@ const steps = [
         <canvas class="hero__bag-canvas" data-hero-fluid></canvas>
       </div>
       <svg class="hero__bag-frame" viewBox="0 0 128 184" fill="none" aria-hidden="true">
+        <!-- Back face: the same silhouette offset behind, suggesting the
+             bag's thickness while staying pure line-art. -->
+        <path
+          class="hero__bag-outline hero__bag-outline--back"
+          pathLength="1"
+          transform="translate(3.5 3)"
+          d="M24 8 L104 8 Q120 8 120 24 L120 108 Q120 118 111 121 L72 134 L72 146 L56 146 L56 134 L17 121 Q8 118 8 108 L8 24 Q8 8 24 8 Z"
+        />
         <!-- Bag silhouette: rounded body tapering to a centre funnel -->
         <path
           class="hero__bag-outline"
@@ -465,15 +473,91 @@ const steps = [
   }
 
   /* ── The IV bag: line-art frame around a real-time fluid ──────────── */
+  /* 2.5D: --nx/--ny (-1..1, set by JS from the pointer) lean the whole bag,
+     shift the plastic sheen, and stretch the ground shadow. */
   .hero__bag {
     position: absolute;
     z-index: 1;
     top: 50%;
     right: clamp(0.5rem, 5vw, 5rem);
-    transform: translateY(-50%);
+    transform: translateY(-50%) perspective(950px)
+      rotateY(calc(var(--nx, 0) * 6deg)) rotateX(calc(var(--ny, 0) * -3.5deg));
     width: clamp(196px, 22vw, 280px);
     aspect-ratio: 128 / 184;
     pointer-events: none;
+    will-change: transform;
+  }
+  /* Grounding shadow: a soft pool under the bag that answers the tilt. */
+  .hero__bag::before {
+    content: '';
+    position: absolute;
+    left: 16%;
+    right: 16%;
+    bottom: -3.5%;
+    height: 11px;
+    border-radius: 50%;
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      rgba(26, 27, 29, 0.16),
+      transparent 72%
+    );
+    filter: blur(3px);
+    transform: translateX(calc(var(--nx, 0) * -12px))
+      scaleX(calc(1 + var(--ny, 0) * 0.07));
+    opacity: 0;
+    animation: hero-fade-in 0.6s var(--ease) forwards 1.2s;
+  }
+  :global([data-theme='dark']) .hero__bag::before {
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      rgba(0, 0, 0, 0.55),
+      transparent 72%
+    );
+  }
+  .hero__bag-outline--back {
+    opacity: 0.28;
+    stroke-width: 1.2;
+    animation-delay: 0.35s;
+  }
+  /* Liquid depth: darker toward the walls and floor, so the fluid reads as
+     a volume behind the outline rather than a flat wash. */
+  .hero__bag-body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    border-radius: inherit;
+    box-shadow:
+      inset 0 -16px 22px -14px rgba(26, 27, 29, 0.22),
+      inset 10px 0 16px -12px rgba(26, 27, 29, 0.12),
+      inset -10px 0 16px -12px rgba(26, 27, 29, 0.12),
+      inset 0 10px 14px -12px rgba(26, 27, 29, 0.08);
+  }
+  /* Plastic sheen: one curved highlight that slides against the tilt. */
+  .hero__bag-body::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    border-radius: inherit;
+    background:
+      radial-gradient(
+        130% 55% at calc(32% + var(--nx, 0) * -16%) 15%,
+        rgba(255, 255, 255, 0.4),
+        transparent 55%
+      ),
+      linear-gradient(
+        100deg,
+        transparent 32%,
+        rgba(255, 255, 255, 0.14) 45%,
+        transparent 58%
+      );
+    mix-blend-mode: screen;
+  }
+  :global([data-theme='dark']) .hero__bag-body::after {
+    opacity: 0.5;
   }
   /* The liquid answers the pointer: stir it, or click to drop an ingredient. */
   .hero__bag-body {
@@ -992,15 +1076,57 @@ const steps = [
     canvas.dataset.init = "1";
 
     // Bag liquid: real-time GPU fluid when possible, soft blooms otherwise.
-    let glRunning = false;
+    let fluid: ReturnType<typeof initHeroFluidGL> = null;
     if (!reduce && bagBody instanceof HTMLElement) {
       try {
-        glRunning = initHeroFluidGL(canvas, bagBody, palette);
+        fluid = initHeroFluidGL(canvas, bagBody, palette);
       } catch {
-        glRunning = false;
+        fluid = null;
       }
     }
-    if (!glRunning) initHeroFluid2D(canvas);
+    if (!fluid) initHeroFluid2D(canvas);
+
+    // 2.5D: the bag leans toward the pointer and the liquid sloshes with
+    // it. Desktop, fine-pointer, motion-safe only; eased so it feels like
+    // weight, not tracking.
+    const tiltBag = document.querySelector(".hero__bag");
+    const heroSection = document.querySelector("[data-hero]");
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (
+      tiltBag instanceof HTMLElement &&
+      heroSection instanceof HTMLElement &&
+      fine &&
+      !reduce &&
+      window.matchMedia("(min-width: 1000px)").matches
+    ) {
+      let nx = 0, ny = 0, cx = 0, cy = 0, traf = 0;
+      const settle = () => {
+        traf = 0;
+        cx += (nx - cx) * 0.1;
+        cy += (ny - cy) * 0.1;
+        tiltBag.style.setProperty("--nx", cx.toFixed(3));
+        tiltBag.style.setProperty("--ny", cy.toFixed(3));
+        fluid?.setTilt(cx * 0.7);
+        if (Math.abs(nx - cx) > 0.003 || Math.abs(ny - cy) > 0.003) {
+          traf = requestAnimationFrame(settle);
+        }
+      };
+      heroSection.addEventListener(
+        "pointermove",
+        (e) => {
+          const r = tiltBag.getBoundingClientRect();
+          nx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (window.innerWidth * 0.5)));
+          ny = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (window.innerHeight * 0.5)));
+          if (!traf) traf = requestAnimationFrame(settle);
+        },
+        { passive: true }
+      );
+      heroSection.addEventListener("pointerleave", () => {
+        nx = 0;
+        ny = 0;
+        if (!traf) traf = requestAnimationFrame(settle);
+      });
+    }
 
     // Headline video: fade in only once it can actually play, so the
     // gradient fallback carries the effect until (and unless) it exists.

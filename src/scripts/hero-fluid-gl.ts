@@ -3,8 +3,10 @@
 // phones a gentle tilt sloshes it. Ink accumulates subtractively and slowly
 // dissipates, so the bag reads as liquid, not particles.
 //
-// Returns false when WebGL2/float buffers are unavailable so the caller can
-// fall back to the 2D canvas version.
+// Returns a small controller ({ setTilt }) when running, or null when
+// WebGL2/float buffers are unavailable so the caller can fall back to the
+// 2D canvas version. setTilt(-1..1) leans the buoyancy sideways - used by
+// the 2.5D pointer tilt on desktop and device orientation on phones.
 
 interface FBO {
   fb: WebGLFramebuffer;
@@ -20,11 +22,15 @@ interface DoubleFBO {
   swap(): void;
 }
 
+export interface HeroFluid {
+  setTilt: (v: number) => void;
+}
+
 export function initHeroFluidGL(
   canvas: HTMLCanvasElement,
   interactionEl: HTMLElement,
   palette: string[]
-): boolean {
+): HeroFluid | null {
   const gl = canvas.getContext('webgl2', {
     alpha: true,
     premultipliedAlpha: true,
@@ -32,8 +38,8 @@ export function initHeroFluidGL(
     stencil: false,
     antialias: false,
   }) as WebGL2RenderingContext | null;
-  if (!gl) return false;
-  if (!gl.getExtension('EXT_color_buffer_float')) return false;
+  if (!gl) return null;
+  if (!gl.getExtension('EXT_color_buffer_float')) return null;
   const linearOk = !!gl.getExtension('OES_texture_float_linear');
   const filtering = linearOk ? gl.LINEAR : gl.NEAREST;
 
@@ -142,7 +148,7 @@ export function initHeroFluidGL(
     return s;
   };
   const vert = compile(gl.VERTEX_SHADER, VERT);
-  if (!vert) return false;
+  if (!vert) return null;
 
   interface Program {
     prog: WebGLProgram;
@@ -173,7 +179,7 @@ export function initHeroFluidGL(
   const pGrad = makeProgram(FRAG_GRADIENT);
   const pForce = makeProgram(FRAG_FORCE);
   const pShow = makeProgram(FRAG_DISPLAY);
-  if (!pSplat || !pAdvect || !pDiv || !pPress || !pGrad || !pForce || !pShow) return false;
+  if (!pSplat || !pAdvect || !pDiv || !pPress || !pGrad || !pForce || !pShow) return null;
 
   // Fullscreen quad
   const buf = gl.createBuffer();
@@ -244,7 +250,7 @@ export function initHeroFluidGL(
     canvas.height = Math.max(1, Math.round(rect.height * dpr));
   };
   resizeCanvas();
-  if (!alloc()) return false;
+  if (!alloc()) return null;
 
   const blit = (target: FBO | null) => {
     if (target) {
@@ -404,5 +410,9 @@ export function initHeroFluidGL(
     else if (!raf) { last = performance.now(); raf = requestAnimationFrame(step); }
   });
 
-  return true;
+  return {
+    setTilt(v: number) {
+      tiltX = Math.max(-1, Math.min(1, v));
+    },
+  };
 }
