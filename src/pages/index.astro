@@ -8,6 +8,13 @@ import RandomPullQuote from '@/components/RandomPullQuote.astro';
 import { treatmentBySlug, type Treatment } from '@/data/treatments';
 import { concerns } from '@/data/concerns';
 import { site, locations } from '@/data/site';
+import { honestMenu } from '@/data/honestMenu';
+
+// Three honest-menu items for the no-JS fallback (build-time pick); the client
+// re-rolls a fresh three on every visit.
+const honestPicks = [...honestMenu]
+  .sort(() => Math.random() - 0.5)
+  .slice(0, 3);
 
 // Home teaser: the eight highest-priced drips (price estimated from
 // ingredients and infusion length, since the site shows no pricing), then
@@ -260,37 +267,15 @@ const steps = [
         </h2>
       </div>
       <ul class="honest reveal" data-honest>
-        <li class="honest__row">
-          <p class="honest__hype">
-            &ldquo;Cures your fatigue.&rdquo;
-            <span class="honest__strike" aria-hidden="true"></span>
-          </p>
-          <p class="honest__truth">
-            B vitamins support normal energy-yielding metabolism. And if you are
-            always tired, we look for the reason first &mdash; starting with
-            your iron.
-          </p>
-        </li>
-        <li class="honest__row">
-          <p class="honest__hype">
-            &ldquo;Detoxes and melts fat.&rdquo;
-            <span class="honest__strike" aria-hidden="true"></span>
-          </p>
-          <p class="honest__truth">
-            Metabolic support happens inside a physician-guided program, with
-            real screening and follow-up. No miracles &mdash; and we say so.
-          </p>
-        </li>
-        <li class="honest__row">
-          <p class="honest__hype">
-            &ldquo;10x your immune system.&rdquo;
-            <span class="honest__strike" aria-hidden="true"></span>
-          </p>
-          <p class="honest__truth">
-            Vitamin C supports normal immune function. That is what the
-            evidence supports, so that is exactly what we say.
-          </p>
-        </li>
+        {honestPicks.map((item) => (
+          <li class="honest__row">
+            <p class="honest__hype">
+              &ldquo;{item.hype}&rdquo;
+              <span class="honest__strike" aria-hidden="true"></span>
+            </p>
+            <p class="honest__truth">{item.truth}</p>
+          </li>
+        ))}
       </ul>
       <p class="honest__note meta reveal">
         Where the evidence is still developing, we label it Emerging &mdash;
@@ -894,6 +879,7 @@ const steps = [
 
 <script>
   import { initHeroFluidGL } from '../scripts/hero-fluid-gl';
+  import { honestMenu } from '../data/honestMenu';
 
   // Ingredient palette: the family + base accents, the colours added to a drip.
   const palette = [
@@ -1100,8 +1086,33 @@ const steps = [
       window.setTimeout(next, 1800);
     }
 
-    // The honest menu: arm the strike-through choreography, fire on scroll.
+    // The honest menu: re-roll three fresh items per visit, then arm the
+    // strike-through choreography to fire when the section scrolls in.
     const honest = document.querySelector("[data-honest]");
+    if (honest instanceof HTMLElement) {
+      const pick = [...honestMenu.keys()]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3)
+        .map((i) => honestMenu[i]);
+      honest.replaceChildren(
+        ...pick.map((item) => {
+          const li = document.createElement("li");
+          li.className = "honest__row";
+          const hype = document.createElement("p");
+          hype.className = "honest__hype";
+          hype.append("“" + item.hype + "”");
+          const strike = document.createElement("span");
+          strike.className = "honest__strike";
+          strike.setAttribute("aria-hidden", "true");
+          hype.appendChild(strike);
+          const truth = document.createElement("p");
+          truth.className = "honest__truth";
+          truth.textContent = item.truth;
+          li.append(hype, truth);
+          return li;
+        })
+      );
+    }
     if (honest instanceof HTMLElement && !reduce && "IntersectionObserver" in window) {
       honest.dataset.armed = "1";
       const io = new IntersectionObserver(
