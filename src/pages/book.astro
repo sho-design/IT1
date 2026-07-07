@@ -255,17 +255,20 @@ const jsonLd = {
   const form = document.getElementById('consult-form') as HTMLFormElement | null;
   const confirm = document.getElementById('consult-confirm');
 
-  // Pre-fill from a Build Your Own selection passed via the URL.
+  // Pre-fill from the URL: a Build Your Own blend (`build`) or a drip/shot
+  // page (`prefill`). Both drop a ready line into the message; `interest`
+  // presets the dropdown from either source.
   const params = new URLSearchParams(window.location.search);
-  const build = params.get('build');
-  if (build) {
+  const messageText = params.get('build') || params.get('prefill');
+  if (messageText) {
     const message = document.getElementById('message') as HTMLTextAreaElement | null;
-    if (message) message.value = build;
-    const interest = params.get('interest');
+    if (message) message.value = messageText;
+  }
+  const interest = params.get('interest');
+  if (interest) {
     const select = document.getElementById('interest') as HTMLSelectElement | null;
-    if (select && interest) {
-      const match = Array.from(select.options).some((o) => o.value === interest);
-      if (match) select.value = interest;
+    if (select && Array.from(select.options).some((o) => o.value === interest)) {
+      select.value = interest;
     }
   }
 

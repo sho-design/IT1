@@ -557,6 +557,25 @@ export const signatureDrips = drips.filter((t) => t.signature);
 export const treatmentBySlug = (slug: string): Treatment | undefined =>
   treatments.find((t) => t.slug === slug);
 
+// A ready-written first line for the consult message, so booking from a drip
+// or shot page tells us what the visitor was looking at. Shot names already
+// include "Shot"; only drips need the "drip" suffix.
+export const consultMessageFor = (t: Treatment): string =>
+  `I'd like to book a consult about the ${t.name}${
+    t.type === 'drip' ? ' drip' : ''
+  }.`;
+
+// The Book-a-consult link for a treatment page: carries the treatment into
+// the consult form (interest preset + a prefilled message). The form reads
+// these params and fills itself in; nothing is lost if JS is off.
+export const bookHrefFor = (t: Treatment): string => {
+  const params = new URLSearchParams({
+    interest: 'A specific drip or shot',
+    prefill: consultMessageFor(t),
+  });
+  return `/book?${params.toString()}`;
+};
+
 // Curated add-on boosters per signature drip: complementary actives that are
 // NOT already in the blend, that a nurse can include after screening. Keyed by
 // drip slug. Pregnancy Care is intentionally omitted — any additions there are

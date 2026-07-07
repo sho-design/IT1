@@ -2,7 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import TreatmentDetail from '@/components/TreatmentDetail.astro';
 import CtaBand from '@/components/CtaBand.astro';
-import { drips, treatmentBySlug } from '@/data/treatments';
+import { drips, treatmentBySlug, bookHrefFor } from '@/data/treatments';
 
 export function getStaticPaths() {
   // Build Your Own has its own configurator page.
@@ -30,5 +30,5 @@ const jsonLd = {
   jsonLd={jsonLd}
 >
   <TreatmentDetail treatment={treatment} />
-  <CtaBand />
+  <CtaBand primaryHref={bookHrefFor(treatment)} />
 </Layout>

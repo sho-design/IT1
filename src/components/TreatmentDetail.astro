@@ -1,6 +1,6 @@
 ---
 import type { Treatment } from '@/data/treatments';
-import { treatmentBySlug, addOnsFor } from '@/data/treatments';
+import { treatmentBySlug, addOnsFor, bookHrefFor } from '@/data/treatments';
 import { ingredientBySlug } from '@/data/ingredients';
 import { families } from '@/data/families';
 import { concernBySlug } from '@/data/concerns';
@@ -95,7 +95,7 @@ const backLabel = treatment.type === 'drip' ? 'All drips' : 'The Injection Bar';
       <div class="sidecard">
         <p class="eyebrow">Begin</p>
         <p class="sidecard__line">A consult confirms this is right for you.</p>
-        <a class="btn sidecard__cta" href="/book">Book a consult</a>
+        <a class="btn sidecard__cta" href={bookHrefFor(treatment)}>Book a consult</a>
         <a class="link-arrow" href="/safety">Is this right for me? &rarr;</a>
       </div>
 
