@@ -41,12 +41,6 @@ const jsonLd = {
   areaServed: locations.map((l) => l.name),
 };
 
-// Flip to true once the filmed loop exists at public/hero/fluid-loop.webm
-// (+ .mp4). Until then no <video> is rendered at all — an errored video can
-// paint a grey box on some mobile browsers — and the animated gradient
-// carries the liquid-typography effect.
-const heroTitleVideo = false;
-
 const steps = [
   {
     n: '01',
@@ -109,40 +103,12 @@ const steps = [
         <span class="visually-hidden">However you arrive.</span>
         <span class="hero__arrive-w" data-arrive aria-hidden="true">However you arrive.</span>
       </p>
-      <h1 class="hl hero__title">
-        <span class="visually-hidden">Come as you are. Leave feeling restored.</span>
-        <!-- Liquid typography: the headline is a window onto moving fluid.
-             A video loop fills the letters when present; an animated liquid
-             gradient carries the effect until then. -->
-        <span class="hero__title-fluid" aria-hidden="true">
-          {heroTitleVideo && (
-            <video
-              class="hero__title-video"
-              autoplay
-              muted
-              loop
-              playsinline
-              preload="metadata"
-              data-title-video
-            >
-              <source src="/hero/fluid-loop.webm" type="video/webm" />
-              <source src="/hero/fluid-loop.mp4" type="video/mp4" />
-            </video>
-          )}
-          <!-- Line metrics mirror the house .hl style: 1.04 line-height,
-               -0.015em tracking, 380 weight with the italic line at 340. -->
-          <svg class="hero__title-cover" viewBox="0 0 880 164" preserveAspectRatio="xMidYMid meet">
-            <defs>
-              <mask id="hero-title-mask">
-                <rect x="-4" y="-4" width="888" height="172" fill="#fff" />
-                <text x="4" y="66" class="hero__mask-text">Come as you are.</text>
-                <text x="4" y="141" class="hero__mask-text hero__mask-text--it">Leave feeling restored.</text>
-              </mask>
-            </defs>
-            <!-- Oversized so no gradient seam peeks at the plate's edges. -->
-            <rect x="-4" y="-4" width="888" height="172" class="hero__cover-rect" mask="url(#hero-title-mask)" />
-          </svg>
-        </span>
+      <!-- Liquid typography: real text with the drifting brand gradient
+           clipped to the letters (background-clip: text). No opaque plate,
+           so there is nothing to mismatch the page in light or dark. -->
+      <h1 class="hl hero__title hero__title--fluid">
+        <span class="lg">Come as you are.</span>
+        <span class="lg it">Leave feeling restored.</span>
       </h1>
       <p class="lead hero__lead in-load" style="--load-delay: 180ms">
         From everyday energy to clinically indicated iron infusions, our
@@ -394,62 +360,44 @@ const steps = [
      it; moving liquid shows through the letterforms. Until the filmed
      loop exists, an animated liquid gradient carries the effect. */
   .hero__title {
-    animation: hero-condense 1.1s var(--ease) both 0.3s;
-  }
-  .hero__title-fluid {
-    position: relative;
-    display: block;
-    width: min(100%, 56rem);
-    line-height: 0;
-    background: linear-gradient(
-      115deg,
-      #3e5c6e,
-      #4f7c82 20%,
-      #b98aae 42%,
-      #c65f73 58%,
-      #c2703d 74%,
-      #3e4c8a 100%
-    );
-    background-size: 280% 280%;
-    /* Inset the liquid 1px inside the plate so no seam ever peeks out at
-       the edges from sub-pixel rounding. */
-    border: 1px solid transparent;
-    background-clip: padding-box;
-    animation: hero-gradient-drift 22s ease-in-out infinite alternate;
-  }
-  .hero__title-video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity 1.2s var(--ease);
-  }
-  .hero__title-video.is-playing {
-    opacity: 1;
-  }
-  .hero__title-cover {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-  .hero__cover-rect {
-    fill: var(--paper);
+    font-size: var(--step-5);
+    max-width: 16ch;
   }
   /* "Come as you are." is the quiet setup; "Leave feeling restored." is the
      emphasised payoff - italic at the richest loaded weight. */
-  .hero__mask-text {
-    font-family: var(--display);
+  .hero__title .lg:first-child {
     font-weight: 340;
-    font-size: 72px;
-    letter-spacing: -0.015em;
-    fill: #000;
   }
-  .hero__mask-text--it {
-    font-style: italic;
+  .hero__title .it {
     font-weight: 440;
+  }
+  /* Clip the drifting brand gradient to the real letters. Fallback is solid
+     ink text where background-clip:text is unsupported. */
+  .hero__title--fluid {
+    color: var(--ink);
+  }
+  @supports (
+      (-webkit-background-clip: text) or (background-clip: text)
+    ) {
+    .hero__title--fluid {
+      background: linear-gradient(
+        115deg,
+        #3e5c6e,
+        #4f7c82 20%,
+        #b98aae 42%,
+        #c65f73 58%,
+        #c2703d 74%,
+        #3e4c8a 100%
+      );
+      background-size: 280% 280%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      animation:
+        inLoad 0.8s var(--ease) both 0.09s,
+        hero-gradient-drift 22s ease-in-out infinite alternate;
+    }
   }
   @keyframes hero-gradient-drift {
     from {
@@ -460,20 +408,8 @@ const steps = [
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .hero__title-fluid {
+    .hero__title--fluid {
       animation: none;
-    }
-  }
-  /* Entrance: the headline settles into place. No blur here - blurring the
-     element would smear the plate's rectangular edge into a visible halo. */
-  @keyframes hero-condense {
-    from {
-      opacity: 0;
-      transform: translateY(14px);
-    }
-    to {
-      opacity: 1;
-      transform: none;
     }
   }
 
@@ -610,10 +546,14 @@ const steps = [
   .hero--skip .hero__bag-hole,
   .hero--skip .hero__bag-port,
   .hero--skip .hero__bag-body,
-  .hero--skip .hero__title,
   .hero--skip .in-load {
     animation-duration: 0.01ms !important;
     animation-delay: 0ms !important;
+  }
+  /* The title's gradient drift must keep running when the overture is
+     skipped, so null only its entrance delay, not its animation duration. */
+  .hero--skip .hero__title--fluid {
+    animation-delay: 0ms, 0s !important;
   }
 
   /* ── The travelling drop (scroll narrative) ─────────────────────────── */
@@ -1132,19 +1072,6 @@ const steps = [
         ny = 0;
         if (!traf) traf = requestAnimationFrame(settle);
       });
-    }
-
-    // Headline video: fade in only once it can actually play, so the
-    // gradient fallback carries the effect until (and unless) it exists.
-    const video = document.querySelector("[data-title-video]");
-    if (video instanceof HTMLVideoElement) {
-      if (reduce) {
-        video.removeAttribute("autoplay");
-        video.pause();
-      } else {
-        video.addEventListener("canplay", () => video.classList.add("is-playing"), { once: true });
-        if (video.readyState >= 3) video.classList.add("is-playing");
-      }
     }
 
     // Arrival states: cycle through how people actually show up, each word
