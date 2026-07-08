@@ -1087,31 +1087,28 @@ const steps = [
     }
 
     // The honest menu: re-roll three fresh items per visit, then arm the
-    // strike-through choreography to fire when the section scrolls in.
+    // strike-through choreography to fire when the section scrolls in. We
+    // update the existing server-rendered rows (which carry Astro's scoped
+    // style attribute) rather than replacing them, so the layout is kept.
     const honest = document.querySelector("[data-honest]");
     if (honest instanceof HTMLElement) {
+      const rows = Array.from(honest.querySelectorAll<HTMLElement>(".honest__row"));
       const pick = [...honestMenu.keys()]
         .sort(() => Math.random() - 0.5)
-        .slice(0, 3)
+        .slice(0, rows.length)
         .map((i) => honestMenu[i]);
-      honest.replaceChildren(
-        ...pick.map((item) => {
-          const li = document.createElement("li");
-          li.className = "honest__row";
-          const hype = document.createElement("p");
-          hype.className = "honest__hype";
-          hype.append("“" + item.hype + "”");
-          const strike = document.createElement("span");
-          strike.className = "honest__strike";
-          strike.setAttribute("aria-hidden", "true");
+      rows.forEach((row, i) => {
+        const item = pick[i];
+        if (!item) return;
+        const hype = row.querySelector<HTMLElement>(".honest__hype");
+        const strike = hype?.querySelector(".honest__strike");
+        if (hype && strike) {
+          hype.textContent = "“" + item.hype + "”";
           hype.appendChild(strike);
-          const truth = document.createElement("p");
-          truth.className = "honest__truth";
-          truth.textContent = item.truth;
-          li.append(hype, truth);
-          return li;
-        })
-      );
+        }
+        const truth = row.querySelector<HTMLElement>(".honest__truth");
+        if (truth) truth.textContent = item.truth;
+      });
     }
     if (honest instanceof HTMLElement && !reduce && "IntersectionObserver" in window) {
       honest.dataset.armed = "1";
