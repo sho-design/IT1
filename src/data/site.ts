@@ -85,9 +85,10 @@ export const googleRating = {
 // profile URL for each. While a URL is on a placeholder the icon still shows
 // but is not a link, so there are never dead links before launch.
 export const socials = [
-  { name: 'Instagram', href: PLACEHOLDER }, // e.g. 'https://instagram.com/...'
-  { name: 'Facebook', href: PLACEHOLDER },
-  { name: 'TikTok', href: PLACEHOLDER },
+  { name: 'Instagram', href: 'https://instagram.com/restorationmedicalofficial' },
+  { name: 'Facebook', href: 'https://facebook.com/restorationmedicalofficial' },
+  // Add TikTok / others here when live, e.g.:
+  // { name: 'TikTok', href: 'https://tiktok.com/@restorationmedicalofficial' },
 ];
 
 // Wire these before launch. While on a placeholder, the consult form posts
