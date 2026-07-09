@@ -792,12 +792,15 @@ const steps = [
     list-style: none;
     padding: 0;
     margin: 0;
-    max-width: 62rem;
+    max-width: 66rem;
   }
+  /* The hype column is wider and its type a touch smaller so each claim
+     stays on one line — a single-line strike reads as a strike-through,
+     not an underline of a wrapped sentence. */
   .honest__row {
     display: grid;
-    grid-template-columns: 1fr 1.25fr;
-    gap: 0.8rem 3rem;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 0.8rem 2.6rem;
     align-items: baseline;
     border-top: 1px solid var(--line);
     padding-block: 1.6rem;
@@ -808,9 +811,10 @@ const steps = [
     font-family: var(--display);
     font-style: italic;
     font-weight: 340;
-    font-size: var(--step-2);
+    font-size: clamp(1.2rem, 1rem + 0.85vw, 1.55rem);
     color: var(--mist);
     line-height: 1.2;
+    text-wrap: nowrap;
   }
   .honest__strike {
     position: absolute;
@@ -887,6 +891,25 @@ const steps = [
     }
     .trust__intro {
       position: static;
+    }
+    /* Narrow column: allow the claim to wrap, and strike it with a real
+       line-through (crosses every line) instead of the single bar, which
+       would otherwise underline the first line of a wrapped claim. */
+    .honest__hype {
+      text-wrap: balance;
+      text-decoration: line-through;
+      text-decoration-color: var(--accent-clinical);
+      text-decoration-thickness: 2px;
+    }
+    .honest__strike {
+      display: none;
+    }
+    .honest[data-armed] .honest__hype {
+      text-decoration-color: transparent;
+      transition: text-decoration-color 0.5s var(--ease);
+    }
+    .honest[data-armed].honest--go .honest__hype {
+      text-decoration-color: var(--accent-clinical);
     }
   }
 </style>
