@@ -112,12 +112,17 @@ const steps = [
         <span class="visually-hidden">However you arrive.</span>
         <span class="hero__arrive-w" data-arrive aria-hidden="true">However you arrive.</span>
       </p>
-      <!-- Liquid typography: real text with the drifting brand gradient
-           clipped to the letters (background-clip: text). No opaque plate,
-           so there is nothing to mismatch the page in light or dark. -->
-      <h1 class="hl hero__title hero__title--fluid">
-        <span class="lg">Come as you are.</span>
-        <span class="lg it">Leave feeling restored.</span>
+      <!-- Liquid typography. Default: real text with the drifting brand
+           gradient clipped to the letters (background-clip:text), theme-safe.
+           When supported, a live ink-in-water fluid is composited into the
+           letters on the canvas overlay and the gradient text is hidden. -->
+      <h1 class="hl hero__title" data-hero-title>
+        <span class="hero__title-fill hero__title--fluid" aria-hidden="true">
+          <span class="lg">Come as you are.</span>
+          <span class="lg it">Leave feeling restored.</span>
+        </span>
+        <span class="visually-hidden">Come as you are. Leave feeling restored.</span>
+        <canvas class="hero__title-ink" data-title-ink aria-hidden="true"></canvas>
       </h1>
       <p class="lead hero__lead in-load" style="--load-delay: 180ms">
         From everyday energy to clinically indicated iron infusions, our
@@ -368,12 +373,32 @@ const steps = [
   }
 
   /* ── Liquid typography ──────────────────────────────────────────────
-     The headline is a paper-coloured plate with the words knocked out of
-     it; moving liquid shows through the letterforms. Until the filmed
-     loop exists, an animated liquid gradient carries the effect. */
+     Default: brand gradient clipped to the real letters. When supported, a
+     live ink-in-water fluid is composited into the letters on the canvas
+     overlay (data-title-ink) and the gradient fill is hidden. */
   .hero__title {
+    position: relative;
     font-size: var(--step-5);
     max-width: 16ch;
+  }
+  .hero__title-fill {
+    display: inline-block;
+  }
+  /* The live-ink canvas overlays the title box exactly (JS sizes it). */
+  .hero__title-ink {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.1s var(--ease);
+  }
+  .hero__title--live .hero__title-ink {
+    opacity: 1;
+  }
+  .hero__title--live .hero__title-fill {
+    visibility: hidden;
   }
   /* "Come as you are." is the quiet setup; "Leave feeling restored." is the
      emphasised payoff - italic at the richest loaded weight. */
@@ -939,6 +964,7 @@ const steps = [
 
 <script>
   import { initHeroFluidGL } from '../scripts/hero-fluid-gl';
+  import { createInkFluid } from '../scripts/ink-fluid';
   import { honestMenu } from '../data/honestMenu';
 
   // Ingredient palette: the family + base accents, the colours added to a drip.
@@ -1077,6 +1103,113 @@ const steps = [
       }
     }
     if (!fluid) initHeroFluid2D(canvas);
+
+    // Live ink-in-water inside the headline: composite the fluid into the
+    // letters via source-in. Desktop-ish + motion-safe only (keeps mobile
+    // light); the gradient fill stays as the fallback if anything fails.
+    const heroTitle = document.querySelector("[data-hero-title]");
+    const inkCanvas = document.querySelector("[data-title-ink]");
+    const fill = heroTitle?.querySelector(".hero__title-fill");
+    const wideEnough = window.matchMedia("(min-width: 760px)").matches;
+    if (
+      heroTitle instanceof HTMLElement &&
+      inkCanvas instanceof HTMLCanvasElement &&
+      fill instanceof HTMLElement &&
+      !reduce &&
+      wideEnough
+    ) {
+      const cctx = inkCanvas.getContext("2d");
+      const isDark = () => document.documentElement.getAttribute("data-theme") === "dark";
+      let ink: ReturnType<typeof createInkFluid> = null;
+      try { ink = cctx ? createInkFluid({ dark: isDark() }) : null; } catch { ink = null; }
+
+      if (ink && cctx) {
+        const lines = Array.from(fill.querySelectorAll<HTMLElement>(".lg"));
+        let dpr = 1, boxW = 0, boxH = 0;
+        const metrics = lines.map(() => ({ font: "", x: 0, y: 0 }));
+
+        const measure = () => {
+          dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const hb = heroTitle.getBoundingClientRect();
+          boxW = hb.width; boxH = hb.height;
+          inkCanvas.width = Math.max(1, Math.round(boxW * dpr));
+          inkCanvas.height = Math.max(1, Math.round(boxH * dpr));
+          lines.forEach((ln, i) => {
+            const s = getComputedStyle(ln);
+            const r = ln.getBoundingClientRect();
+            metrics[i] = {
+              font: `${s.fontStyle} ${s.fontWeight} ${s.fontSize} "Fraunces", Georgia, serif`,
+              x: r.left - hb.left,
+              y: r.top - hb.top,
+            };
+          });
+        };
+
+        const draw = () => {
+          cctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          cctx.clearRect(0, 0, boxW, boxH);
+          cctx.globalCompositeOperation = "source-over";
+          cctx.textBaseline = "top";
+          cctx.fillStyle = "#000";
+          try { (cctx as any).letterSpacing = "-0.015em"; } catch {}
+          lines.forEach((ln, i) => {
+            cctx.font = metrics[i].font;
+            cctx.fillText(ln.textContent || "", metrics[i].x, metrics[i].y);
+          });
+          // keep the ink only where the letters were drawn
+          if (ink) {
+            cctx.globalCompositeOperation = "source-in";
+            cctx.drawImage(ink.canvas, 0, 0, boxW, boxH);
+            cctx.globalCompositeOperation = "source-over";
+          }
+          rafInk = requestAnimationFrame(draw);
+        };
+
+        let rafInk = 0;
+        const start = () => {
+          measure();
+          // wait for Fraunces so the composited letters match the fallback
+          const fonts = (document as any).fonts;
+          const go = () => {
+            measure();
+            heroTitle.classList.add("hero__title--live");
+            if (!rafInk) rafInk = requestAnimationFrame(draw);
+          };
+          if (fonts?.ready) fonts.ready.then(go); else go();
+        };
+        start();
+
+        window.addEventListener("resize", measure);
+
+        // Rebuild the sim in the other palette when the theme is toggled, so
+        // the letters stay readable (dark ink on light, bright ink on dark).
+        let curDark = isDark();
+        new MutationObserver(() => {
+          if (isDark() === curDark) return;
+          curDark = isDark();
+          ink?.stop();
+          try { ink = createInkFluid({ dark: curDark }); } catch { ink = null; }
+          if (!ink) heroTitle.classList.remove("hero__title--live");
+        }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+        // pause the sim + compositor when the hero is out of view
+        if ("IntersectionObserver" in window) {
+          const io = new IntersectionObserver((es) => {
+            es.forEach((e) => {
+              ink?.setPaused(!e.isIntersecting);
+              if (e.isIntersecting) { if (!rafInk) rafInk = requestAnimationFrame(draw); }
+              else if (rafInk) { cancelAnimationFrame(rafInk); rafInk = 0; }
+            });
+          }, { threshold: 0 });
+          io.observe(heroTitle);
+        }
+        document.addEventListener("visibilitychange", () => {
+          ink?.setPaused(document.hidden);
+          if (document.hidden && rafInk) { cancelAnimationFrame(rafInk); rafInk = 0; }
+          else if (!document.hidden && !rafInk) rafInk = requestAnimationFrame(draw);
+        });
+      }
+    }
 
     // 2.5D: the bag leans toward the pointer and the liquid sloshes with
     // it. Desktop, fine-pointer, motion-safe only; eased so it feels like
