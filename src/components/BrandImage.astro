@@ -1,0 +1,145 @@
+---
+// Drop-in image slot with an on-brand treatment, so any real photo instantly
+// matches the calm editorial palette. Until a real photo exists (src on
+// PLACEHOLDER or empty), it renders a quiet labelled placeholder instead of a
+// broken image — the same "never ship a dead asset" pattern used site-wide.
+//
+// Usage:
+//   <BrandImage src="/photos/the-chair.jpg" alt="The treatment chair in morning light" ratio="4/3" />
+//   <BrandImage placeholderLabel="Treatment room · Thornhill" ratio="3/2" />
+import { isFilled } from '@/data/site';
+
+export interface Props {
+  src?: string;
+  alt?: string;
+  /** aspect ratio, e.g. "4/3", "3/2", "1/1", "16/9" */
+  ratio?: string;
+  /** cover (default) or contain */
+  fit?: 'cover' | 'contain';
+  /** treatment strength: 'soft' (default) or 'none' for full-colour */
+  tone?: 'soft' | 'none';
+  /** accent for the placeholder + hover wash */
+  accent?: string;
+  /** shown in the placeholder so the slot reads as intentional */
+  placeholderLabel?: string;
+  /** priority images (above the fold) skip lazy-loading */
+  eager?: boolean;
+  /** when true and no image is set, render nothing (keeps live pages clean
+      until a real photo is dropped in). Default shows a labelled placeholder. */
+  hideWhenEmpty?: boolean;
+  class?: string;
+}
+
+const {
+  src,
+  alt = '',
+  ratio = '3/2',
+  fit = 'cover',
+  tone = 'soft',
+  accent = 'var(--accent-wellness)',
+  placeholderLabel = 'Photograph',
+  eager = false,
+  hideWhenEmpty = false,
+  class: className = '',
+} = Astro.props;
+
+const hasImage = isFilled(src) && src !== '';
+const render = hasImage || !hideWhenEmpty;
+---
+
+{render && (
+<figure
+  class:list={['bimg', `bimg--${tone}`, { 'bimg--placeholder': !hasImage }, className]}
+  style={`--bimg-ratio:${ratio}; --bimg-fit:${fit}; --bimg-accent:${accent}`}
+>
+  {hasImage ? (
+    <img src={src} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+  ) : (
+    <span class="bimg__ph" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <circle cx="8.5" cy="10" r="1.4" />
+        <path d="M21 16l-5-5L5 19" />
+      </svg>
+      <span class="bimg__ph-label">{placeholderLabel}</span>
+    </span>
+  )}
+</figure>
+)}
+
+<style>
+  .bimg {
+    position: relative;
+    margin: 0;
+    aspect-ratio: var(--bimg-ratio);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--cloud);
+    border: 1px solid var(--line);
+  }
+  .bimg img {
+    width: 100%;
+    height: 100%;
+    object-fit: var(--bimg-fit);
+    display: block;
+    transition: transform 0.6s var(--ease), filter 0.6s var(--ease);
+  }
+  /* On-brand treatment: gently desaturated and warmed toward the palette,
+     lifting to full colour on hover so it feels alive, not flat. A faint
+     grain (::after) matches the page's paper texture. */
+  .bimg--soft img {
+    filter: saturate(0.82) contrast(0.98) brightness(1.01);
+  }
+  .bimg--soft::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+    opacity: 0.06;
+  }
+  :global([data-theme='dark']) .bimg--soft::after {
+    mix-blend-mode: screen;
+    opacity: 0.05;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .bimg--soft:hover img {
+      filter: saturate(1) contrast(1) brightness(1);
+      transform: scale(1.02);
+    }
+  }
+
+  /* Placeholder: quiet, labelled, tinted by the slot's accent so an empty
+     slot still reads as designed rather than missing. */
+  .bimg--placeholder {
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(120% 120% at 30% 20%, color-mix(in srgb, var(--bimg-accent) 12%, transparent), transparent 60%),
+      var(--cloud);
+    border-style: dashed;
+  }
+  .bimg__ph {
+    display: grid;
+    justify-items: center;
+    gap: 0.6rem;
+    color: color-mix(in srgb, var(--bimg-accent) 70%, var(--mist));
+    text-align: center;
+    padding: 1rem;
+  }
+  .bimg__ph-label {
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mist);
+    max-width: 22ch;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bimg img {
+      transition: none;
+    }
+  }
+</style>

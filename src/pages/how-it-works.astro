@@ -2,6 +2,8 @@
 import Layout from '@/layouts/Layout.astro';
 import PageHeader from '@/components/PageHeader.astro';
 import CtaBand from '@/components/CtaBand.astro';
+import BrandImage from '@/components/BrandImage.astro';
+import { photos } from '@/data/photos';
 
 const steps = [
   { n: '01', t: 'Intake & screening', d: 'We review your health history, medications, and goals. This is where we make sure a treatment is safe and sensible for you, and where we will say so honestly if it is not.' },
@@ -31,6 +33,19 @@ const jsonLd = {
   >
     What happens, <span class="it">from the first drop.</span>
   </PageHeader>
+
+  {photos.process && (
+    <section class="section-tight">
+      <div class="wrap reveal">
+        <BrandImage
+          src={photos.process}
+          ratio="3/2"
+          accent="var(--accent-clinical)"
+          alt="A registered nurse preparing an IV drip at Restoration Medical"
+        />
+      </div>
+    </section>
+  )}
 
   <section class="section-tight">
     <div class="wrap-narrow stack-lg">

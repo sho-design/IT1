@@ -1,8 +1,10 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import TrustBand from '@/components/TrustBand.astro';
+import BrandImage from '@/components/BrandImage.astro';
 import { site, locations, integrations, isFilled } from '@/data/site';
 import { concerns } from '@/data/concerns';
+import { photos } from '@/data/photos';
 
 const hasEndpoint = isFilled(integrations.formEndpoint);
 const namedLocations = locations.filter((l) => l.name);
@@ -48,6 +50,16 @@ const jsonLd = {
               Call {site.phone}
             </a>
           </p>
+        )}
+        {photos.consultRoom && (
+          <div class="book__photo">
+            <BrandImage
+              src={photos.consultRoom}
+              ratio="4/5"
+              accent="var(--accent-wellness)"
+              alt="A quiet corner of the Restoration Medical clinic"
+            />
+          </div>
         )}
       </div>
 

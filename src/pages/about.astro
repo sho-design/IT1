@@ -3,7 +3,9 @@ import Layout from '@/layouts/Layout.astro';
 import PageHeader from '@/components/PageHeader.astro';
 import CtaBand from '@/components/CtaBand.astro';
 import RandomPullQuote from '@/components/RandomPullQuote.astro';
+import BrandImage from '@/components/BrandImage.astro';
 import { locations, isFilled } from '@/data/site';
+import { photos } from '@/data/photos';
 
 const principles = [
   { t: 'Physician first', d: 'We are physicians and nurses, not a counter. Every treatment is reviewed and overseen by our physician.' },
@@ -58,6 +60,19 @@ const jsonLd = {
       </p>
     </div>
   </section>
+
+  {photos.clinicSpace && (
+    <section class="section-tight">
+      <div class="wrap reveal">
+        <BrandImage
+          src={photos.clinicSpace}
+          ratio="3/2"
+          accent="var(--accent-wellness)"
+          alt="The calm Thornhill clinic space"
+        />
+      </div>
+    </section>
+  )}
 
   <section class="section-tight">
     <div class="wrap">

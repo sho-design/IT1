@@ -4,11 +4,13 @@ import TreatmentCard from '@/components/TreatmentCard.astro';
 import ConcernTile from '@/components/ConcernTile.astro';
 import CtaBand from '@/components/CtaBand.astro';
 import GoogleRating from '@/components/GoogleRating.astro';
+import BrandImage from '@/components/BrandImage.astro';
 import RandomPullQuote from '@/components/RandomPullQuote.astro';
 import { treatmentBySlug, type Treatment } from '@/data/treatments';
 import { concerns } from '@/data/concerns';
 import { site, locations } from '@/data/site';
 import { honestMenu } from '@/data/honestMenu';
+import { photos } from '@/data/photos';
 
 // Three honest-menu items for the no-JS fallback (build-time pick); the client
 // re-rolls a fresh three on every visit.
@@ -312,6 +314,27 @@ const steps = [
   </section>
 
   <GoogleRating />
+
+  {/* The destination: the real treatment chair. Set `photos.chair` above to
+      reveal this whole section; hidden until then so the live page stays clean. */}
+  {photos.chair && (
+    <section class="section">
+      <div class="wrap">
+        <div class="reveal sec-head" style="text-align:center; justify-items:center; margin-inline:auto;">
+          <p class="eyebrow">This is where you'll sit</p>
+          <h2 class="hl display-3">The calm is the point.</h2>
+        </div>
+        <div class="reveal" style="max-width:1000px; margin-inline:auto;">
+          <BrandImage
+            src={photos.chair}
+            ratio="16/9"
+            accent="var(--accent-recovery)"
+            alt="A treatment chair in the calm Thornhill clinic, in morning light"
+          />
+        </div>
+      </div>
+    </section>
+  )}
 
   <CtaBand
     eyebrow="Begin"
