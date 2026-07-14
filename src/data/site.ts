@@ -90,7 +90,7 @@ export const network = {
   heading: 'Our network',
   links: [
     { label: 'Restoration Medical', href: 'https://restorationmedical.ca', note: 'The clinic' },
-    // { label: 'Canada Knee Clinic', href: 'https://canadakneeclinic.com', note: 'Knee & joint care' },
+    { label: 'Canada Knee Clinic', href: 'https://canadakneeclinic.com', note: 'Knee & joint care' },
   ],
 };
 
