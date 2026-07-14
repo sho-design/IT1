@@ -84,6 +84,16 @@ export const googleRating = {
 // Social profiles, shown in the footer and the mobile menu. Add the full
 // profile URL for each. While a URL is on a placeholder the icon still shows
 // but is not a link, so there are never dead links before launch.
+// The wider family of clinics / brands. Shown in the footer; add a line per
+// site as they come online. External links open in a new tab.
+export const network = {
+  heading: 'Our network',
+  links: [
+    { label: 'Restoration Medical', href: 'https://restorationmedical.ca', note: 'The clinic' },
+    // { label: 'Canada Knee Clinic', href: 'https://canadakneeclinic.com', note: 'Knee & joint care' },
+  ],
+};
+
 export const socials = [
   { name: 'Instagram', href: 'https://instagram.com/restorationmedicalofficial' },
   { name: 'Facebook', href: 'https://facebook.com/restorationmedicalofficial' },
