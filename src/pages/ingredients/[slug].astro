@@ -15,6 +15,8 @@ const ingredient = ingredientBySlug(slug!)!;
 const fam = families[ingredient.family];
 const foundIn = treatmentsWithIngredient(ingredient.slug);
 const evidence = ingredientEvidence(ingredient.slug);
+const evLabel =
+  evidence.level.charAt(0).toUpperCase() + evidence.level.slice(1);
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -42,13 +44,14 @@ const jsonLd = {
             <span class="ih__dot" aria-hidden="true"></span>
             {ingredient.role}
           </span>
-          <span
-            class={`ev ev--${evidence.level === 'Established' ? 'est' : 'emg'}`}
+          <a
+            class={`ev ev--${evidence.level}`}
+            href="#evidence"
             title={evidence.note}
           >
             <span class="ev__dot" aria-hidden="true"></span>
-            {evidence.level} evidence
-          </span>
+            {evLabel} evidence
+          </a>
         </div>
         <h1 class="hl ih__title display-2">{ingredient.name}</h1>
         <p class="lead ih__line">{ingredient.oneLine}</p>
@@ -76,6 +79,37 @@ const jsonLd = {
           ))}
         </ul>
       </div>
+
+      {evidence.studies.length > 0 && (
+        <div class="reveal block" id="evidence">
+          <h2 class="block__h">Evidence &amp; studies</h2>
+          <p class="ev-lead">{evidence.note}</p>
+          <ol class="studies">
+            {evidence.studies.map((s) => (
+              <li class="study">
+                <h3 class="study__finding">{s.finding}</h3>
+                <p class="study__summary">{s.summary}</p>
+                <p class="study__context">{s.context}</p>
+                <a
+                  class="study__source"
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {s.source} <span aria-hidden="true">&rarr;</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+          <p class="ev-note">
+            Citations are provided for transparency and are reviewed by our
+            physician. Much of the published research uses oral dosing or
+            specific patient groups, so it describes the ingredient in general
+            rather than promising a result from any infusion. Individual results
+            vary.
+          </p>
+        </div>
+      )}
 
       {ingredient.goodToKnow && (
         <div class="reveal block block--note">
@@ -140,7 +174,8 @@ const jsonLd = {
     color: var(--accent-text);
     margin-bottom: 0;
   }
-  /* Honest evidence tag: established (solid) vs emerging (hollow). */
+  /* Honest evidence tag, linking to the citations below. Three levels:
+     established (solid), emerging (half), limited (hollow). */
   .ev {
     display: inline-flex;
     align-items: center;
@@ -153,19 +188,101 @@ const jsonLd = {
     border: 1px solid var(--line);
     border-radius: 999px;
     padding: 0.26rem 0.62rem;
-    cursor: help;
+    text-decoration: none;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .ev:hover {
+    color: var(--ink);
+    border-color: var(--graphite);
   }
   .ev__dot {
     width: 7px;
     height: 7px;
     border-radius: 50%;
   }
-  .ev--est .ev__dot {
+  .ev--established .ev__dot {
     background: var(--accent-metabolic);
   }
-  .ev--emg .ev__dot {
+  .ev--emerging .ev__dot {
+    background: linear-gradient(
+      to right,
+      var(--accent-metabolic) 50%,
+      transparent 50%
+    );
+    border: 1.5px solid var(--accent-metabolic);
+  }
+  .ev--limited .ev__dot {
     background: transparent;
     border: 1.5px solid var(--mist);
+  }
+  /* Evidence & studies */
+  .ev-lead {
+    color: var(--graphite);
+    font-size: var(--step-0);
+    line-height: 1.5;
+    margin-bottom: 1.4rem;
+    max-width: 62ch;
+  }
+  .studies {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+    counter-reset: study;
+  }
+  .study {
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 1.2rem 1.3rem;
+    background: var(--white-pure);
+  }
+  .study__finding {
+    font-size: var(--step-0);
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0 0 0.5rem;
+    color: var(--ink);
+  }
+  .study__summary {
+    color: var(--graphite);
+    font-size: var(--step-0);
+    line-height: 1.55;
+    margin: 0 0 0.6rem;
+  }
+  .study__context {
+    color: var(--graphite);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin: 0 0 0.8rem;
+    padding-left: 0.8rem;
+    border-left: 2px solid var(--accent);
+    font-style: italic;
+    opacity: 0.9;
+  }
+  .study__source {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: var(--graphite);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .study__source:hover {
+    color: var(--ink);
+    border-color: var(--graphite);
+  }
+  .ev-note {
+    color: var(--graphite);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    margin-top: 1.2rem;
+    opacity: 0.85;
+    max-width: 62ch;
   }
   .ih__specimen {
     justify-self: end;
