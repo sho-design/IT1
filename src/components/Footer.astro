@@ -327,9 +327,6 @@ const columns = [
   .footer__legal-main {
     display: grid;
     gap: 0.8rem;
-    /* Sit against the right edge of the column, text aligned right. */
-    justify-items: end;
-    text-align: right;
   }
   /* Family-of-brands / network links, left of the legal fine print. */
   .footer__network {
@@ -390,7 +387,6 @@ const columns = [
     letter-spacing: 0.06em;
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-end;
     gap: 1.2rem;
   }
   .footer__legallinks a {
@@ -415,14 +411,6 @@ const columns = [
     }
     .footer__network {
       justify-self: start;
-    }
-    /* Stacked: the fine print reads better left-aligned again. */
-    .footer__legal-main {
-      justify-items: start;
-      text-align: left;
-    }
-    .footer__legallinks {
-      justify-content: flex-start;
     }
   }
   @media (max-width: 520px) {
