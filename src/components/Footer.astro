@@ -118,24 +118,6 @@ const columns = [
     </div>
 
     <div class="footer__legal">
-      <div class="footer__legal-main">
-        <p class="footer__fine">
-          Wellness infusion services are elective and are not covered by OHIP.
-          Iron therapy may be clinically indicated. Every treatment is
-          physician-reviewed and nurse-administered. Information on this site is
-          educational and is not medical advice. Results vary from person to
-          person. A consult confirms what is right for you.
-        </p>
-        <p class="footer__fine">
-          &copy; {year} {site.brand}. {site.signOff}
-        </p>
-        <p class="footer__legallinks">
-          <a href="/privacy">Privacy Policy</a>
-          <a href="/terms">Terms of Use</a>
-          <a href="/accessibility">Accessibility</a>
-        </p>
-      </div>
-
       {network.links.length > 0 && (
         <nav class="footer__network" aria-label={network.heading}>
           <p class="footer__network-h">{network.heading}</p>
@@ -156,6 +138,24 @@ const columns = [
           </ul>
         </nav>
       )}
+
+      <div class="footer__legal-main">
+        <p class="footer__fine">
+          Wellness infusion services are elective and are not covered by OHIP.
+          Iron therapy may be clinically indicated. Every treatment is
+          physician-reviewed and nurse-administered. Information on this site is
+          educational and is not medical advice. Results vary from person to
+          person. A consult confirms what is right for you.
+        </p>
+        <p class="footer__fine">
+          &copy; {year} {site.brand}. {site.signOff}
+        </p>
+        <p class="footer__legallinks">
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/terms">Terms of Use</a>
+          <a href="/accessibility">Accessibility</a>
+        </p>
+      </div>
     </div>
   </div>
 </footer>
@@ -320,7 +320,7 @@ const columns = [
   .footer__legal {
     padding-top: var(--space-m);
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: auto 1fr;
     gap: 2rem 3rem;
     align-items: start;
   }
@@ -328,9 +328,9 @@ const columns = [
     display: grid;
     gap: 0.8rem;
   }
-  /* Family-of-brands / network links, right of the legal fine print. */
+  /* Family-of-brands / network links, left of the legal fine print. */
   .footer__network {
-    justify-self: end;
+    justify-self: start;
     min-width: 12rem;
   }
   .footer__network-h {
