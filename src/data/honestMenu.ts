@@ -14,29 +14,29 @@ export interface HonestItem {
 
 export const honestMenu: HonestItem[] = [
   {
-    hype: 'Cures your fatigue.',
+    hype: 'Wipes out your fatigue.',
     truth:
       'B vitamins support normal energy-yielding metabolism. And if you are always tired, we look for the reason first — starting with your iron.',
   },
   {
-    hype: 'Detoxes and melts fat.',
+    hype: 'Cleanses and slims you down.',
     truth:
-      'Metabolic support happens inside a physician-guided program, with real screening and follow-up. No miracles — and we say so.',
+      'Metabolic support happens inside a physician-guided program, with real screening and follow-up. No shortcuts — and we say so.',
   },
   {
-    hype: '10x your immune system.',
+    hype: 'Never catch another cold.',
     truth:
       'Vitamin C supports normal immune function. That is what the evidence supports, so that is exactly what we say.',
   },
   {
-    hype: 'Instant hangover cure.',
+    hype: 'Instant hangover fix.',
     truth:
       'Fluids and electrolytes can help you feel more comfortable while your body recovers. Time is still what a hangover needs, and we will tell you that.',
   },
   {
     hype: 'Flush the toxins from your body.',
     truth:
-      'Your liver and kidneys already do that. A drip can support hydration and specific nutrients — it does not "detox" you, and we will not pretend otherwise.',
+      'Your liver and kidneys already do that. A drip can support hydration and specific nutrients — it does not cleanse you of "toxins," and we will not pretend otherwise.',
   },
   {
     hype: 'Glow up with our beauty drip.',
@@ -44,37 +44,37 @@ export const honestMenu: HonestItem[] = [
       'Ingredients like vitamin C and glutathione support normal skin and antioxidant function. Skin has many inputs; a drip is one, and results vary.',
   },
   {
-    hype: 'Boost your metabolism instantly.',
+    hype: 'Fire up your metabolism instantly.',
     truth:
       'There is no instant switch. A physician-guided program looks at the whole picture — labs, habits, and follow-up — because that is what actually helps.',
   },
   {
-    hype: 'Cure your cold in an hour.',
+    hype: 'Beat your cold in an hour.',
     truth:
-      'Nothing cures a cold in an hour. Hydration and vitamin C may support how you feel and your normal immune function while it runs its course.',
+      'Nothing clears a cold in an hour. Hydration and vitamin C may support how you feel and your normal immune function while it runs its course.',
   },
   {
-    hype: 'Reverse aging from the inside.',
+    hype: 'Turn back the clock from the inside.',
     truth:
-      'Nothing reverses aging. Nutrients like NAD+ are studied for cellular-energy and healthy-aging support; the evidence is still developing, and we label it that way.',
+      'No drip turns back the clock. Nutrients like NAD+ are studied for cellular-energy and healthy-aging support; the evidence is still developing, and we label it that way.',
   },
   {
-    hype: 'Guaranteed more energy, today.',
+    hype: 'All the energy you want, today.',
     truth:
       'We do not guarantee outcomes. If your energy is low, B vitamins support normal energy metabolism — and a lab may find a cause worth treating.',
   },
   {
-    hype: 'Melt fat while you relax.',
+    hype: 'Slim down while you relax.',
     truth:
-      'Nothing melts fat in a chair. Compounds like MIC are offered only inside a physician-led metabolic program, alongside real lifestyle change.',
+      'Nothing burns fat in a chair. Compounds like MIC are offered only inside a physician-led metabolic program, alongside real lifestyle change.',
   },
   {
-    hype: 'Megadose your way to health.',
+    hype: 'More is always better.',
     truth:
       'More is not better, and can be unsafe. We dose to what is appropriate for you, after screening — clinical, not maximal.',
   },
   {
-    hype: 'IV drips are better than food.',
+    hype: 'IV drips beat real food.',
     truth:
       'Food and a healthy gut come first. IV nutrients bypass the gut, which helps in specific situations — not as a replacement for eating well.',
   },
@@ -109,8 +109,8 @@ export const honestMenu: HonestItem[] = [
       'Magnesium supports normal muscle and nervous-system function. It is supportive, not a treatment for anxiety — and we would rather say so.',
   },
   {
-    hype: 'A cure for what ails you.',
+    hype: 'A fix for whatever ails you.',
     truth:
-      'We do not sell cures. We offer physician-reviewed, nurse-administered support, and we are honest about the limits.',
+      'We do not sell fixes. We offer physician-reviewed, nurse-administered support, and we are honest about the limits.',
   },
 ];

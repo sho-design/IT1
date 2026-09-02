@@ -10,7 +10,7 @@ const tiers = [
     who: 'For one steady habit, kept simple.',
     benefits: [
       'A regular shot or lighter drip on a calm cadence',
-      'Member pricing held for you, shared at consult',
+      'A set treatment-plan price for your routine, confirmed at consult',
       'Priority booking around your schedule',
     ],
   },
@@ -19,7 +19,7 @@ const tiers = [
     who: 'For a fuller drip you return to each month.',
     benefits: [
       'A signature drip on a monthly rhythm',
-      'A complimentary shot to pair with it',
+      'A paired shot as part of the plan',
       'Priority booking and flexible rescheduling',
     ],
   },
@@ -28,8 +28,8 @@ const tiers = [
     who: 'For the most consistent wellness routine.',
     benefits: [
       'Drips and shots across the month, planned with your nurse',
-      'First access to new treatments and seasonal items',
-      'The highest priority booking and care',
+      'Early word on new treatments and seasonal items',
+      'The highest priority booking',
     ],
   },
 ];
@@ -39,19 +39,19 @@ const jsonLd = {
   '@type': 'WebPage',
   name: 'Memberships',
   description:
-    'A calmer, consistent way to maintain your wellness rhythm at Restoration Medical, with member benefits and priority care.',
+    'A calmer, consistent way to maintain your wellness rhythm at Restoration Medical, with a consistent plan and priority booking.',
   url: new URL('/memberships', Astro.site).href,
 };
 ---
 
 <Layout
   title="Memberships"
-  description="A calmer, consistent way to maintain your wellness rhythm at Restoration Medical. Three membership ideas, member benefits, and priority care. Details shared at consult."
+  description="A calmer, consistent way to maintain your wellness rhythm at Restoration Medical. Three membership ideas, a consistent treatment-plan price, and priority booking. Details shared at consult."
   jsonLd={jsonLd}
 >
   <PageHeader
     eyebrow="Memberships"
-    lead="A calmer, consistent way to maintain your wellness rhythm, with member benefits and priority care. Consistency is where wellness routines actually pay off."
+    lead="A calmer, consistent way to maintain your wellness rhythm, with a consistent plan and priority booking. Consistency is where wellness routines actually pay off."
   >
     A steady rhythm, <span class="it">looked after.</span>
   </PageHeader>

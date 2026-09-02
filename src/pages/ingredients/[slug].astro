@@ -1,6 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import CtaBand from '@/components/CtaBand.astro';
+import IvDisclaimer from '@/components/IvDisclaimer.astro';
 import TreatmentCard from '@/components/TreatmentCard.astro';
 import { ingredients, ingredientBySlug, ingredientEvidence } from '@/data/ingredients';
 import { treatmentsWithIngredient } from '@/data/treatments';
@@ -96,6 +97,14 @@ const jsonLd = {
         <div class="grid reveal">
           {foundIn.map((t) => <TreatmentCard treatment={t} />)}
         </div>
+      </div>
+    </section>
+  )}
+
+  {ingredient.slug !== 'iron-sucrose' && (
+    <section class="section-tight">
+      <div class="wrap-narrow">
+        <IvDisclaimer class="reveal" />
       </div>
     </section>
   )}

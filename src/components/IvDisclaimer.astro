@@ -1,0 +1,25 @@
+---
+// Required infusion-therapy disclaimer (RM-HB-COMMS v1.1, Appendix D.2),
+// used verbatim. Placed on IV/IM wellness surfaces: the drip and shot menus,
+// every treatment detail page, ingredient pages, and the homepage menu.
+// Iron therapy and the metabolic program carry their own, page-specific
+// framing, so this wellness-IV line is not shown there.
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<p class={`iv-disclaimer ${className}`}>
+  IV therapy is provided after screening by our medical team. It is not a
+  treatment for any disease and does not replace medical care.
+</p>
+
+<style>
+  .iv-disclaimer {
+    color: var(--graphite);
+    font-size: 0.78rem;
+    line-height: 1.6;
+    max-width: 68ch;
+  }
+</style>

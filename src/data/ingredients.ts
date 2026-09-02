@@ -47,7 +47,7 @@ export const ingredients: Ingredient[] = [
     name: 'Vitamin C',
     role: 'Antioxidant',
     family: 'immune',
-    oneLine: 'Antioxidant that supports immunity and collagen.',
+    oneLine: 'Antioxidant that supports normal immune function and collagen.',
     whatItIs:
       'An antioxidant vitamin involved in normal immune function and in the body making collagen, the protein that gives skin and connective tissue structure.',
     maySupport: [
@@ -63,7 +63,7 @@ export const ingredients: Ingredient[] = [
     name: 'Vitamin D3',
     role: 'Vitamin',
     family: 'wellness',
-    oneLine: 'Supports bone, muscle, and immune health.',
+    oneLine: 'Supports bone, muscle, and normal immune function.',
     whatItIs:
       'The form of vitamin D the body makes from sunlight. Many people in our climate run low, particularly through the winter.',
     maySupport: [
@@ -221,7 +221,7 @@ export const ingredients: Ingredient[] = [
     name: 'Zinc',
     role: 'Mineral',
     family: 'immune',
-    oneLine: 'Supports immune function and skin repair.',
+    oneLine: 'Supports normal immune function and skin repair.',
     whatItIs:
       'A trace mineral the body uses in immune function, wound healing, and maintaining skin.',
     maySupport: [

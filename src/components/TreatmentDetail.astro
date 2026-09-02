@@ -7,6 +7,7 @@ import { concernBySlug } from '@/data/concerns';
 import WhatsInside from './WhatsInside.astro';
 import IngredientChip from './IngredientChip.astro';
 import TreatmentCard from './TreatmentCard.astro';
+import IvDisclaimer from './IvDisclaimer.astro';
 
 export interface Props {
   treatment: Treatment;
@@ -69,7 +70,7 @@ const backLabel = treatment.type === 'drip' ? 'All drips' : 'The Injection Bar';
         <section class="reveal detail__block detail__addons">
           <h2 class="detail__h">Recommended add-ons</h2>
           <p class="detail__p measure">
-            Boosters that pair well with this drip. Your nurse can include any
+            Add-ons that pair well with this drip. Your nurse can include any
             after a quick screening, on clinical grounds. No pricing.
           </p>
           <ul class="addons">
@@ -89,6 +90,8 @@ const backLabel = treatment.type === 'drip' ? 'All drips' : 'The Injection Bar';
         <h2 class="detail__h">Good to know</h2>
         <p class="detail__p measure">{treatment.goodToKnow}</p>
       </section>
+
+      <IvDisclaimer class="reveal detail__disclaimer" />
     </div>
 
     <aside class="detail__side reveal">

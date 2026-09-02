@@ -58,8 +58,8 @@ export const treatments: Treatment[] = [
     name: "Healing (Myers')",
     type: 'drip',
     family: 'wellness',
-    essence: 'A classic blend to support energy and immune recovery.',
-    menuDescriptor: 'Energy and immune recovery',
+    essence: 'A classic blend to support energy and a normal immune response.',
+    menuDescriptor: 'Energy and immune support',
     whatItIs:
       "Our take on the classic Myers' cocktail, a well-known blend of B vitamins, vitamin C, magnesium, and calcium. A go-to when you feel run down and want to reset.",
     supports: [
@@ -150,10 +150,10 @@ export const treatments: Treatment[] = [
     name: 'Immune Shield',
     type: 'drip',
     family: 'immune',
-    essence: 'Seasonal immune defence.',
+    essence: 'Seasonal immune support.',
     menuDescriptor: 'Seasonal defence',
     whatItIs:
-      'A high-support immune drip built around vitamin C, zinc, and supporting nutrients. A considered choice through a demanding season or before travel.',
+      'A high-support drip built around vitamin C, zinc, and supporting nutrients. A considered choice through a demanding season or before travel.',
     supports: [
       'May support a normal immune response through a demanding season.',
       'Helps maintain hydration.',
@@ -428,8 +428,8 @@ export const treatments: Treatment[] = [
     name: 'Tri-Immune Shot',
     type: 'shot',
     family: 'immune',
-    essence: 'A three-part immune boost.',
-    menuDescriptor: 'Three-part immune boost',
+    essence: 'A three-part immune-support shot.',
+    menuDescriptor: 'Three-part immune support',
     whatItIs:
       'A concentrated immune shot bringing together vitamin C, zinc, and glutathione, the body uses each in a normal immune response.',
     supports: [

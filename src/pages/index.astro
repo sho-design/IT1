@@ -3,7 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import TreatmentCard from '@/components/TreatmentCard.astro';
 import ConcernTile from '@/components/ConcernTile.astro';
 import CtaBand from '@/components/CtaBand.astro';
-import GoogleRating from '@/components/GoogleRating.astro';
+import IvDisclaimer from '@/components/IvDisclaimer.astro';
 import BrandImage from '@/components/BrandImage.astro';
 import RandomPullQuote from '@/components/RandomPullQuote.astro';
 import { treatmentBySlug, type Treatment } from '@/data/treatments';
@@ -159,7 +159,7 @@ const steps = [
         <article class="path">
           <h3 class="path__title">Wellness infusions &amp; shots</h3>
           <p class="path__body">
-            Support energy, immunity, skin, recovery, and healthy aging.
+            Support energy, immune function, skin, recovery, and healthy aging.
             Personalized to you, given in a calm clinical setting. Elective,
             and designed around how you want to feel.
           </p>
@@ -288,6 +288,7 @@ const steps = [
         right on the ingredient. Results vary from person to person, and we
         screen first.
       </p>
+      <IvDisclaimer class="reveal" />
     </div>
   </section>
 
@@ -312,8 +313,6 @@ const steps = [
       </div>
     </div>
   </section>
-
-  <GoogleRating />
 
   {/* The destination: the real treatment chair. Set `photos.chair` above to
       reveal this whole section; hidden until then so the live page stays clean. */}

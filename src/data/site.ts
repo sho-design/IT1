@@ -68,18 +68,12 @@ export const cta = {
   secondary: { label: 'Explore drips & shots', href: '/drips' },
 };
 
-// Google rating strip. To stay clear of the CPSO rule against testimonials in a
-// physician's advertising, we show only the aggregate rating, the count, and a
-// link out to Google — never quoted review text on-page. The whole strip stays
-// hidden until all three are filled, so no fabricated rating is ever shown.
-//   - rating: the average, e.g. '4.9'
-//   - count:  number of reviews, e.g. '128'
-//   - url:    your Google Business "reviews" or profile link
-export const googleRating = {
-  rating: '4.8',
-  count: '16',
-  url: 'https://www.google.com/maps/place/Restoration+Medical/@43.8116543,-79.4536255,17z/data=!3m1!4b1!4m6!3m5!1s0x882b2db3105c83d1:0x644d7da1c8c35de7!8m2!3d43.8116505!4d-79.4510506!16s%2Fg%2F11yl66jl7w',
-};
+// Google rating strip: REMOVED for compliance. Under the Restoration Medical
+// Communications & Marketing Compliance Handbook (v1.1, §3.1 and §7.1), an
+// aggregate star rating reproduced on the website is a prohibited testimonial —
+// even without quoted review text. Do not re-introduce a rating/stars component.
+// Patients may leave reviews on Google directly; the clinic does not reproduce
+// them on-site. A plain, unlinked "Find us on Google" is fine if ever wanted.
 
 // Social profiles, shown in the footer and the mobile menu. Add the full
 // profile URL for each. While a URL is on a placeholder the icon still shows

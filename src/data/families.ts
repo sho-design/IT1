@@ -47,7 +47,7 @@ export const families: Record<FamilyKey, Family> = {
     label: 'Immune',
     accent: '#C2703D',
     text: '#A55B2C',
-    blurb: 'Seasonal defence and immune support.',
+    blurb: 'Seasonal support with vitamin C, zinc, and more.',
   },
   energy: {
     key: 'energy',

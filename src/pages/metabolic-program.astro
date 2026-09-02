@@ -4,7 +4,7 @@ import CtaBand from '@/components/CtaBand.astro';
 
 const journey = [
   { n: '01', t: 'Assessment', d: 'A full medical assessment of your health, history, and goals. The physician decides whether the program, and which therapies within it, are appropriate for you.' },
-  { n: '02', t: 'A personalized plan', d: 'A plan built around you, which may include GLP-1 therapy where suitable, nutrition guidance, and metabolic injections as supporting tools.' },
+  { n: '02', t: 'A personalized plan', d: 'A plan built around you, which may include physician-prescribed medication where suitable, nutrition guidance, and metabolic injections as supporting tools.' },
   { n: '03', t: 'Ongoing support', d: 'Regular check-ins, monitoring, and adjustments. Weight is personal, and steady support matters more than any single step.' },
   { n: '04', t: 'Maintenance', d: 'As goals are met, the focus shifts to maintaining them, with a lighter touch and the same medical oversight.' },
 ];
@@ -14,14 +14,14 @@ const jsonLd = {
   '@type': 'MedicalWebPage',
   name: 'Metabolic Program',
   description:
-    'A physician-supervised, medically guided weight-management program at Restoration Medical. GLP-1 therapy where appropriate, with monitoring and support.',
+    'A physician-supervised, medically guided weight-management program at Restoration Medical. Physician-prescribed medication where appropriate, with monitoring and support.',
   url: new URL('/metabolic-program', Astro.site).href,
 };
 ---
 
 <Layout
   title="Metabolic Program"
-  description="A physician-led, medically supervised weight-management program at Restoration Medical. GLP-1 therapy where appropriate, with monitoring, support, and metabolic injections. Results vary."
+  description="A physician-led, medically supervised weight-management program at Restoration Medical. Physician-prescribed medication where appropriate, with monitoring, support, and metabolic injections. Results vary."
   jsonLd={jsonLd}
 >
   <header class="mhead reveal">
@@ -36,9 +36,9 @@ const jsonLd = {
       </h1>
       <p class="lead mhead__lead">
         A physician-supervised weight-management program. Where appropriate, it
-        may include GLP-1 therapy, alongside monitoring, support, and metabolic
-        injections as part of the journey. Not a quick fix. A real plan, with
-        real oversight.
+        may include physician-prescribed medication, alongside monitoring,
+        support, and metabolic injections as part of the journey. Not a quick
+        fix. A real plan, with real oversight.
       </p>
       <div class="mhead__actions">
         <a class="btn btn--lg" href="/book">Request a consult</a>
